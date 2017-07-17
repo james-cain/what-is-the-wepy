@@ -1,0 +1,25 @@
+<template name="drawer">
+  <view class="drawer_screen" bindtap="setModalStatus" data-status="0" wx:if="{{showModalStatus}}"></view>
+  <view animation="{{animationData}}" class="drawer_attr_box" wx:if="{{showModalStatus}}">
+    <view class="close_icon" bindtap="setModalStatus" data-status="0">×</view>
+    <view class="drawer_attr_content">
+      <view class="text_center">
+        <image class="drawer_image" src="{{goods.pic}}"></image>
+        <view class="info">
+          <view class="drawer_desc goodsname">{{goods.goods_name}}</view>
+          <view class="drawer_desc price">￥{{goods.price}}</view>
+        </view>
+      </view>
+      <view class="box">
+       <text>购买数量:</text>
+       <view class="count">
+        <view class="minus" data-type="0" bindtap="buyNum">-</view>
+        <input  type="number" class="number" value="{{count}}"/>
+        <view class="plus" data-type="1" bindtap="buyNum">+</view>
+       </view>
+      </view>
+      <button type="warn" class="operation" bindtap="addCart" data-status="0" wx:if="{{next===3}}">确定</button>
+       <button type="warn" class="operation" bindtap="buyNow" data-status="0" wx:if="{{next===4}}">下一步</button>
+    </view>
+  </view>
+</template>
