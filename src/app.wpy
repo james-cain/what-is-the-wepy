@@ -85,5 +85,6 @@ body {
   margin: 0px;
   padding: 0px;
   background-color: #f0eff5;
+  font-size: 28rpx;
 }
 </style>
