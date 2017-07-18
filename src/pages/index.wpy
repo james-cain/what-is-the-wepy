@@ -35,71 +35,39 @@
 <template>
   <view class="container">
     <view class="container-menu">
-      <view class="menu-login">
-        <text>登陆</text>
-      </view>
-      <view class="menu-search">
-        <input type="text" placeholder="搜索站点" confirm-type="search" @input="bindSearchInput" />
-      </view>
-      <view class="menu-switch">
-        <button type="default" size="mini" plain="true" @tap="switchType">{{type}}</button>
-      </view>
+      <button type="default" size="default" @tap="markertap">弹出层</button>
     </view>
-
     <view class="container-map">
-      <map id="map" longitude="113.324520" latitude="23.099994" scale="14" controls="{{controls}}" @controltap="controltap" markers="{{markers}}" @markertap="markertap" polyline="{{polyline}}" @regionchange="regionchange" show-location style="width: 100%; height: 515px;"></map>
+      <map id="map" longitude="{{center[0]}}" latitude="{{center[1]}}" scale="14" controls="{{controls}}"
+      markers="{{markers}}" @markertap="markertap" polyline="{{polyline}}" show-location style="width: 100%; height: 500px;"></map>
     </view>
+    <drawer :showModalStatus="showModalStatus"></drawer>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import drawer from '../components/drawer'
 
   export default class Index extends wepy.page {
     config = {
-      // navigationBarTitleText: 'test'
-    }
-    components = {
 
+    }
+
+    components = {
+      drawer: drawer
     }
 
     data = {
+      height: 0,
+      center: [],
+      showModalStatus: false,
       userInfo: {
         nickName: '加载中...'
       },
       searchValue: '',
       type: '列表',
-      markers: [{
-        iconPath: '../images/user.png',
-        id: 0,
-        latitude: 23.099994,
-        longitude: 113.324520,
-        width: 50,
-        height: 50
-      }],
-      polyline: [{
-        points: [{
-          longitude: 113.3245211,
-          latitude: 23.10229
-        }, {
-          longitude: 113.324520,
-          latitude: 23.21229
-        }],
-        color: '#FF0000DD',
-        width: 2,
-        dottedLine: true
-      }],
-      controls: [{
-        id: 1,
-        iconPath: '../images/user.png',
-        position: {
-          left: 0,
-          top: 300 - 50,
-          width: 50,
-          height: 50
-        },
-        clickable: true
-      }]
+      markers: []
     }
 
     computed = {
@@ -107,21 +75,15 @@
     }
 
     methods = {
-      bindSearchInput (e) {
-        let that = this
-        that.searchValue = e.detail.value
-      },
       switchType () {
 
       },
-      regionchange(e) {
-        console.log(e.type)
-      },
-      markertap(e) {
-        console.log(e.markerId)
-      },
-      controltap(e) {
-        console.log(e.controlId)
+      markertap (e) {
+        console.log(e)
+        this.showModalStatus = true
+        this.$apply()
+        this.$invoke('drawer', 'showModal', this.showModalStatus)
+        console.log(this.showModalStatus)
       }
     }
 
@@ -131,6 +93,25 @@
 
     onLoad() {
       let self = this
+      // const system = wx.getSystemInfoSync()
+      // self.height = system.windowHeight
+      wx.getLocation({
+        type: 'gcj02',
+        success: (res) => {
+          self.center = [res.longitude, res.latitude]
+          for (let i = 0; i < 10; i++) {
+            let marker = {}
+            marker.width = 20
+            marker.height = 20
+            marker.id = i
+            marker.iconPath = '../images/dianpu.png'
+            marker.longitude = Math.random() + res.longitude
+            marker.latitude = Math.random() + res.latitude
+            self.markers.push(marker)
+          }
+          self.$apply()
+        }
+      })
       this.$parent.getUserInfo(function (userInfo) {
         if (userInfo) {
           self.userInfo = userInfo
@@ -138,6 +119,7 @@
 
         self.$apply()
       })
+      console.log(self)
     }
   }
 </script>
