@@ -292,25 +292,18 @@
         duration: 2000
       })
     }
-    onLoad() {
-      let self = this
-      // const system = wx.getSystemInfoSync()
-      // self.height = system.windowHeight
+    onLoad () {
+      let that = this
       wx.getLocation({
         type: 'gcj02',
         success: (res) => {
-          self.center = [res.longitude, res.latitude]
-          for (let i = 0; i < 10; i++) {
-            let marker = {}
-            marker.width = 20
-            marker.height = 20
-            marker.id = i
-            marker.iconPath = '../images/dianpu.png'
-            marker.longitude = Math.random() + res.longitude
-            marker.latitude = Math.random() + res.latitude
-            self.markers.push(marker)
+          let latitude = res.latitude
+          let longitude = res.longitude
+          that.point = {
+            latitude: latitude,
+            longitude: longitude
           }
-          self.$apply()
+          that.$apply()
         }
       })
       this.$parent.getUserInfo(function (userInfo) {
@@ -321,6 +314,20 @@
         self.$apply()
       })
       console.log(self)
+    }
+    onReady (e) {
+      // 通过id获取map对象，创建上下文
+      this.mapCtx = wx.createMapContext('map')
+    }
+    onShow () {
+      wx.showToast({
+        title: '正在获取用户最新状态',
+        icon: 'loading',
+        duraction: 5000,
+        mask: true
+      })
+      console.log('onshow')
+      let that = this
     }
   }
 </script>
