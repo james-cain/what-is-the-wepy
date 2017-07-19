@@ -1,0 +1,275 @@
+<style lang="less">
+.phoneLb {
+  position: absolute;
+  left: 0;
+  top: 60rpx;
+  width: 200rpx;
+  height: 80rpx;
+  background-color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: bold;
+  font-family: Times New Roman;
+  text-align: center;
+  line-height: 80rpx;
+}
+
+.phoneTf {
+  position: absolute;
+  left: 200rpx;
+  top: 60rpx;
+  width: 300rpx;
+  height: 80rpx;
+  background-color: #FFFFFF;
+  font-size: 32rpx;
+}
+
+.getCodeBtn {
+  position: absolute;
+  right: 0px;
+  top: 60rpx;
+  width: 300rpx;
+  height: 80rpx;
+  background-color: #FFFFFF;
+  font-size: 32rpx;
+}
+
+.codeLb {
+  position: absolute;
+  left: 0;
+  top: 142rpx;
+  width: 200rpx;
+  height: 80rpx;
+  background-color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: bold;
+  font-family: Times New Roman;
+  text-align: center;
+  line-height: 80rpx;
+}
+
+.codeTf {
+  position: absolute;
+  left: 200rpx;
+  top: 142rpx;
+  right: 0rpx;
+  height: 80rpx;
+  background-color: #FFFFFF;
+  font-size: 32rpx;
+}
+
+.loginBtn {
+  position: absolute;
+  left: 40rpx;
+  top: 330rpx;
+  width: 670rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+}
+
+</style>
+
+<template>
+  <view class="homepage">
+    <text class="phoneLb">手机号码</text>
+    <input class="phoneTf" @input="phoneTfInput" maxLength="11" type="number" placeholder="填写手机号" focus="true" />
+    <button class="getCodeBtn" style="color: {{getCodeBtnProperty.titleColor}}" type="default" @tap="getCodeAct" disabled="{{getCodeBtnProperty.disabled}}" loading="{{getCodeBtnProperty.loading}}">{{getCodeBtnProperty.title}}</button>
+    <text class="codeLb">验证码</text>
+    <input class="codeTf" @input="codeTfInput" maxLength="4" type="number" placeholder="输入验证码" focus="{{codeTfFocus}}" />
+    <button class="loginBtn" type="primary" @tap="loginAct" disabled="{{loginBtnProperty.disabled}}" loading="{{loginBtnProperty.loading}}">登录</button>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import checkNetWorkStatus from '../utils/CheckNetWork'
+
+  export default class Register extends wepy.page {
+    config = {}
+
+    components = {}
+
+    data = {
+      getCodeBtnProperty: {
+        titleColor: '#B4B4B4',
+        disabled: true,
+        loading: false,
+        title: '获取验证码'
+      },
+      loginBtnProperty: {
+        disabled: true,
+        loading: false
+      },
+      // 请求参数
+      getCodeParams: {
+        mobile: ''
+      },
+      registerParams: {
+        mobile: '',
+        code: ''
+      },
+      ElectryUrl: {
+        getcode: '',
+        register: ''
+      },
+      codeTfFocus: false
+    }
+
+    methods = {
+      // 输入手机号
+      phoneTfInput (e) {
+        let that = this
+        let inputValue = e.detail.value
+        let length = e.detail.value.length
+        if (length === 11) {
+          that.getCodeParams.mobile = inputValue
+          that.registerParams.mobile = inputValue
+          that.getCodeBtnProperty.titleColor = '#34B5E3'
+          that.getCodeBtnProperty.disabled = false
+        } else {
+          that.getCodeParams.mobile = ''
+          that.registerParams.mobile = ''
+          that.getCodeBtnProperty.titleColor = '#B4B4B4'
+          that.getCodeBtnProperty.disabled = true
+        }
+        that.$apply()
+      },
+      // 获取验证码
+      getCodeAct () {
+        if (checkNetWorkStatus() === false) {
+          console.log('网络错误')
+        } else {
+          let that = this
+          that.getCodeBtnProperty.loading = true
+          // 测试写法begin
+          wx.showToast({
+            title: '获取验证码：\n',
+            icon: 'success',
+            duration: 2000
+          })
+          let number = 60
+          let time = setInterval(function() {
+            number--
+            that.getCodeBtnProperty.title = number + '秒'
+            that.getCodeBtnProperty.disabled = true
+            if (number === 0) {
+              that.getCodeBtnProperty.title = '重新获取'
+              that.getCodeBtnProperty.disabled = false
+              clearInterval(time)
+            }
+          }, 1000)
+          that.codeTfFocus = true
+          // 测试写法end
+          // wepy.request({
+          //   url: that.ElectryUrl.getCode,
+          //   data: that.getCodeParams,
+          //   method: 'POST',
+          //   header: {
+          //     'content-type': 'application/x-www-form-urlencoded'
+          //   }
+          // }).then((res) => {
+          //   console.log(that.getCodeParams)
+          //   console.log(res.data)
+          //   wx.showToast({
+          //     title: '获取验证码：\n',
+          //     icon: 'success',
+          //     duration: 2000
+          //   })
+          //   let number = 60
+          //   let time = setInterval(function() {
+          //     number--
+          //     that.getCodeBtnProperty.title = number + '秒'
+          //     that.getCodeBtnProperty.disabled = true
+          //     if (number === 0) {
+          //       that.getCodeBtnProperty.title = '重新获取'
+          //       that.getCodeBtnProperty.disabled = false
+          //       clearInterval(time)
+          //     }
+          //   }, 1000)
+          //   that.codeTfFocus = true
+          //   that.$apply()
+          // }).catch((err) => {
+          //   console.log(err)
+          //   that.failMessage()
+          // })
+          that.$apply()
+        }
+      },
+      // 输入验证码
+      codeTfInput (e) {
+        let that = this
+        let inputValue = e.detail.value
+        let length = e.detail.value.value
+        if (length === 4) {
+          that.loginBtnProperty.disabled = false
+          that.registerParams.code = inputValue
+        } else {
+          that.loginBtnProperty.disabled = true
+          that.registerParams.code = ''
+        }
+        that.$apply()
+      },
+      // 注册登录
+      loginAct () {
+        let that = this
+        that.codeTfFocus = false
+        if (checkNetWorkStatus() === false) {
+          console.log('网络错误')
+        } else {
+          that.loginBtnProperty.loading = true
+          // 测试begin
+          wx.showToast({
+            title: '注册登录：\n' + 'OK',
+            icon: 'success',
+            duration: 2000
+          })
+          // 转回主界面
+          setTimeout(function () {
+            wx.navigationBack()
+          }, 1500)
+          that.loginBtnProperty.loading = false
+          // 测试end
+          // wepy.request({
+          //   url: that.ElectryUrl.register,
+          //   data: that.registerParams,
+          //   method: 'POST',
+          //   header: {
+          //     'content-type': 'application/x-www-form-urlencoded'
+          //   }
+          // }).then((res) => {
+          //   console.log(that.registerParams)
+          //   console.log(res)
+          //   wx.showToast({
+          //     title: '注册登录：\n' + 'OK',
+          //     icon: 'success',
+          //     duration: 2000
+          //   })
+          //   // 将token保存到程序内
+          //   let token = res.access_token
+          //   wx.setStorageSync('token', token)
+          //   // 转回主界面
+          //   setTimeout(function () {
+          //     wx.navigationBack()
+          //   }, 1500)
+          //   that.loginBtnProperty.loading = false
+          //   that.$apply()
+          // }).catch(() => {
+          //   that.failMessage()
+          // })
+        }
+        that.$apply()
+      }
+    }
+
+    failMessage () {
+      wx.showToast({
+        title: '连接服务器失败',
+        icon: 'loading',
+        duration: 2000
+      })
+    }
+
+    events = {}
+
+    onLoad () {}
+  }
+</script>

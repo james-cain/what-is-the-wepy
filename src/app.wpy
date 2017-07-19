@@ -7,36 +7,37 @@
       'pages': [
         'pages/index',
         'pages/scan',
-        'pages/me'
+        'pages/me',
+        'pages/register'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',
         'navigationBarTextStyle': 'white',
         'navigationBarTitleText': '小南充电',
         'backgroundTextStyle': 'light'
-      },
-      'tabBar': {
-        'color': '#9A9A9A',
-        'selectedColor': '#87CEFA',
-        'list': [{
-          'pagePath': 'pages/index',
-          'text': '找桩',
-          'iconPath': 'images/dianpu.png',
-          'selectedIconPath': 'images/dianpu_s.png'
-        },
-        {
-          'pagePath': 'pages/scan',
-          'text': '充电',
-          'iconPath': 'images/gouwuche.png',
-          'selectedIconPath': 'images/gouwuche_s.png'
-        },
-        {
-          'pagePath': 'pages/me',
-          'text': '我的',
-          'iconPath': 'images/user.png',
-          'selectedIconPath': 'images/user_s.png'
-        }]
       }
+      // 'tabBar': {
+      //   'color': '#9A9A9A',
+      //   'selectedColor': '#87CEFA',
+      //   'list': [{
+      //     'pagePath': 'pages/index',
+      //     'text': '找桩',
+      //     'iconPath': 'images/dianpu.png',
+      //     'selectedIconPath': 'images/dianpu_s.png'
+      //   },
+      //   {
+      //     'pagePath': 'pages/scan',
+      //     'text': '充电',
+      //     'iconPath': 'images/gouwuche.png',
+      //     'selectedIconPath': 'images/gouwuche_s.png'
+      //   },
+      //   {
+      //     'pagePath': 'pages/me',
+      //     'text': '我的',
+      //     'iconPath': 'images/user.png',
+      //     'selectedIconPath': 'images/user_s.png'
+      //   }]
+      // }
     }
 
     constructor() {
@@ -50,6 +51,14 @@
 
     onLaunch() {
       this.testAsync()
+      wx.getSystemInfo({
+        success: (res) => {
+          let kScreenW = res.windowWidth / 375
+          let kScreenH = res.windowHeight / 603
+          wx.setStorageSync('kScreenW', kScreenW)
+          wx.setStorageSync('kScreenH', kScreenH)
+        }
+      })
     }
 
     sleep (s) {
@@ -81,10 +90,10 @@
 </script>
 
 <style lang='less'>
-body {
-  margin: 0px;
-  padding: 0px;
-  background-color: #f0eff5;
-  font-size: 28rpx;
+.homepage {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-color: #F4F6F7
 }
 </style>

@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang='less'>
   .container {
     display: flex;
     flex-direction: column;
@@ -33,21 +33,21 @@
   }
 </style>
 <template>
-  <view class="container">
-    <view class="container-menu">
-      <button type="default" size="default" @tap="markertap">弹出层</button>
-    </view>
-    <view class="container-map">
-      <map id="map" longitude="{{center[0]}}" latitude="{{center[1]}}" scale="14" controls="{{controls}}"
-      markers="{{markers}}" @markertap="markertap" polyline="{{polyline}}" show-location style="width: 100%; height: 500px;"></map>
-    </view>
-    <drawer :showModalStatus="showModalStatus"></drawer>
-  </view>
+   <view class="homepage">
+    <!-- <view class='container-menu'>
+      <button type='default' size='default' @tap='markertap'>弹出层</button>
+    </view> -->
+    <!-- <view class="container-map"> -->
+      <map id="map" longitude="{{point.longitude}}" latitude="{{point.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}; top: {{maptop}}"></map>
+    <!-- </view> -->
+    <!-- <drawer :showModalStatus='showModalStatus'></drawer> -->
+   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import drawer from '../components/drawer'
+  // import drawer from '../components/drawer'
+  import checkNetWorkStatus from '../utils/CheckNetWork'
 
   export default class Index extends wepy.page {
     config = {
@@ -55,19 +55,154 @@
     }
 
     components = {
-      drawer: drawer
+      // drawer: drawer
     }
 
     data = {
-      height: 0,
-      center: [],
-      showModalStatus: false,
+      // 地图的宽高
+      mapHeight: '100%',
+      mapWidth: '100%',
+      mapTop: 0,
+      // 用户当前位置
+      point: {
+        latitude: 0,
+        longitude: 0
+      },
+      // 站桩标志物
+      markers: [],
+      // 当前地图的缩放级别
+      mapScale: 16,
+      // 地图上不可移动的控件
+      controls: [],
+      // 接口url
+      ElectryUrl: {
+        getList: '',
+        scan: ''
+      },
+      // 查询附近桩请求参数
+      getPileListParams: {},
+      // 请求桩充电参数
+      electryPileParams: {},
+      // 已登录的地图组件
+      hasLoginMapControls: [
+        // 重新定位按钮
+        {
+          id: 1,
+          position: {
+            left: 10 * wx.getStorageSync('kScreenW'),
+            top: 523 * wx.getStorageSync('kScreenH'),
+            width: 40 * wx.getStorageSync('kScreenW'),
+            height: 40 * wx.getStorageSync('kScreenW')
+          },
+          iconPath: '../images/imgs_main_location@2x.png',
+          clickable: true
+        },
+        // 钱包控件按钮
+        {
+          id: 2,
+          position: {
+            left: 330 * wx.getStorageSync('kScreenW'),
+            top: 523 * wx.getStorageSync('kScreenH'),
+            width: 40 * wx.getStorageSync('kScreenW'),
+            height: 40 * wx.getStorageSync('kScreenW')
+          },
+          iconPath: '../images/imgs_main_location@2x.png',
+          clickable: true
+        },
+        // 地图中心位置按钮
+        {
+          id: 3,
+          position: {
+            left: 177.5 * wx.getStorageSync('kScreenW'),
+            top: 261.5 * wx.getStorageSync('kScreenH'),
+            width: 20 * wx.getStorageSync('kScreenW'),
+            height: 40 * wx.getStorageSync('kScreenW')
+          },
+          iconPath: '../images/imgs_main_center@2x.png',
+          clickable: false
+        }
+        // 扫描二维码控件按钮
+        // {
+        //   id: 4,
+        //   position: {
+        //     left: 132.5 * wx.getStorageSync('kScreenW'),
+        //     top: 523 * wx.getStorageSync('kScreenH'),
+        //     width: 110 * wx.getStorageSync('kScreenW'),
+        //     height: 40 * wx.getStorageSync('kScreenW')
+        //   },
+        //   iconPath: '../images/imgs_custom_scan@2x.png',
+        //   clickable: true
+        // }
+      ],
+      // 没有登陆的地图组件
+      noLoginMapControls: [
+        // 重新定位按钮
+        {
+          id: 1,
+          position: {
+            left: 10 * wx.getStorageSync('kScreenW'),
+            top: 523 * wx.getStorageSync('kScreenH'),
+            width: 40 * wx.getStorageSync('kScreenW'),
+            height: 40 * wx.getStorageSync('kScreenW')
+          },
+          iconPath: '../images/imgs_main_location@2x.png',
+          clickable: true
+        },
+        // 钱包控件按钮
+        {
+          id: 2,
+          position: {
+            left: 330 * wx.getStorageSync('kScreenW'),
+            top: 523 * wx.getStorageSync('kScreenH'),
+            width: 40 * wx.getStorageSync('kScreenW'),
+            height: 40 * wx.getStorageSync('kScreenW')
+          },
+          iconPath: '../images/imgs_main_location@2x.png',
+          clickable: true
+        },
+        // 地图中心位置按钮
+        {
+          id: 3,
+          position: {
+            left: 177.5 * wx.getStorageSync('kScreenW'),
+            top: 261.5 * wx.getStorageSync('kScreenH'),
+            width: 20 * wx.getStorageSync('kScreenW'),
+            height: 40 * wx.getStorageSync('kScreenW')
+          },
+          iconPath: '../images/imgs_main_center@2x.png',
+          clickable: false
+        },
+        // 扫描二维码控件按钮
+        {
+          id: 4,
+          position: {
+            left: 132.5 * wx.getStorageSync('kScreenW'),
+            top: 523 * wx.getStorageSync('kScreenH'),
+            width: 110 * wx.getStorageSync('kScreenW'),
+            height: 40 * wx.getStorageSync('kScreenW')
+          },
+          iconPath: '../images/imgs_custom_scan@2x.png',
+          clickable: true
+        }
+        // 登陆注册
+        // {
+        //   id: 5,
+        //   position: {
+        //     left: 132.5 * wx.getStorageSync('kScreenW'),
+        //     top: 523 * wx.getStorageSync('kScreenH'),
+        //     width: 110 * wx.getStorageSync('kScreenW'),
+        //     height: 40 * wx.getStorageSync('kScreenW')
+        //   },
+        //   iconPath: '../images/login_register.png',
+        //   clickable: true,
+        // },
+      ],
+      // showModalStatus: false,
       userInfo: {
         nickName: '加载中...'
       },
       searchValue: '',
-      type: '列表',
-      markers: []
+      type: '列表'
     }
 
     computed = {
@@ -79,11 +214,42 @@
 
       },
       markertap (e) {
+
+      },
+      controltap (e) {
         console.log(e)
-        this.showModalStatus = true
-        this.$apply()
-        this.$invoke('drawer', 'showModal', this.showModalStatus)
-        console.log(this.showModalStatus)
+        let that = this
+        let id = e.controlId
+        if (id === 1) {
+          // 定位当前位置
+          that.getUserCurrentLocation()
+        } else if (id === 2) {
+          // 钱包功能
+          wx.navigationTo({
+            url: '../register'
+          })
+        } else if (id === 4) {
+          // 扫描二维码
+          wx.scanCode({
+            success: (res) => {
+              that.electryPileParams.device_id = res.result
+              that.scanPile()
+            },
+            fail: () => {
+              wx.showToast({
+                title: '扫码失败',
+                icon: 'loading',
+                duration: 2000
+              })
+            },
+            complete: () => {}
+          })
+        } else if (id === 5) {
+          // 登陆注册
+          wx.navigation({
+            url: '../register'
+          })
+        }
       }
     }
 
@@ -91,6 +257,41 @@
 
     }
 
+    // 扫描二维码返回的事件
+    scanPile () {
+      // 检查网络
+      if (checkNetWorkStatus() === false) {
+        console.log('网络错误')
+      } else {
+        let that = this
+        wepy.request({
+          url: that.ElectryUrl.scan,
+          data: that.electryPileParams,
+          method: 'POST',
+          header: {
+            'content-type': 'application/x-www-form-urlencoded'
+          }
+        }).then((res) => {
+          wx.navigation({
+            url: '../electring'
+          })
+        }).catch(() => {
+          that.failMessage()
+        })
+      }
+    }
+
+    getUserCurrentLocation() {
+      this.mapCtx.moveToLocation()
+    }
+
+    failMessage () {
+      wx.showToast({
+        title: '连接服务器失败',
+        icon: 'loading',
+        duration: 2000
+      })
+    }
     onLoad() {
       let self = this
       // const system = wx.getSystemInfoSync()
