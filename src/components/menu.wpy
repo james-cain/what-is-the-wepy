@@ -1,0 +1,37 @@
+<style lang="less">
+
+</style>
+
+<template>
+
+</template>
+
+<script>
+    import wepy from 'wepy'
+
+    export default class Menu extends wepy.component {
+        config = {
+
+        }
+        
+        data = {
+
+        }
+
+        components = {
+
+        }
+
+        methods = {
+
+        }
+
+        events = {
+
+        }
+
+        onLoad () {
+
+        }
+    }
+</script>
