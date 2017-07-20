@@ -74,9 +74,11 @@
       mapScale: 16,
       // 地图上不可移动的控件
       controls: [],
+      // 请求数据完成标记
+      completeStatus: true,
       // 接口url
       ElectryUrl: {
-        getList: '',
+        getPileList: '',
         scan: ''
       },
       // 查询附近桩请求参数
@@ -90,23 +92,23 @@
           id: 1,
           position: {
             left: 10 * wx.getStorageSync('kScreenW'),
-            top: 523 * wx.getStorageSync('kScreenH'),
+            top: 513 * wx.getStorageSync('kScreenH'),
             width: 40 * wx.getStorageSync('kScreenW'),
             height: 40 * wx.getStorageSync('kScreenW')
           },
-          iconPath: '../images/imgs_main_location@2x.png',
+          iconPath: '../images/c_map_location_btn@2x.png',
           clickable: true
         },
-        // 钱包控件按钮
+        // 筛选控件按钮
         {
           id: 2,
           position: {
             left: 330 * wx.getStorageSync('kScreenW'),
-            top: 523 * wx.getStorageSync('kScreenH'),
+            top: 513 * wx.getStorageSync('kScreenH'),
             width: 40 * wx.getStorageSync('kScreenW'),
             height: 40 * wx.getStorageSync('kScreenW')
           },
-          iconPath: '../images/imgs_main_location@2x.png',
+          iconPath: '../images/c_map_sift_btn@2x.png',
           clickable: true
         },
         // 地图中心位置按钮
@@ -135,29 +137,29 @@
         // }
       ],
       // 没有登陆的地图组件
-      noLoginMapControls: [
+      notLoginMapControls: [
         // 重新定位按钮
         {
           id: 1,
           position: {
             left: 10 * wx.getStorageSync('kScreenW'),
-            top: 523 * wx.getStorageSync('kScreenH'),
+            top: 503 * wx.getStorageSync('kScreenH'),
             width: 40 * wx.getStorageSync('kScreenW'),
             height: 40 * wx.getStorageSync('kScreenW')
           },
-          iconPath: '../images/imgs_main_location@2x.png',
+          iconPath: '../images/c_map_location_btn@2x.png',
           clickable: true
         },
-        // 钱包控件按钮
+        // 筛选控件按钮
         {
           id: 2,
           position: {
             left: 330 * wx.getStorageSync('kScreenW'),
-            top: 523 * wx.getStorageSync('kScreenH'),
+            top: 503 * wx.getStorageSync('kScreenH'),
             width: 40 * wx.getStorageSync('kScreenW'),
             height: 40 * wx.getStorageSync('kScreenW')
           },
-          iconPath: '../images/imgs_main_location@2x.png',
+          iconPath: '../images/c_map_sift_btn@2x.png',
           clickable: true
         },
         // 地图中心位置按钮
@@ -176,14 +178,14 @@
         {
           id: 4,
           position: {
-            left: 132.5 * wx.getStorageSync('kScreenW'),
-            top: 523 * wx.getStorageSync('kScreenH'),
-            width: 110 * wx.getStorageSync('kScreenW'),
-            height: 40 * wx.getStorageSync('kScreenW')
+            left: 270 * wx.getStorageSync('kScreenW'),
+            top: 533 * wx.getStorageSync('kScreenH'),
+            width: 55 * wx.getStorageSync('kScreenW'),
+            height: 55 * wx.getStorageSync('kScreenW')
           },
-          iconPath: '../images/imgs_custom_scan@2x.png',
+          iconPath: '../images/c_main_scan_normal.png',
           clickable: true
-        }
+        },
         // 登陆注册
         // {
         //   id: 5,
@@ -196,6 +198,18 @@
         //   iconPath: '../images/login_register.png',
         //   clickable: true,
         // },
+        // 我的收藏入口
+        {
+          id: 6,
+          position: {
+            left: 330 * wx.getStorageSync('kScreenW'),
+            top: 543 * wx.getStorageSync('kScreenH'),
+            width: 40 * wx.getStorageSync('kScreenW'),
+            height: 40 * wx.getStorageSync('kScreenW')
+          },
+          iconPath: '../images/c_map_favorite_btn@2x.png',
+          clickable: true
+        }
       ],
       // showModalStatus: false,
       userInfo: {
@@ -216,6 +230,26 @@
       markertap (e) {
 
       },
+      regionchange (e) {
+        console.log(e)
+        let that = this
+        that.mapCtx.getCenterLocation({
+          success: (res) => {
+            // 经纬度保留6位小数
+            // let longitudeFix = res.longitude
+            // let latitudeFix = res.latitude
+            if (e.type === 'begin') {
+              console.log('位置相同，不执行刷新操作')
+            } else {
+              console.log('位置变化')
+              // that.getPileListParams.longitude = longitudeFix
+              // that.getPileListParams.latitude = latitudeFix
+              // that.$apply()
+              // that.getPileList()
+            }
+          }
+        })
+      },
       controltap (e) {
         console.log(e)
         let that = this
@@ -225,15 +259,27 @@
           that.getUserCurrentLocation()
         } else if (id === 2) {
           // 钱包功能
-          wx.navigationTo({
-            url: '../register'
+          wx.navigateTo({
+            url: 'register'
           })
         } else if (id === 4) {
           // 扫描二维码
           wx.scanCode({
             success: (res) => {
               that.electryPileParams.device_id = res.result
-              that.scanPile()
+              wx.showModal({
+                title: '提示',
+                content: '是否开始充电?',
+                showCancel: true,
+                success: (res) => {
+                  if (res.confirm) {
+                    console.log('用户点击确定')
+                    that.scanPile()
+                  } else if (res.cancel) {
+                    console.log('用户点击取消')
+                  }
+                }
+              })
             },
             fail: () => {
               wx.showToast({
@@ -241,13 +287,14 @@
                 icon: 'loading',
                 duration: 2000
               })
+              that.scanPile()
             },
             complete: () => {}
           })
         } else if (id === 5) {
           // 登陆注册
-          wx.navigation({
-            url: '../register'
+          wx.navigateTo({
+            url: 'register'
           })
         }
       }
@@ -257,27 +304,109 @@
 
     }
 
+    // 获取桩的集合
+    getPileList () {
+      // 检查网络
+      // if (checkNetWorkStatus() === false) {
+      //   console.log('网络错误')
+      // } else {
+      let that = this
+      let pileArr = [
+        {
+          longitude: that.getPileListParams.longitude,
+          latitude: that.getPileListParams.latitude,
+          id: 1
+        }
+      ]
+      let markers = []
+      for (let i = 0; i < pileArr.length; i++) {
+        let pileLat = Number(pileArr[i].latitude)
+        let pileLong = Number(pileArr[i].longitude)
+        let id = Number(pileArr[i].device_id)
+        let marker = {
+          latitude: pileLat,
+          longitude: pileLong,
+          iconPath: '../images/c_map_collection@2x.png',
+          id: id,
+          width: 30 * wx.getStorageSync('kScreenW'),
+          height: 40 * wx.getStorageSync('kScreenH'),
+          label: {
+            color: '#666666',
+            fontSize: '28rpx',
+            content: '22'
+          }
+        }
+        markers.push(marker)
+      }
+      that.markers = markers
+      that.$apply()
+        // wepy.request({
+        //   url: that.ElectryUrl.getPileList,
+        //   data: that.getPileListParams,
+        //   method: 'POST',
+        //   header: {
+        //     'content-type': 'application/x-www-form-urlencoded'
+        //   }
+        // }).then((res) => {
+        //   wx.showToast({
+        //     title: '查询附近的充电桩：\n',
+        //     icon: 'success',
+        //     duration: 2000
+        //   })
+        //   let pileArr = res.data.result
+        //   let markers = []
+        //   for (let i = 0; i < pileArr.length; i++) {
+        //     let pileLat = Number(pileArr[i].latitude)
+        //     let pileLong = Number(pileArr[i].longitude)
+        //     let id = Number(pileArr[i].device_id)
+        //     let marker = {
+        //       latitude: pileLat,
+        //       longitude: pileLong,
+        //       iconPath: '../images/imgs_main_bike@2x.png',
+        //       id: id,
+        //       width: 40 * wx.getStorageSync('kScreenW'),
+        //       height: 40 * wx.getStorageSync('kScreenH')
+        //     }
+        //     markers.push(marker)
+        //   }
+        //   that.markers = markers
+        //   that.$apply()
+        //   setTimeout(function () {
+        //     wx.hideToast()
+        //   }, 1000)
+        // }).catch(() => {
+        //   that.failMessage()
+        //   setTimeout(function () {
+        //     wx.hideToast()
+        //   }, 1000)
+        // })
+      // }
+    }
+
     // 扫描二维码返回的事件
     scanPile () {
       // 检查网络
       if (checkNetWorkStatus() === false) {
         console.log('网络错误')
       } else {
-        let that = this
-        wepy.request({
-          url: that.ElectryUrl.scan,
-          data: that.electryPileParams,
-          method: 'POST',
-          header: {
-            'content-type': 'application/x-www-form-urlencoded'
-          }
-        }).then((res) => {
-          wx.navigation({
-            url: '../electring'
-          })
-        }).catch(() => {
-          that.failMessage()
+        // let that = this
+        wx.navigateTo({
+          url: 'electring'
         })
+        // wepy.request({
+        //   url: that.ElectryUrl.scan,
+        //   data: that.electryPileParams,
+        //   method: 'POST',
+        //   header: {
+        //     'content-type': 'application/x-www-form-urlencoded'
+        //   }
+        // }).then((res) => {
+        //   wx.navigateTo({
+        //     url: 'electring'
+        //   })
+        // }).catch(() => {
+        //   that.failMessage()
+        // })
       }
     }
 
@@ -292,8 +421,10 @@
         duration: 2000
       })
     }
+
     onLoad () {
       let that = this
+      that.completeStatus = false
       wx.getLocation({
         type: 'gcj02',
         success: (res) => {
@@ -308,17 +439,20 @@
       })
       this.$parent.getUserInfo(function (userInfo) {
         if (userInfo) {
-          self.userInfo = userInfo
+          that.userInfo = userInfo
         }
-
-        self.$apply()
+        // 这个设置是必须的，要在该接口完成后才能执行onShow里的方法
+        that.completeStatus = true
+        that.$apply()
       })
-      console.log(self)
+      console.log(that)
     }
+
     onReady (e) {
       // 通过id获取map对象，创建上下文
       this.mapCtx = wx.createMapContext('map')
     }
+
     onShow () {
       wx.showToast({
         title: '正在获取用户最新状态',
@@ -328,6 +462,55 @@
       })
       console.log('onshow')
       let that = this
+      let checkTimer = setInterval(function () {
+        console.log('定时器执行')
+        if (that.completeStatus) {
+          console.log('定时器停止')
+          clearInterval(checkTimer)
+          let longitudeFix = that.point.longitude
+          let latitudeFix = that.point.latitude
+          that.getPileListParams.longitude = longitudeFix
+          that.getPileListParams.latitude = latitudeFix
+          that.$apply()
+          that.getPileList()
+          // let hasLoginMapControls = that.hasLoginMapControls
+          let notLoginMapControls = that.notLoginMapControls
+          // 没有登录的情况
+          that.controls = notLoginMapControls
+          that.mapHeight = '100%'
+          that.mapWidth = '100%'
+          that.mapTop = '0'
+          that.$apply()
+          wx.hideToast()
+        } else {
+          console.log('定时器没有停止执行')
+        }
+      }, 1000)
+    }
+
+    onHide () {
+      console.log('onHide')
+    }
+
+    onUnload () {
+      console.log('onUnload')
+    }
+
+    onPullDownRefresh () {
+      console.log('onPullDownRefresh')
+    }
+
+    onReachBottom () {
+      console.log('onReachBottom')
+    }
+
+    onShareAppMessage () {
+      // 右上角分享
+      console.log('onShareAppMesage')
+      return {
+        title: '分享给大家',
+        path: '/index'
+      }
     }
   }
 </script>

@@ -8,7 +8,8 @@
         'pages/index',
         'pages/scan',
         'pages/me',
-        'pages/register'
+        'pages/register',
+        'pages/electring'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',
@@ -16,28 +17,6 @@
         'navigationBarTitleText': '小南充电',
         'backgroundTextStyle': 'light'
       }
-      // 'tabBar': {
-      //   'color': '#9A9A9A',
-      //   'selectedColor': '#87CEFA',
-      //   'list': [{
-      //     'pagePath': 'pages/index',
-      //     'text': '找桩',
-      //     'iconPath': 'images/dianpu.png',
-      //     'selectedIconPath': 'images/dianpu_s.png'
-      //   },
-      //   {
-      //     'pagePath': 'pages/scan',
-      //     'text': '充电',
-      //     'iconPath': 'images/gouwuche.png',
-      //     'selectedIconPath': 'images/gouwuche_s.png'
-      //   },
-      //   {
-      //     'pagePath': 'pages/me',
-      //     'text': '我的',
-      //     'iconPath': 'images/user.png',
-      //     'selectedIconPath': 'images/user_s.png'
-      //   }]
-      // }
     }
 
     constructor() {
@@ -50,7 +29,6 @@
     }
 
     onLaunch() {
-      this.testAsync()
       wx.getSystemInfo({
         success: (res) => {
           let kScreenW = res.windowWidth / 375
@@ -59,19 +37,6 @@
           wx.setStorageSync('kScreenH', kScreenH)
         }
       })
-    }
-
-    sleep (s) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve('promise resolved')
-        }, s * 1000)
-      })
-    }
-
-    async testAsync () {
-      const data = await this.sleep(3)
-      console.log(data)
     }
 
     getUserInfo(cb) {
