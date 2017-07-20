@@ -3,7 +3,16 @@
 </style>
 
 <template>
-
+    <view class="pile-menu">
+        <view class="pile-menu-tab" style="width: {{menuTabWidth}}px" wx:for="{{pileMenuList}}" wx:for-index="pileId" wx:for-item="pileMenu">
+            <text class="pile-menu-tab-name">{{pileMenu.name}}</text>
+            <image src="../images/c_downward_icon@2x.png" mode="scaleToFill" class="tag-down" wx:if="{{`tag-down-${pileId}`}}"></image>
+            <image src="../images/c_upward_icon@2x.png" mode="scaleToFill" class="tag-up" wx:if="{{`tag-up-${pileId}`}}"></image>
+            <view class="pile-menu-tab-list" style="width: {{menuTabWidth}}px" wx:for="{{pileMenu.list}}" wx:for-index="listId" wx:for-item="pileChild">
+                <text class="pile-menu-tab-child">{{pileChild.name}}</text>
+            </view>
+        </view>
+    </view>
 </template>
 
 <script>
