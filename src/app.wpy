@@ -33,6 +33,8 @@
         success: (res) => {
           let kScreenW = res.windowWidth / 375
           let kScreenH = res.windowHeight / 603
+          wx.setStorageSync('windowH', res.windowHeight)
+          wx.setStorageSync('windowW', res.windowWidth)
           wx.setStorageSync('kScreenW', kScreenW)
           wx.setStorageSync('kScreenH', kScreenH)
         }

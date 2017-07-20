@@ -1,46 +1,93 @@
 <style lang='less'>
-  .container {
+  .menu {
+    position: absolute;
+    width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    &-menu {
-      height: 80rpx;
-      width: 96%;
-      padding: 0 2%;
+    background-color: #ffffff;
+    &-login {
+      position: relative;
+      width: 55px;
+      height: 100%;
+    }
+    &-search{
+      flex: 1;
+      margin: 8px 0;
+      border-radius: 3px;
+      background-color: #e6e6e6;
       display: flex;
       flex-direction: row;
       justify-content: center;
-      align-items: center;
-    }
-    &-map {
-      flex: 1;
-      width: 100%;
-    }
-  }
-
-  .menu {
-    &-login {
-      width: 15%
-    }
-    &-search {
-      width: 65%
     }
     &-switch {
-      width: 20%
+      position: relative;
+      width: 55px;
+      height: 100%;
+      line-height: 48px;
+      font-size: 16px;
+      color: #7ccdd4;
+      text-align: center;
+    }
+  }
+  .login-img {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    top: 11px;
+    left: 15px;
+  }
+  .search-icon-area {
+    position: relative;
+    height: 100%;
+    width: 35px;
+  }
+  .search-del-area {
+    position: relative;
+    height: 100%;
+    width: 29px;
+  }
+  .search {
+    &-icon {
+      position:relative;
+      width: 16px;
+      height: 16px;
+      left: 11px;
+      top: 5px;
+    }
+    &-input {
+      flex: 1;
+    }
+    &-delete {
+      position:relative;
+      width: 16px;
+      height: 16px;
+      top: 5px;
+      left: 2px;
     }
   }
 </style>
 <template>
    <view class="homepage">
-    <!-- <view class='container-menu'>
-      <button type='default' size='default' @tap='markertap'>弹出层</button>
-    </view> -->
-    <!-- <view class="container-map"> -->
-      <map id="map" longitude="{{point.longitude}}" latitude="{{point.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}; top: {{maptop}}"></map>
-    <!-- </view> -->
-    <!-- <drawer :showModalStatus='showModalStatus'></drawer> -->
+     <view class="menu" style="height: {{menuHeight}}px;">
+       <view class="menu-login">
+          <image src="../images/c_main_more_icon.png" mode="scaleToFill" class="login-img" @tap="goUserPage"></image>
+       </view>
+       <view class="menu-search">
+         <view class="search-icon-area">
+            <image src="../images/c_search_box_icon@2x.png" mode="scaleToFill" class="search-icon"/>
+         </view>       
+         <input class="search-input" type="text" @input="search" placeholder="搜索站点" placeholder-style="font-size: 14px; color: #999999;" confirm-type="search"/>
+         <view class="search-del-area">
+           <image src="../images/s_text_view_delete_icon.png" mode="scaleToFill" class="search-delete"/>
+         </view>        
+       </view>
+       <view class="menu-switch" @tap="switchType">
+          {{switchType === 'map' ? '列表' : '地图'}}
+       </view>
+    </view>
+    <map id="map" longitude="{{point.longitude}}" latitude="{{point.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px"></map>
    </view>
 </template>
 
@@ -59,6 +106,9 @@
     }
 
     data = {
+      switchType: 'map',
+      // 菜单的高度
+      menuHeight: 0,
       // 地图的宽高
       mapHeight: '100%',
       mapWidth: '100%',
@@ -92,9 +142,9 @@
           id: 1,
           position: {
             left: 10 * wx.getStorageSync('kScreenW'),
-            top: 513 * wx.getStorageSync('kScreenH'),
-            width: 40 * wx.getStorageSync('kScreenW'),
-            height: 40 * wx.getStorageSync('kScreenW')
+            top: 465 * wx.getStorageSync('kScreenH'),
+            width: 35 * wx.getStorageSync('kScreenW'),
+            height: 35 * wx.getStorageSync('kScreenW')
           },
           iconPath: '../images/c_map_location_btn@2x.png',
           clickable: true
@@ -104,25 +154,25 @@
           id: 2,
           position: {
             left: 330 * wx.getStorageSync('kScreenW'),
-            top: 513 * wx.getStorageSync('kScreenH'),
-            width: 40 * wx.getStorageSync('kScreenW'),
-            height: 40 * wx.getStorageSync('kScreenW')
+            top: 465 * wx.getStorageSync('kScreenH'),
+            width: 35 * wx.getStorageSync('kScreenW'),
+            height: 35 * wx.getStorageSync('kScreenW')
           },
           iconPath: '../images/c_map_sift_btn@2x.png',
           clickable: true
-        },
-        // 地图中心位置按钮
-        {
-          id: 3,
-          position: {
-            left: 177.5 * wx.getStorageSync('kScreenW'),
-            top: 261.5 * wx.getStorageSync('kScreenH'),
-            width: 20 * wx.getStorageSync('kScreenW'),
-            height: 40 * wx.getStorageSync('kScreenW')
-          },
-          iconPath: '../images/imgs_main_center@2x.png',
-          clickable: false
         }
+        // 地图中心位置按钮
+        // {
+        //   id: 3,
+        //   position: {
+        //     left: 177.5 * wx.getStorageSync('kScreenW'),
+        //     top: 261.5 * wx.getStorageSync('kScreenH'),
+        //     width: 20 * wx.getStorageSync('kScreenW'),
+        //     height: 40 * wx.getStorageSync('kScreenW')
+        //   },
+        //   iconPath: '../images/imgs_main_center@2x.png',
+        //   clickable: false
+        // }
         // 扫描二维码控件按钮
         // {
         //   id: 4,
@@ -143,9 +193,9 @@
           id: 1,
           position: {
             left: 10 * wx.getStorageSync('kScreenW'),
-            top: 503 * wx.getStorageSync('kScreenH'),
-            width: 40 * wx.getStorageSync('kScreenW'),
-            height: 40 * wx.getStorageSync('kScreenW')
+            top: 455 * wx.getStorageSync('kScreenH'),
+            width: 35 * wx.getStorageSync('kScreenW'),
+            height: 35 * wx.getStorageSync('kScreenW')
           },
           iconPath: '../images/c_map_location_btn@2x.png',
           clickable: true
@@ -155,33 +205,33 @@
           id: 2,
           position: {
             left: 330 * wx.getStorageSync('kScreenW'),
-            top: 503 * wx.getStorageSync('kScreenH'),
-            width: 40 * wx.getStorageSync('kScreenW'),
-            height: 40 * wx.getStorageSync('kScreenW')
+            top: 455 * wx.getStorageSync('kScreenH'),
+            width: 35 * wx.getStorageSync('kScreenW'),
+            height: 35 * wx.getStorageSync('kScreenW')
           },
           iconPath: '../images/c_map_sift_btn@2x.png',
           clickable: true
         },
         // 地图中心位置按钮
-        {
-          id: 3,
-          position: {
-            left: 177.5 * wx.getStorageSync('kScreenW'),
-            top: 261.5 * wx.getStorageSync('kScreenH'),
-            width: 20 * wx.getStorageSync('kScreenW'),
-            height: 40 * wx.getStorageSync('kScreenW')
-          },
-          iconPath: '../images/imgs_main_center@2x.png',
-          clickable: false
-        },
+        // {
+        //   id: 3,
+        //   position: {
+        //     left: 177.5 * wx.getStorageSync('kScreenW'),
+        //     top: 261.5 * wx.getStorageSync('kScreenH'),
+        //     width: 20 * wx.getStorageSync('kScreenW'),
+        //     height: 40 * wx.getStorageSync('kScreenW')
+        //   },
+        //   iconPath: '../images/imgs_main_center@2x.png',
+        //   clickable: false
+        // },
         // 扫描二维码控件按钮
         {
           id: 4,
           position: {
-            left: 270 * wx.getStorageSync('kScreenW'),
-            top: 533 * wx.getStorageSync('kScreenH'),
-            width: 55 * wx.getStorageSync('kScreenW'),
-            height: 55 * wx.getStorageSync('kScreenW')
+            left: 275 * wx.getStorageSync('kScreenW'),
+            top: 490 * wx.getStorageSync('kScreenH'),
+            width: 45 * wx.getStorageSync('kScreenW'),
+            height: 45 * wx.getStorageSync('kScreenW')
           },
           iconPath: '../images/c_main_scan_normal.png',
           clickable: true
@@ -203,9 +253,9 @@
           id: 6,
           position: {
             left: 330 * wx.getStorageSync('kScreenW'),
-            top: 543 * wx.getStorageSync('kScreenH'),
-            width: 40 * wx.getStorageSync('kScreenW'),
-            height: 40 * wx.getStorageSync('kScreenW')
+            top: 495 * wx.getStorageSync('kScreenH'),
+            width: 35 * wx.getStorageSync('kScreenW'),
+            height: 35 * wx.getStorageSync('kScreenW')
           },
           iconPath: '../images/c_map_favorite_btn@2x.png',
           clickable: true
@@ -224,8 +274,21 @@
     }
 
     methods = {
-      switchType () {
-
+      goUserPage (e) {
+        console.log(e)
+        wx.navigateTo({
+          url: 'register'
+        })
+      },
+      switchType (e) {
+        console.log(e)
+        let that = this
+        if (that.switchType === 'map') {
+          that.switchType = 'table'
+        } else {
+          that.switchType = 'map'
+        }
+        that.$apply()
       },
       markertap (e) {
 
@@ -424,6 +487,8 @@
 
     onLoad () {
       let that = this
+      let menuHeight = 49 * wx.getStorageSync('kScreenH')
+      let mapHeight = wx.getStorageSync('windowH') - menuHeight
       that.completeStatus = false
       wx.getLocation({
         type: 'gcj02',
@@ -445,6 +510,9 @@
         that.completeStatus = true
         that.$apply()
       })
+      that.menuHeight = menuHeight
+      that.mapHeight = mapHeight
+      that.$apply()
       console.log(that)
     }
 
@@ -477,9 +545,9 @@
           let notLoginMapControls = that.notLoginMapControls
           // 没有登录的情况
           that.controls = notLoginMapControls
-          that.mapHeight = '100%'
-          that.mapWidth = '100%'
-          that.mapTop = '0'
+          // that.mapHeight = '100%'
+          // that.mapWidth = '100%'
+          that.mapTop = that.menuHeight
           that.$apply()
           wx.hideToast()
         } else {
