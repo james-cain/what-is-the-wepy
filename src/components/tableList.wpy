@@ -1,37 +1,132 @@
 <style lang="less">
-
+.table-card {
+  position: relative;
+  padding: 15px 10px 15px 10px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #dfdfdf;
+  height: 70px;
+  width: 100%;
+  background-color: #ffffff;
+  &-left {
+    position: relative;
+    width: 294px;
+    left: 0px;
+  }
+  &-name {
+    position: relative;
+    font-size: 15px;
+  }
+  &-address {
+    position: relative;
+    font-size: 13px;
+    color: #a7a7a7;
+    top: 10px;
+  }
+  &-right {
+    position: relative;
+    width: 60px;
+    right: 0px;
+  }
+  &-distance {
+    position: relative;
+    right: 0px;
+    color: #a7a7a7;
+    font-size: 10px;
+    float: right;
+  }
+  &-button {
+    right: 0px;
+    position: relative;
+    top: 4px;
+    height: 28px;
+    width: 47px;
+    border-radius: 3px;
+    color: #ffffff;
+    background-color: #2fb9c3;
+    font-size: 14px;
+    float: right;
+    line-height: 28px;
+    text-align: center;
+  }
+}
+.pile-table {
+  &-name {
+    position: relative;
+    display: inline-block;
+    width: 165px;
+  }
+  &-img {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    left: 10px;
+  }
+  &-pilecount {
+    position: relative;
+    left: 20px;
+    top: -2px;
+    font-size: 12px;
+    color: #a7a7a7;
+  }
+}
 </style>
 
 <template>
-
+  <scroll-view scroll-y>
+    <view class="table-card" wx:for="{{pileTableList}}" wx:for-item="pileTable" wx:key="id">
+      <view style="display: flex;">
+        <view class="table-card-left">
+          <view class="table-card-name">
+            <text class="pile-table-name">{{pileTable.name}}</text>
+            <image src="../images/c_list_leisure_icon@2x.png" mode="scaleToFill" class="pile-table-img" wx:if="{{pileTable.isLeisure}}"></image>
+            <image src="../images/c_list_leisure_icon_gray@2x.png" mode="scaleToFill" class="pile-table-img" wx:if="{{!pileTable.isLeisure}}"></image>
+            <text class="pile-table-pilecount">{{pileTable.pilecount}}</text>
+          </view>
+          <view class="table-card-address">
+            <text class="pile-table-address">{{pileTable.address}}</text>
+          </view>
+        </view>
+        <view class="table-card-right">
+          <view class="table-card-distance">
+            <text class="pile-table-distance">{{pileTable.distance}}</text>
+          </view>
+          <view class="table-card-button" @tap.stop="">预约</view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
 </template>
 
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy'
 
-    export default class TableList extends wepy.component {
-        config = {
+  export default class TableList extends wepy.component {
+    config = {
 
-        }
-        
-        data = {
-
-        }
-
-        components = {
-
-        }
-
-        methods = {
-
-        }
-
-        events = {
-
-        }
-
-        onLoad () {
-
-        }
     }
+
+    props = {
+      pileTableList: {}
+    }
+
+    data = {
+
+    }
+
+    components = {
+
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+
+    onLoad () {
+
+    }
+  }
 </script>

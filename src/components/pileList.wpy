@@ -7,31 +7,31 @@
 </template>
 
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy'
 
-    export default class PileList extends wepy.component {
-        config = {
+  export default class PileList extends wepy.component {
+    config = {
 
-        }
-        
-        data = {
-
-        }
-
-        components = {
-
-        }
-
-        methods = {
-
-        }
-
-        events = {
-
-        }
-
-        onLoad () {
-
-        }
     }
+
+    data = {
+
+    }
+
+    components = {
+
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+
+    onLoad () {
+
+    }
+  }
 </script>

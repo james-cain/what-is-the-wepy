@@ -87,13 +87,18 @@
           {{switchType === 'map' ? '列表' : '地图'}}
        </view>
     </view>
-    <map id="map" longitude="{{point.longitude}}" latitude="{{point.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px"></map>
+    <view style="position: relative; width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px" wx:if="{{switchType === 'map' ? false : true}}">
+      <menu :pileMenuList="pileMenuList"></menu>
+      <tableList :pileTableList="pileTableList"></tableList>
+    </view>
+    <map id="map" longitude="{{point.longitude}}" latitude="{{point.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px"  wx:if="{{switchType === 'map' ? true : false}}"></map>
    </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  // import drawer from '../components/drawer'
+  import menu from '../components/menu'
+  import tableList from '../components/tableList'
   import checkNetWorkStatus from '../utils/CheckNetWork'
 
   export default class Index extends wepy.page {
@@ -102,10 +107,84 @@
     }
 
     components = {
-      // drawer: drawer
+      menu: menu,
+      tableList: tableList
     }
 
     data = {
+      pileMenuList: [
+        {
+          id: 0,
+          name: '全部站点',
+          selected: false,
+          list: [
+            {
+              childId: 0,
+              name: '全部电站',
+              selected: true
+            },
+            {
+              childId: 1,
+              name: '空闲中',
+              selected: false
+            },
+            {
+              childId: 2,
+              name: '直流电',
+              selected: false
+            },
+            {
+              childId: 3,
+              name: '交流快充',
+              selected: false
+            },
+            {
+              childId: 4,
+              name: '交流慢充',
+              selected: false
+            }
+          ]
+        },
+        {
+          id: 1,
+          name: '距离最近',
+          selected: false,
+          list: [
+            {
+              childId: 0,
+              name: '距离最近',
+              selected: true
+            },
+            {
+              childId: 1,
+              name: '好评优先',
+              selected: false
+            }
+          ]
+        },
+        {
+          id: 2,
+          name: '不限车型',
+          selected: false,
+          list: [
+            {
+              childId: 0,
+              name: '不限车型',
+              selected: true
+            }
+          ]
+        }
+      ],
+      pileTableList: [
+        {
+          id: 1,
+          name: '碧华庭居充电站',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        }
+      ],
       switchType: 'map',
       // 菜单的高度
       menuHeight: 0,
@@ -394,9 +473,11 @@
           width: 30 * wx.getStorageSync('kScreenW'),
           height: 40 * wx.getStorageSync('kScreenH'),
           label: {
-            color: '#666666',
-            fontSize: '28rpx',
-            content: '22'
+            color: '#3fba7c',
+            fontSize: '16rpx',
+            content: '111',
+            x: -10,
+            y: -25
           }
         }
         markers.push(marker)

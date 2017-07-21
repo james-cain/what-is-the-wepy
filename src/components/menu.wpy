@@ -1,46 +1,143 @@
 <style lang="less">
+.pile-menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  height: 45px;
+  border-top: 1px solid #dfdfdf;
+  border-bottom: 1px solid #dfdfdf;
+  background-color: #fbfbfb;
+  &-tab {
+    margin: 8px 0;
+    color: #808080;
+    font-size: 14px;
+    border-right: 1px solid #eeeeee;
+    text-align: center;
+  }
+  &-tab-name {
+    color: #808080;
+    font-size: 14px;
+    text-align: center;
+    line-height: 29px;
+  }
+  &-tab-list {
+    text-align: start;
+    z-index: 1000;
+    height: 45px;
+    padding: 10px 0px 10px 5px;
+    box-sizing: border-box;
+    top: 9px;
+    line-height: 25px;
+    border-bottom: 1px solid #dfdfdf;
+    background-color: #ffffff;
+    color: #000000;
+    position: relative;
+  }
+  &-tab-child {
+    font-size: 15px;
+  }
+}
+.tag-down,.tag-up {
+  width: 6px;
+  height: 6px;
+}
+
+.selected {
+  color: #7ccdd4;
+}
 
 </style>
 
 <template>
     <view class="pile-menu">
-        <view class="pile-menu-tab" style="width: {{menuTabWidth}}px" wx:for="{{pileMenuList}}" wx:for-index="pileId" wx:for-item="pileMenu">
-            <text class="pile-menu-tab-name">{{pileMenu.name}}</text>
-            <image src="../images/c_downward_icon@2x.png" mode="scaleToFill" class="tag-down" wx:if="{{`tag-down-${pileId}`}}"></image>
-            <image src="../images/c_upward_icon@2x.png" mode="scaleToFill" class="tag-up" wx:if="{{`tag-up-${pileId}`}}"></image>
-            <view class="pile-menu-tab-list" style="width: {{menuTabWidth}}px" wx:for="{{pileMenu.list}}" wx:for-index="listId" wx:for-item="pileChild">
-                <text class="pile-menu-tab-child">{{pileChild.name}}</text>
+        <view class="pile-menu-tab" style="width: {{menuTabWidth}}px" wx:for="{{pileMenuList}}" wx:for-item="pileMenu" wx:key="id">
+          <view @tap.stop="menuSelected({{pileMenu.id}})">
+            <text class="pile-menu-tab-name {{pileMenu.selected ? 'selected' : ''}}">{{pileMenu.name}}</text>
+            <image src="../images/c_downward_icon@2x.png" mode="scaleToFill" class="tag-down" wx:if="{{!pileMenu.selected}}"></image>
+            <image src="../images/c_upward_icon_select@2x.png" mode="scaleToFill" class="tag-up" wx:if="{{pileMenu.selected}}"></image>
+          </view>
+          <view class="pile-menu-tab-list" style="width: {{menuChildWidth}}px; left: {{-1 * menuTabWidth * pileMenu.id}}px" wx:for="{{pileMenu.list}}" wx:for-index="listId" wx:for-item="pileChild" wx:if="{{pileMenu.selected}}" wx:key="childId">
+            <view @tap.stop="childSelected({{pileMenu.id}}, {{pileChild.childId}})">
+              <text class="pile-menu-tab-child {{pileChild.selected ? 'selected' : ''}}">{{pileChild.name}}</text>
             </view>
+          </view>
         </view>
     </view>
 </template>
 
 <script>
-    import wepy from 'wepy'
+  import wepy from 'wepy'
 
-    export default class Menu extends wepy.component {
-        config = {
+  export default class Menu extends wepy.component {
+    config = {
 
-        }
-        
-        data = {
-
-        }
-
-        components = {
-
-        }
-
-        methods = {
-
-        }
-
-        events = {
-
-        }
-
-        onLoad () {
-
-        }
     }
+
+    props = {
+      pileMenuList: {}
+    }
+
+    data = {
+      menuTabWidth: 0,
+      menuChildWidth: 0
+    }
+
+    computed = {
+      menuTabWidth () {
+        let windowW = wx.getStorageSync('windowW')
+        let index = this.pileMenuList.length
+        return windowW / index
+      },
+      menuChildWidth () {
+        return wx.getStorageSync('windowW')
+      }
+    }
+
+    components = {
+
+    }
+
+    methods = {
+      menuSelected (id, e) {
+        console.log('id:' + id)
+        console.log(e)
+        this.pileMenuList.forEach((e, index, self) => {
+          if (index === id) {
+            if (e.selected === true) {
+              e.selected = false
+            } else {
+              e.selected = true
+            }
+          } else {
+            e.selected = false
+          }
+        })
+      },
+      childSelected (id, childId, e) {
+        console.log('id:' + id)
+        console.log('childId:' + childId)
+        console.log(e)
+        let pileList = this.pileMenuList[id].list
+        pileList.forEach((e, index, self) => {
+          if (index === childId) {
+            if (e.selected === false) {
+              e.selected = true
+              this.pileMenuList[id].name = e.name
+            }
+          } else {
+            e.selected = false
+          }
+        })
+      }
+    }
+
+    events = {
+
+    }
+
+    onLoad () {
+
+    }
+  }
 </script>
