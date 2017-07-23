@@ -183,6 +183,62 @@
           distance: '1.2km',
           isLeisure: true,
           pilecount: 1
+        },
+        {
+          id: 2,
+          name: '梅山苑',
+          address: '深圳市福田区梅山苑一期综合楼旁边停车场',
+          distance: '1.07km',
+          isLeisure: false,
+          pilecount: 2
+        },
+        {
+          id: 3,
+          name: '骏景豪园',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 4,
+          name: '梅林一村',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 5,
+          name: '碧华庭居充电站',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 6,
+          name: '特发小区',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 7,
+          name: '梅林二村',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 8,
+          name: '碧华庭居充电站',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
         }
       ],
       switchType: 'map',
@@ -570,6 +626,8 @@
       let that = this
       let menuHeight = 49 * wx.getStorageSync('kScreenH')
       let mapHeight = wx.getStorageSync('windowH') - menuHeight
+      wx.setStorageSync('mapH', mapHeight)
+      console.log('2:' + wx.getStorageSync('mapH'))
       that.completeStatus = false
       wx.getLocation({
         type: 'gcj02',
@@ -586,6 +644,7 @@
       this.$parent.getUserInfo(function (userInfo) {
         if (userInfo) {
           that.userInfo = userInfo
+          console.log('用户信息:' + userInfo)
         }
         // 这个设置是必须的，要在该接口完成后才能执行onShow里的方法
         that.completeStatus = true
