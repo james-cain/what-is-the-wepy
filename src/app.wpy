@@ -9,7 +9,8 @@
         'pages/scan',
         'pages/me',
         'pages/register',
-        'pages/electring'
+        'pages/electring',
+        'pages/station'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',

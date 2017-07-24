@@ -1,0 +1,37 @@
+<style lang="less">
+
+</style>
+
+<template>
+<view>hello,welcome to</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Station extends wepy.page {
+    config = {
+
+    }
+
+    data = {
+      stationName: ''
+    }
+
+    methods = {
+
+    }
+
+    components = {
+
+    }
+
+    onLoad (option) {
+      console.log('站点详情页')
+      console.log(option)
+      wx.setNavigationBarTitle({
+        title: option.name
+      })
+    }
+  }
+</script>
