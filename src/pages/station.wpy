@@ -70,6 +70,9 @@
   &-main {
     width: 100%;
     background: #f1f5f8;
+    .selected {
+      display: block;
+    }
   }
   &-main-order-btn {
     width: 100%;
@@ -90,6 +93,7 @@
   &-tab-sub-details {
     width: 100%;
     float: left;
+    display: none;
     &-location {
       margin-top: 20px;
       background: #ffffff;
@@ -195,6 +199,9 @@
       margin-top: 20px;
     }
   }
+  &-tab-sub-comment {
+    display: none;
+  }
 }
 .fav-star {
   width: 30px;
@@ -250,12 +257,12 @@
           </view>
         </view>
         <view class="station-details-tab">
-          <view class="tab selected" @tap="">详情</view>
-          <view class="tab" @tap="">用户评价</view>
+          <view class="tab {{desSelected ? 'selected' : ''}}" @tap="selectPage(1)">详情</view>
+          <view class="tab {{evaSelected ? 'selected' : ''}}" @tap="selectPage(2)">用户评价</view>
         </view>
       </view>
       <scroll-view scroll-y style="height: {{stationH}}px" class="station-details-main">
-        <view class="station-details-tab-sub-details">
+        <view class="station-details-tab-sub-details {{desSelected ? 'selected' : ''}}">
           <view class="station-details-tab-sub-details-location"  @tap="">
             <view class="location">
               <view class="location-address">{{address}}</view>
@@ -279,7 +286,7 @@
             <pileList :pilelist="pilelist"></pileList>
           </view>
         </view>
-        <view class="station-details-tab-sub-comment">
+        <view class="station-details-tab-sub-comment {{evaSelected ? 'selected' : ''}}">
           <view class="station-details-tab-sub-comment-title"></view>
           <view class="list-tips">
             <view class="list-tips-title">暂无评价</view>
@@ -306,6 +313,8 @@
     }
 
     data = {
+      desSelected: true,
+      evaSelected: false,
       stationName: '',
       isFav: false,
       scores: 3.5,
@@ -400,7 +409,25 @@
     }
 
     methods = {
-
+      selectPage (id, e) {
+        console.log('此时点击了：' + id)
+        console.log('this.desSelected:' + this.desSelected)
+        console.log('this.evaSelected:' + this.evaSelected)
+        if (id === 1) {
+          if (this.desSelected === false) {
+            console.log('come1')
+            this.desSelected = true
+            this.evaSelected = false
+          }
+        } else {
+          if (this.evaSelected === false) {
+            console.log('come2')
+            this.evaSelected = true
+            this.desSelected = false
+          }
+        }
+        this.$apply()
+      }
     }
 
     computed = {

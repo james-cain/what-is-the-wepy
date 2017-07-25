@@ -6,6 +6,7 @@
 
 .pile-li:last-child {
   border: 0;
+  margin-bottom: 45px;
 }
 
 .pile-li .line {
@@ -107,21 +108,21 @@
 
 <template>
 <view wx:for="{{pilelist}}" wx:for-item="pileItem" class="pile-li" wx:key="id">
-  <view class="line {{'status' + pileItem.workingState}}">
+  <view class="line {{'status-' + pileItem.workingState}}">
     {{statusAry[pileItem.workingState * 1 - 1]}}
   </view>
   <view class="pile-item">
     <view class="title">
-      <view>
+      <view style="display: inline-block;">
         {{pileItem.chargePileName}}
       </view>
-      <view class="{{pileItem.ratedPower * 1 < 7 ? 'chargetype-m' : 'chargetype-k'}}">
+      <view style="display: inline-block;" class="{{pileItem.ratedPower * 1 < 7 ? 'chargetype-m' : 'chargetype-k'}}">
         [{{pileItem.chargePileType === 2 ? '交流' : '直流'}}{{pileItem.ratedPower * 1 < 7 ? '慢充' : '快充'}}/{{pileItem.ratedPower}}kW]
       </view>
     </view>
     <view class="code">编号(CID)：{{pileItem.chargePileCode}}</view>
-    <view class="c-s-price">电  价：{{pileItem.chargePrice === null ? '0.0000' : pileItem.chargePrice}}元/kWh</view>
-    <view class="c-s-price">服务费：{{pileItem.servicePrice === null ? '0.0000' : pileItem.servicePrice}}元/kWh</view>
+    <view class="c-s-price">电  价：{{pileItem.chargePrice === '' ? '0.0000' : pileItem.chargePrice}}元/kWh</view>
+    <view class="c-s-price">服务费：{{pileItem.servicePrice === '' ? '0.0000' : pileItem.servicePrice}}元/kWh</view>
   </view>
 </view>
 </template>
