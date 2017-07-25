@@ -1,13 +1,304 @@
 <style lang="less">
-
+#station-panel {
+  width: inherit;
+  height: inherit;
+  position: relative;
+}
+.station-details{
+  &-top {
+    height: 140px;
+    position: relative;
+    width: 100%;
+    background: #1e1b22;
+    border-bottom: 1px solid #ccc;
+  }
+  &-icon {
+    width: 70px;
+    height: 70px;
+    bottom: 46px;
+    padding: 2px;
+    border-radius: 3px;
+    background: #fff;
+    position: absolute;
+    left: 10px;
+    z-index: 2;
+  }
+  &-params {
+    position: absolute;
+    z-index: 0;
+    left: 95px;
+    bottom: 90px;
+    height: 20px;
+    line-height: 20px;
+    color: #ffffff;
+    width: 300px;
+  }
+  &-top-bottom {
+    bottom: 40px;
+    position: absolute;
+    left: 0;
+    height: 40px;
+    width: 100%;
+    background: #ffffff;
+    z-index: 1;
+    text-indent: 95px;
+    line-height: 17px;
+    color: #666666;
+    font-size: 11px;
+  }
+  &-tab {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: #ffffff;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+    z-index: 0;
+    font-size: 17px;
+    color: #777777;
+    width: 100%;
+    .selected {
+      border-bottom: 1px solid rgb(47, 185, 195);
+      color: rgb(47, 185, 195);
+    }
+    .tab {
+      width: 50%;
+      display: inline-block;
+    }
+  }
+  &-main {
+    width: 100%;
+    background: #f1f5f8;
+  }
+  &-main-order-btn {
+    width: 100%;
+    background: lightseagreen;
+    color: #ffffff;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    font-size: 17px;
+    .no {
+      background: #cccccc;
+      color: #ffffff;
+    }
+  }
+  &-tab-sub-details {
+    width: 100%;
+    float: left;
+    &-location {
+      margin-top: 20px;
+      background: #ffffff;
+      border: 1px solid #e5e5e5;
+      border-width: 1px 0;
+      height: 80px;
+      overflow: hidden;
+      .location {
+        width: 100%;
+        height: 50px;
+        line-height: 25px;
+        float: left;
+        padding-right: 20%;
+        border-bottom: 1px solid #e5e5e5;
+        font-size: 12px;
+        display: table;
+        &-address {
+          font-style: normal;
+          padding-left: 10px;
+          display: table-cell;
+          vertical-align: middle;
+        }
+        &-gis {
+          float: right;
+          margin-right: 10px;
+          line-height: 80px;
+          display: block;
+          height: inherit;
+          text-align: center;
+          font-size: 10px;
+          color: #ccc;
+          text-indent: 0;
+          background: url("../images/c_details_navi_btn_pressed@2x.png") center 5px no-repeat;
+          background-size: 38px 24px;
+        }
+      }
+      .icon {
+        width: 100%;
+        line-height: 30px;
+        height: 30px;
+        float: left;
+        text-indent: 10px;
+        font-size: 13px;
+      }
+    }
+    &-carType {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-width: 1px 0;
+      height: 67px;
+      margin-top: 20px;
+      &-list {
+        width: 80%;
+        height: 57px;
+        float: left;
+        padding: 5px 0;
+        overflow: hidden;
+        .carType {
+          width: 25%;
+          height: 55px;
+          float: left;
+          padding: 5px 0;
+          overflow: hidden;
+          &-image {
+            width: 33px;
+            height: 33px;
+            margin: 0 auto;
+            border: 0;
+            display: block;
+          }
+          &-name {
+            width: 100%;
+            display: block;
+            text-align: center;
+            height: 15px;
+            line-height: 15px;
+            padding: 0;
+            color: #333;
+            font-size: 11px;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+      &-btn {
+        float: right;
+        width: 20%;
+        line-height: 13px;
+        display: block;
+        height: 26px;
+        padding: 20px 0;
+        text-align: center;
+        font-size: 12px;
+        color: rgb(47, 185, 195);
+      }
+    }
+    &-list {
+      background: #ffffff;
+      border:1px solid #e5e5e5;
+      border-width: 1px 0;
+      margin-top: 20px;
+    }
+  }
+}
+.fav-star {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 5px;
+  bottom: 45px;
+  z-index: 2;
+  font-size: 21px;
+  text-align: center;
+  line-height: 40px;
+  .fav {
+    width: 30px;
+    height: 30px;
+  }
+}
+.score {
+  width: 100%;
+  height: 25px;
+  line-height: 25px;
+  overflow: hidden;
+  font-size: 14px;
+  color: #ffffff;
+}
 </style>
 
 <template>
-<view>hello,welcome to</view>
+<view class="homepage">
+  <view id="station-panel">
+    <view id="station-details">
+      <view class="station-details-top">
+        <view class="fav-star">
+          <image class="fav" src="../images/c_details_add_favorite@2x.png" wx:if="{{!isFav}}"></image>
+          <image class="fav" src="../images/c_details_favorite_select@2x.png" wx:if="{{isFav}}"></image>
+        </view>
+        <view class="station-details-icon"><image src="../images/c_default_station@2x.png" mode="scaleToFill" style="height: 70px; width: 70px;"/></view>
+        <view class="station-details-params">
+          <view class="score">
+            <score :scores="scores"></score>
+          </view>
+        </view>
+        <view class="station-details-top-bottom">
+          <view class="work-time-container">
+            <view class="work-time" wx:if="{{workingTime !== '' && workingTime !== undefined}}">
+              {{workingTimeOnWork}}
+            </view>
+            <view class="work-time" wx:if="{{workingTime !== '' && workingTime !== undefined}}">
+              {{worlingTimeOnHoliday}}
+            </view>
+            <view style="color: orange; line-height: 30px; font-size: 14px;" wx:if="{{workingTime === '' || workingTime === undefined}}">
+              本站点暂不对外开放
+            </view>
+          </view>
+        </view>
+        <view class="station-details-tab">
+          <view class="tab selected" @tap="">详情</view>
+          <view class="tab" @tap="">用户评价</view>
+        </view>
+      </view>
+      <scroll-view scroll-y style="height: {{stationH}}px" class="station-details-main">
+        <view class="station-details-tab-sub-details">
+          <view class="station-details-tab-sub-details-location"  @tap="">
+            <view class="location">
+              <view class="location-address">{{address}}</view>
+              <view class="location-gis">{{gis + 'km'}}</view>
+            </view>
+            <view class="icon">
+              <image src="../images/c_list_parking_icon@2x.png" mode="scaleToFill" wx:if="{{isPark}}" style="width: 15px; height: 15px;position: relative; top: 3px;"></image>
+              {{isPark ? '停车费用：' + parkingRate : ''}}
+            </view>
+          </view>
+          <view class="station-details-tab-sub-details-carType">
+            <view class="station-details-tab-sub-details-carType-list">
+              <view class="carType" wx:for="{{carTypeList}}" wx:for-item="carType" wx:for-index="index">
+                <image class="carType-image" src="{{carType.vehicleBrandImg}}" mode="scaleToFill"></image>
+                <view class="carType-name">{{carType.vehicleModel}}</view>
+              </view>
+            </view>
+            <view class="station-details-tab-sub-details-carType-btn" @tap=""><view>更多</view><view>车型</view></view>
+          </view>
+          <view class="station-details-tab-sub-details-list">
+            <pileList :pilelist="pilelist"></pileList>
+          </view>
+        </view>
+        <view class="station-details-tab-sub-comment">
+          <view class="station-details-tab-sub-comment-title"></view>
+          <view class="list-tips">
+            <view class="list-tips-title">暂无评价</view>
+            <view>手指运动起来，写出你的想法</view>
+          </view>
+          <view class="comment-list"></view>
+          <view class="add-more"></view>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="station-details-main-order-btn {{makeAppointment !== 1 || (makeAppointment === 1 && chargingPileNum === 0 ? 'no' : '')}}">点击预约</view>
+  </view>
+</view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import score from '../components/score'
+  import pileList from '../components/pileList'
 
   export default class Station extends wepy.page {
     config = {
@@ -15,20 +306,120 @@
     }
 
     data = {
-      stationName: ''
+      stationName: '',
+      isFav: false,
+      scores: 3.5,
+      stationH: 0,
+      workingTime: '工作日：0:00到24:00节假日：0:00到24:00',
+      makeAppointment: 1,
+      chargingPileNum: 6,
+      address: '',
+      isPark: true,
+      parkingRate: 10,
+      gis: 1.2,
+      carTypeList: [
+        {
+          vehicleBrandImg: '../images/vehicle/Fisker.png',
+          vehicleModel: 'Fisker'
+        },
+        {
+          vehicleBrandImg: '../images/vehicle/奥迪.png',
+          vehicleModel: '奥迪'
+        },
+        {
+          vehicleBrandImg: '../images/vehicle/宝马.png',
+          vehicleModel: '宝马'
+        },
+        {
+          vehicleBrandImg: '../images/vehicle/保时捷.png',
+          vehicleModel: '保时捷'
+        }
+      ],
+      pilelist: [
+        {
+          id: 1,
+          chargePileType: 1,
+          ratedPower: 4,
+          chargePileName: '#1交流慢充7kw（######）',
+          chargePrice: '',
+          servicePrice: '',
+          chargePileCode: '234243454654656',
+          workingState: 1
+        },
+        {
+          id: 2,
+          chargePileType: 2,
+          ratedPower: 7,
+          chargePileName: '#1交流慢充7kw（######）',
+          chargePrice: '',
+          servicePrice: '',
+          chargePileCode: '234243454654656',
+          workingState: 3
+        },
+        {
+          id: 3,
+          chargePileType: 1,
+          ratedPower: 8,
+          chargePileName: '#1交流慢充7kw（######）',
+          chargePrice: '',
+          servicePrice: '',
+          chargePileCode: '234243454654656',
+          workingState: 4
+        },
+        {
+          id: 4,
+          chargePileType: 1,
+          ratedPower: 4,
+          chargePileName: '#1交流慢充7kw（######）',
+          chargePrice: '',
+          servicePrice: '',
+          chargePileCode: '234243454654656',
+          workingState: 1
+        },
+        {
+          id: 5,
+          chargePileType: 1,
+          ratedPower: 4,
+          chargePileName: '#1交流慢充7kw（######）',
+          chargePrice: '',
+          servicePrice: '',
+          chargePileCode: '234243454654656',
+          workingState: 1
+        },
+        {
+          id: 6,
+          chargePileType: 1,
+          ratedPower: 4,
+          chargePileName: '#1交流慢充7kw（######）',
+          chargePrice: '',
+          servicePrice: '',
+          chargePileCode: '234243454654656',
+          workingState: 1
+        }
+      ]
     }
 
     methods = {
 
     }
 
-    components = {
+    computed = {
+      workingTimeOnWork () {
+        return this.workingTime.substr(0, this.workingTime.indexOf('节假日'))
+      },
+      worlingTimeOnHoliday () {
+        return this.workingTime.substr(this.workingTime.indexOf('节假日'), this.workingTime.length)
+      }
+    }
 
+    components = {
+      score: score,
+      pileList: pileList
     }
 
     onLoad (option) {
-      console.log('站点详情页')
-      console.log(option)
+      this.stationH = wx.getStorageSync('windowH') - 141
+      this.address = option.address
       wx.setNavigationBarTitle({
         title: option.name
       })

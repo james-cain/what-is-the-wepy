@@ -90,7 +90,7 @@
           <view class="table-card-distance">
             <text class="pile-table-distance">{{pileTable.distance}}</text>
           </view>
-          <view class="table-card-button" @tap.stop="gotostation({{pileTable.name}}, {{pileTable.id}})">预约</view>
+          <view class="table-card-button" @tap.stop="gotostation({{pileTable.name}}, {{pileTable.id}}, {{pileTable.address}})">预约</view>
         </view>
       </view>
     </view>
@@ -125,9 +125,9 @@
     }
 
     methods = {
-      gotostation (stationName, stationId, e) {
+      gotostation (stationName, stationId, address, e) {
         wx.navigateTo({
-          url: '../pages/station?name=' + stationName + '&id=' + stationId
+          url: '../pages/station?name=' + stationName + '&id=' + stationId + '&address=' + address
         })
       }
     }

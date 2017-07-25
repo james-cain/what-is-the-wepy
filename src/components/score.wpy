@@ -1,0 +1,90 @@
+<style lang="less">
+
+</style>
+
+<template>
+  <view>
+    <image src="../images/c_grade_star_yellow@2x.png" mode="scaleToFill" wx:for="{{allStar}}" style="height: {{size}}px; width: {{size}}px;"></image>
+    <image src="../images/c_grade_star_half@2x.png" mode="scaleToFill" wx:if="{{isHalf}}" style="height: {{size}}px; width: {{size}}px;"></image>
+    <image src="../images/c_grade_star_gray@2x.png" mode="scaleToFill" wx:for="{{nvlStar}}" style="height: {{size}}px; width: {{size}}px;"></image>
+    {{scores}}分
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Score extends wepy.component {
+    config = {
+
+    }
+
+    props = {
+      scores: {
+        type: Number,
+        default: 0
+      },
+      size: {
+        type: Number,
+        default: 16
+      }
+    }
+
+    computed = {
+      allStar () {
+        let scoreInt = parseInt(this.scores, 10)
+        console.log('this.scores' + this.scores)
+        let allStar = []
+        for (let i = 0; i < scoreInt; i++) {
+          allStar.push(i)
+        }
+        console.log(allStar)
+        return allStar
+      },
+      isHalf () {
+        let scoreInt = parseInt(this.scores, 10)
+        let isHalf = false
+        if (this.scores - scoreInt > 0) {
+          isHalf = true
+        } else {
+          isHalf = false
+        }
+        return isHalf
+      },
+      nvlStar () {
+        let scoreInt = parseInt(this.scores, 10)
+        let nvlStar = []
+        let isHalf = false
+        if (this.scores - scoreInt > 0) {
+          isHalf = true
+        } else {
+          isHalf = false
+        }
+        let nvlInt = isHalf ? 4 - scoreInt : 5 - scoreInt
+        for (let j = 0; j < nvlInt; j++) {
+          nvlStar.push(j)
+        }
+        console.log(nvlStar)
+        return nvlStar
+      }
+    }
+
+    data = {
+      allStar: [],
+      isHalf: false,
+      nvlStar: []
+    }
+
+    components = {
+
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+  }
+</script>
