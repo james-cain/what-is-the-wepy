@@ -84,7 +84,9 @@
   import checkNetWorkStatus from '../utils/CheckNetWork'
 
   export default class Register extends wepy.page {
-    config = {}
+    config = {
+      navigationBarTitleText: '登录注册'
+    }
 
     components = {}
 
