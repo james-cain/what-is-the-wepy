@@ -136,48 +136,54 @@
   font-size: 14px;
   margin-bottom: 45px;
 }
+
+.comment-body {
+  margin-top: 20px;
+}
 </style>
 
 <template>
-<view class="{{commentlist.length === 0 && commentlist !== ''? 'comment-no-data' : ''}}">
+<view class="comment-body {{commentlist.length === 0 && commentlist !== ''? 'comment-no-data' : ''}}">
   <view class="list-tips">
     <image src="../images/c_nodata_grade_list@2x.png" mode="scaleToFill" style="width: 155px; height: 106px; display: block; margin: 0 auto;"/>
     <view class="list-tips-title">暂无评价</view>
     <view class="list-tips-title">手指运动起来，写出你的想法</view>
   </view>
   <view class="comment-list">
-    <view class="comment-card" wx:for="{{commentlist}}" wx:for-item="comment" wx:key="commentId">
-      <view id="{{comment.commentId}}">
-        <view class="user">
-          <view class="good-num">
-            <image class="comment-icon" src="../images/c_like_normal@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp !== 2}}"></image>
-            <image class="comment-icon" src="../images/c_like_pressed@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp === 2}}"></image>
-            {{comment.thumbUpNum}}
+    <repeat for="{{commentlist}}" key="commentId" item="comment">
+      <view class="comment-card">
+        <view id="{{comment.commentId}}">
+          <view class="user">
+            <view class="good-num">
+              <image class="comment-icon" src="../images/c_like_normal@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp !== 2}}"></image>
+              <image class="comment-icon" src="../images/c_like_pressed@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp === 2}}"></image>
+              {{comment.thumbUpNum}}
+            </view>
+            <view class="comment-num">
+              <image class="comment-icon" src="../images/c_comment_normal@2x.png" mode="scaleToFill"></image>
+              {{comment.commentList.length}}
+            </view>
+            <image class="user-avatar" src="{{comment.avatar === null || comment.avatar === '' ? tempImg : comment.avatar}}" mode="scaleToFill"></image>
+            <view class="user-name">{{comment.userName}}</view>
           </view>
-          <view class="comment-num">
-            <image class="comment-icon" src="../images/c_comment_normal@2x.png" mode="scaleToFill"></image>
-            {{comment.commentList.length}}
+          <view class="score">
+            <view style="display: inline-block; margin: 0 10px 0 5px;">评分:</view>
+            <score class="scores" :scores="comment.score" :isScoreStatic="0"></score>
           </view>
-          <image class="user-avatar" src="{{comment.avatar === null || comment.avatar === '' ? tempImg : comment.avatar}}" mode="scaleToFill"></image>
-          <view class="user-name">{{comment.userName}}</view>
-        </view>
-        <view class="score">
-          <view style="display: inline-block; margin: 0 10px 0 5px;">评分:</view>
-          <score class="scores" :scores="comment.score" :isScoreStatic="0"></score>
-        </view>
-        <view class="labels-p">
-          <view class="stations-label labelCode" wx:for="{{comment.labelList}}" wx:for-item="label" wx:key="labelCode">{{label.labelName}}</view>
-        </view>
-        <view class="comment-list-content">
-          {{comment.comment}}
-        </view>
-        <view class="comment-list-reply-list" wx:for="{{comment.commentList}}" wx:for-item="commentItem">
-          <view class="comment-list-reply-item">
-            {{commentItem.userName}}  回复：<view>{{commentItem.content}}</view>
+          <view class="labels-p">
+            <view class="stations-label labelCode" wx:for="{{comment.labelList}}" wx:for-item="label" wx:key="labelCode">{{label.labelName}}</view>
+          </view>
+          <view class="comment-list-content">
+            {{comment.comment}}
+          </view>
+          <view class="comment-list-reply-list" wx:for="{{comment.commentList}}" wx:for-item="commentItem">
+            <view class="comment-list-reply-item">
+              {{commentItem.userName}}  回复：<view>{{commentItem.content}}</view>
+            </view>
           </view>
         </view>
       </view>
-    </view>
+    </repeat>
   </view>
   <view class="add-more"></view>
 </view>

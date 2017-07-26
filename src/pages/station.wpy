@@ -152,10 +152,13 @@
         padding: 5px 0;
         overflow: hidden;
         .carType {
-          width: 25%;
-          height: 55px;
+          width: 20%;
+          height: 57px;
           float: left;
-          padding: 5px 0;
+          margin: 0 5px;
+          box-sizing: border-box;
+          border: 1px solid #e0e0e0;
+          border-radius: 3px;
           overflow: hidden;
           &-image {
             width: 33px;
@@ -201,9 +204,6 @@
   }
   &-tab-sub-comment {
     display: none;
-    .comment-body {
-      margin-top: 20px;
-    }
   }
 }
 .fav-star {
@@ -283,7 +283,7 @@
                 <view class="carType-name">{{carType.vehicleModel}}</view>
               </view>
             </view>
-            <view class="station-details-tab-sub-details-carType-btn" @tap=""><view>更多</view><view>车型</view></view>
+            <view class="station-details-tab-sub-details-carType-btn" @tap="moreCarType"><view>更多</view><view>车型</view></view>
           </view>
           <view class="station-details-tab-sub-details-list">
              <pileList :pilelist="pilelist"></pileList>
@@ -482,6 +482,11 @@
           }
         }
         this.$apply()
+      },
+      moreCarType (e) {
+        wx.navigateTo({
+          url: 'moreCarType'
+        })
       }
     }
 

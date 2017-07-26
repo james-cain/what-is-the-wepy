@@ -1,0 +1,54 @@
+<style lang="less">
+
+</style>
+<template>
+  <view class="homepage">
+    <view id="ctp-panel" style="overflow:hidden; overflow-y: auto;background: #f5f5f5;">
+      <view id="more-car-type">
+        <view class="suit-me">
+          <view class="suit-me-title">适合我的车型</view>
+          <view></view>
+        </view>
+        <view class="other-type">
+          <view class="type-list">
+
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class MoreCarType extends wepy.page {
+    config = {
+      navigationBarTitleText: '更多车型'
+    }
+
+    components = {
+
+    }
+
+    data = {
+
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+
+    onLoad() {
+
+    }
+  }
+</script>
