@@ -1,0 +1,215 @@
+<style lang="less">
+.list-tips {
+  display: none;
+}
+
+.comment-no-data {
+  .list-tips {
+    top: 346px;
+    display: block;
+    text-align: center;
+  }
+  .list-tips-title {
+    font-size: 17px;
+    color: #b7bec8;
+    height: 40px;
+    line-height: 40px;
+  }
+  .comment-list {
+    display: none;
+  }
+  .add-more {
+    display: none;
+  }
+}
+
+.comment-list {
+  display: block;
+  .comment-card {
+    min-height: 70px;
+    border-bottom: 1px solid #e5e5e5;
+    background: #fff;
+    padding: 5px;
+    .user {
+      height: 40px;
+      line-height: 40px;
+      .comment-num {
+        display: inline-block;
+        width: 24px;
+        height: 18px;
+        line-height: 22px;
+        float: right;
+        font-size: 9px;
+        color: #999;
+      }
+      .good-num {
+        display: inline-block;
+        width: 24px;
+        height: 18px;
+        line-height: 22px;
+        padding-left: 4px;
+        float: right;
+        font-size: 9px;
+        color: #999;
+        margin-right: 4px;
+      }
+      .user-name {
+        float: left;
+        font-size: 12px;
+        height: 40px;
+        line-height: 45px !important;
+        display: inline-block;
+      }
+      .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #ccc;
+        margin: 5px;
+        float: left;
+      }
+    }
+    .score {
+      width: 100%;
+      height: 25px;
+      line-height: 25px;
+      overflow: hidden;
+      color: #999999;
+      .scores {
+        display: inline-block;
+      }
+    }
+    .stations-label {
+      display: inline-block;
+      min-width: 30px;
+      height: 28px;
+      font-size: 11px;
+      line-height: 28px;
+      text-align: center;
+      background: #f5f5f5;
+      border-radius: 3px;
+      font-weight: normal;
+      margin-right: 3px;
+      padding: 1px 2px;
+      color: #666;
+      margin-bottom: 3px;
+    }
+    .labels-p {
+      margin-left: 5px;
+    }
+  }
+
+  .comment-icon {
+    height: 18px;
+    width: 18px;
+    display: block;
+    float: left;
+  }
+
+  .comment-list-content {
+    line-height: 25px;
+    padding: 3px 5px;
+  }
+  .comment-list-reply-list {
+    background: #f9f9f9;
+    margin: 5px;
+    padding: 5px;
+    line-height: 18px;
+    font-size: 12px;
+    color: #666;
+    overflow: hidden;
+  }
+
+  .comment-list-reply-item {
+    font-size: 12px;
+    color: #666;
+    line-height: 18px;
+    margin-bottom: 5px;
+  }
+}
+
+.add-more {
+  height: 50px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 45px;
+}
+</style>
+
+<template>
+<view class="{{commentlist.length === 0 && commentlist !== ''? 'comment-no-data' : ''}}">
+  <view class="list-tips">
+    <image src="../images/c_nodata_grade_list@2x.png" mode="scaleToFill" style="width: 155px; height: 106px; display: block; margin: 0 auto;"/>
+    <view class="list-tips-title">暂无评价</view>
+    <view class="list-tips-title">手指运动起来，写出你的想法</view>
+  </view>
+  <view class="comment-list">
+    <view class="comment-card" wx:for="{{commentlist}}" wx:for-item="comment" wx:key="commentId">
+      <view id="{{comment.commentId}}">
+        <view class="user">
+          <view class="good-num">
+            <image class="comment-icon" src="../images/c_like_normal@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp !== 2}}"></image>
+            <image class="comment-icon" src="../images/c_like_pressed@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp === 2}}"></image>
+            {{comment.thumbUpNum}}
+          </view>
+          <view class="comment-num">
+            <image class="comment-icon" src="../images/c_comment_normal@2x.png" mode="scaleToFill"></image>
+            {{comment.commentList.length}}
+          </view>
+          <image class="user-avatar" src="{{comment.avatar === null || comment.avatar === '' ? tempImg : comment.avatar}}" mode="scaleToFill"></image>
+          <view class="user-name">{{comment.userName}}</view>
+        </view>
+        <view class="score">
+          <view style="display: inline-block; margin: 0 10px 0 5px;">评分:</view>
+          <score class="scores" :scores="comment.score" :isScoreStatic="0"></score>
+        </view>
+        <view class="labels-p">
+          <view class="stations-label labelCode" wx:for="{{comment.labelList}}" wx:for-item="label" wx:key="labelCode">{{label.labelName}}</view>
+        </view>
+        <view class="comment-list-content">
+          {{comment.comment}}
+        </view>
+        <view class="comment-list-reply-list" wx:for="{{comment.commentList}}" wx:for-item="commentItem">
+          <view class="comment-list-reply-item">
+            {{commentItem.userName}}  回复：<view>{{commentItem.content}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="add-more"></view>
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import score from './score'
+
+  export default class CommentList extends wepy.component {
+    config = {
+
+    }
+
+    props = {
+      commentlist: {}
+    }
+
+    data = {
+      tempImg: '../images/c_default_avatar@2x.png'
+    }
+
+    components = {
+      score: score
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+  }
+</script>

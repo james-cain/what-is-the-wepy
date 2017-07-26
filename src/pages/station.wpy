@@ -201,6 +201,9 @@
   }
   &-tab-sub-comment {
     display: none;
+    .comment-body {
+      margin-top: 20px;
+    }
   }
 }
 .fav-star {
@@ -283,17 +286,11 @@
             <view class="station-details-tab-sub-details-carType-btn" @tap=""><view>更多</view><view>车型</view></view>
           </view>
           <view class="station-details-tab-sub-details-list">
-            <pileList :pilelist="pilelist"></pileList>
+             <pileList :pilelist="pilelist"></pileList>
           </view>
         </view>
         <view class="station-details-tab-sub-comment {{evaSelected ? 'selected' : ''}}">
-          <view class="station-details-tab-sub-comment-title"></view>
-          <view class="list-tips">
-            <view class="list-tips-title">暂无评价</view>
-            <view>手指运动起来，写出你的想法</view>
-          </view>
-          <view class="comment-list"></view>
-          <view class="add-more"></view>
+          <commentList class="comment-body" :commentlist="commentlist"></commentList>
         </view>
       </scroll-view>
     </view>
@@ -306,6 +303,7 @@
   import wepy from 'wepy'
   import score from '../components/score'
   import pileList from '../components/pileList'
+  import commentList from '../components/commentList'
 
   export default class Station extends wepy.page {
     config = {
@@ -405,23 +403,80 @@
           chargePileCode: '234243454654656',
           workingState: 1
         }
+      ],
+      commentlist: [
+        {
+          commentId: 1,
+          isThumbUp: 1,
+          avatar: '',
+          labelList: [
+            {
+              labelCode: 'label1',
+              labelName: '环境好'
+            },
+            {
+              labelCode: 'label2',
+              labelName: '价格实惠'
+            }
+          ],
+          commentList: [
+            {
+              userName: '小王',
+              content: '价格真的便宜吗'
+            },
+            {
+              userName: '小明',
+              content: '价格真的便宜吗'
+            }
+          ],
+          thumbUpNum: 4,
+          userName: '用户1',
+          comment: '价格好，划算',
+          score: 5
+        },
+        {
+          commentId: 2,
+          isThumbUp: 2,
+          avatar: '',
+          labelList: [
+            {
+              labelCode: 'label1',
+              labelName: '环境好'
+            },
+            {
+              labelCode: 'label2',
+              labelName: '价格实惠'
+            }
+          ],
+          commentList: [
+            {
+              userName: '小王',
+              content: '价格真的便宜吗'
+            },
+            {
+              userName: '小明',
+              content: '价格真的便宜吗'
+            }
+          ],
+          thumbUpNum: 0,
+          userName: '用户2',
+          comment: '价格好，划算',
+          score: 3.5
+        }
       ]
     }
 
     methods = {
       selectPage (id, e) {
         console.log('此时点击了：' + id)
-        console.log('this.desSelected:' + this.desSelected)
-        console.log('this.evaSelected:' + this.evaSelected)
-        if (id === 1) {
+        let _id = parseInt(id, 10)
+        if (_id === 1) {
           if (this.desSelected === false) {
-            console.log('come1')
             this.desSelected = true
             this.evaSelected = false
           }
         } else {
           if (this.evaSelected === false) {
-            console.log('come2')
             this.evaSelected = true
             this.desSelected = false
           }
@@ -441,7 +496,8 @@
 
     components = {
       score: score,
-      pileList: pileList
+      pileList: pileList,
+      commentList: commentList
     }
 
     onLoad (option) {
