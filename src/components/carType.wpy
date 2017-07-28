@@ -1,18 +1,82 @@
 <style lang="less">
-.scores {
-  display: inline-block;
+#car-type {
+  overflow: hidden;
+  .left-type {
+    width: 40%;
+    float: left;
+    height: 80%;
+    overflow: hidden;
+    overflow-y: auto;
+    background: #f9f9f9;
+    position: relative;
+    &-list {
+      width: 99%;
+      min-height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 3;
+    }
+    &-card {
+      height: 56px;
+      line-height: 56px;
+      overflow: hidden;
+      border: 1px solid #f9f9f9;
+      border-left: 0;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 15px;
+    }
+  }
+
+  .line-bg {
+    width: 1px;
+    background: #e5e5e5;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    z-index: 2;
+  }
+
+  .right-type-details {
+    width: 58%;
+    float: right;
+    height: inherit;
+    overflow: hidden;
+    overflow-y: auto;
+    background: #fff;
+    &-list {
+      width: 100%;
+    }
+    &-card {
+      width: 80%;
+      margin-left: 10%;
+      padding-right: 10%;
+      border-bottom: 1px solid #e5e5e5;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 15px;
+    }
+  }
 }
 </style>
 
 <template>
   <view id="car-type">
-    <scroll-view class="left-type" >
-      <view>
+    <scroll-view class="left-type">
+      <view class="left-type-list">
+        <view class="left-type-card"></view>
       </view>
       <view class="line-bg" style="height: 100%;"></view>
     </scroll-view>
-    <scroll-view class="right-type-details" style="height: 32.3rem">
-      <view>
+    <scroll-view class="right-type-details">
+      <view class="right-type-details-list">
+        <view class="right-type-details-card"></view>
       </view>
     </scroll-view>
     <view id="car-type-btn">确定</view>
