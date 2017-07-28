@@ -1,0 +1,201 @@
+<style lang="less">
+.stake-map-filterList {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  left: 0;
+  bottom: 0;
+  position: absolute;
+  z-index: 9;
+
+  .title {
+    color: #999;
+    font-size: 14px;
+    margin: 0 0 16px 17px;
+    display: block;
+  }
+
+  .second {
+    margin-top: 20px;
+  }
+
+  .filter-elect-list,
+  .filter-car-list {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .filter-elect-list .filter-elect-card,
+  .filter-car-list .filter-car-list-my-car-type {
+    border: 1px solid #e5e5e5;
+    width: 29%;
+    height: 60px;
+    padding: 5px 0;
+    border-radius: 3px;
+    display: inline-block;
+    text-align: center;
+    margin: 0 5px 5px 5px;
+  }
+
+  .filter-elect-list .selected {
+    background-color: rgb(234, 248, 249);
+    border: 1px solid rgb(47, 185, 195)
+  }
+
+  .filter-elect-img,
+  .filter-car-img {
+    width: 35px;
+    height: 35px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .filter-elect-name,
+  .filter-car-name {
+    color: #333;
+    font-size: 15px;
+  }
+
+  .change-car-type {
+    width: 29%;
+    height: 60px;
+    padding: 5px 0;
+    border-radius: 3px;
+    display: inline-block;
+    text-align: center;
+    margin: 0 5px 5px 5px;
+    border: 1px dashed rgb(47, 185, 195);
+    &-name-area {
+      display: inline-block;
+      padding: 12px 0;
+    }
+    &-name {
+      color: rgb(47, 185, 195);
+      width: 60px;
+      font-size: 14px;
+    }
+    .more {
+      height: 20px;
+      width: 10px;
+    }
+  }
+
+  .btn-group {
+    width: 100%;
+    height: 45px;
+    border-top: 1px solid #e5e5e5;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    .btn-card {
+      display: inline-block;
+      height: inherit;
+      width: 49%;
+      text-align: center;
+      line-height: 45px;
+      color: rgb(47, 185, 195);
+      font-size: 17px;
+      text-decoration: none;
+    }
+    .left {
+      border-left: 1px solid #e5e5e5;
+    }
+  }
+}
+</style>
+<template>
+  <view class="homepage">
+    <view id="stake-map-filterList" class="stake-map-filterList">
+      <text class="title">
+        筛选条件
+      </text>
+      <view class="filter-elect-list">
+        <view class="filter-elect-card zld {{selectedArr[0] ? 'selected' : ''}}" @tap="selectedCard(0)">
+          <image src="../images/c_filtrate_dc_icon@2x.png" class="filter-elect-img"/>
+          <text class="filter-elect-name">直流电</text>
+        </view>
+        <view class="filter-elect-card jlkc {{selectedArr[1] ? 'selected' : ''}}" @tap="selectedCard(1)">
+          <image src="../images/c_filtrate_ac_fast_icon@2x.png" class="filter-elect-img" />
+          <text class="filter-elect-name">交流快充</text>
+        </view>
+        <view class="filter-elect-card jlmc {{selectedArr[2] ? 'selected' : ''}}" @tap="selectedCard(2)">
+          <image src="../images/c_filtrate_ac_icon@2x.png" class="filter-elect-img" />
+          <text class="filter-elect-name">交流慢充</text>
+        </view>
+        <view class="filter-elect-card ykx {{selectedArr[3] ? 'selected' : ''}}" @tap="selectedCard(3)">
+          <image src="../images/c_filtrate_list_leisure_icon@2x.png" class="filter-elect-img" />
+          <text class="filter-elect-name">有空闲</text>
+        </view>
+      </view>
+      <text class="title second">
+        选择车型
+      </text>
+      <view class="filter-car-list">
+        <view class="filter-car-list-my-car-type" style="margin-top: 0;" wx:if="">
+          <image src="" class="filter-car-img"/>
+          <text class="filter-car-name"></text>
+        </view>
+        <view class="change-car-type">
+          <view class="change-car-type-name-area">
+            <view class="change-car-type-name">
+              更换
+            </view>
+            <view class="change-car-type-name">
+              车型
+            </view>
+          </view>
+          <image src="../images/c_right_icon_cyan@2x.png" class="more"/>
+        </view>
+      </view>
+      <view class="btn-group">
+        <view class="btn-card btn-group-cancel">取消</view>
+        <view class="btn-card btn-group-submit left">确定</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class MapFilter extends wepy.page {
+    config = {
+      navigationBarTitleText: '筛选条件'
+    }
+
+    components = {
+
+    }
+
+    data = {
+      selectedArr: [
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+      selectedCard (id, e) {
+        this.selectedArr[id] = !this.selectedArr[id]
+        this.$apply()
+      }
+    }
+
+    events = {
+
+    }
+
+    onLoad() {
+
+    }
+  }
+</script>

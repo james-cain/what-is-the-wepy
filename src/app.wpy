@@ -10,7 +10,8 @@
         'pages/register',
         'pages/electring',
         'pages/station',
-        'pages/moreCarType'
+        'pages/moreCarType',
+        'pages/mapFilter'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',

@@ -77,11 +77,11 @@
        <view class="menu-search">
          <view class="search-icon-area">
             <image src="../images/c_search_box_icon@2x.png" mode="scaleToFill" class="search-icon"/>
-         </view>       
+         </view>
          <input class="search-input" type="text" @input="search" placeholder="搜索站点" placeholder-style="font-size: 14px; color: #999999;" confirm-type="search"/>
          <view class="search-del-area">
            <image src="../images/s_text_view_delete_icon.png" mode="scaleToFill" class="search-delete"/>
-         </view>        
+         </view>
        </view>
        <view class="menu-switch" @tap="switchType">
           {{switchType === 'map' ? '列表' : '地图'}}
@@ -456,9 +456,9 @@
           // 定位当前位置
           that.getUserCurrentLocation()
         } else if (id === 2) {
-          // 钱包功能
+          // 筛选功能
           wx.navigateTo({
-            url: 'register'
+            url: 'mapFilter'
           })
         } else if (id === 4) {
           // 扫描二维码

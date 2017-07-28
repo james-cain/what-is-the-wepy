@@ -1,21 +1,124 @@
 <style lang="less">
+.suit-me {
+  width: 100%;
+  height: 124px;
+  border-bottom: 1px solid #e5e5e5;
+  background: #fff;
+  padding: 6px 19px;
+  box-sizing: border-box;
+  .suit-me-title {
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+    line-height: 35px;
+    height: 35px;
+    text-indent: 10px;
+  }
+  .suit-me-list {
+    display: flex;
+  }
+  .suit-me-card {
+    width: 70px;
+    height: 70px;
+    display: inline-block;
+    border: 1px solid #e5e5e5;
+    border-radius: 2px;
+    text-align: center;
+    .suit-me-img {
+      width: 35px;
+      height: 35px;
+      margin: 5px auto 0 auto;
+    }
+    .suit-me-name {
+      display: block;
+      width: 100%;
+      height: 20px;
+      line-height: 20px;
+      color: #333;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 13px;
+    }
+  }
+}
 
+.type-list {
+  padding: 6px 19px;
+  box-sizing: border-box;
+  .type-list-title {
+    font-size: 13px;
+    font-weight: normal;
+    color: #999;
+    line-height: 35px;
+    height: 35px;
+    text-indent: 10px;
+  }
+  .type-card-list {
+    width: 100%;
+    display: flex;
+    .type-card {
+      width: 70px;
+      height: 70px;
+      display: inline-block;
+      border: 1px solid #e5e5e5;
+      border-radius: 2px;
+      text-align: center;
+      margin-right: 15px;
+      .type-img {
+        width: 35px;
+        height: 35px;
+        margin: 5px auto 0 auto;
+      }
+      .type-name {
+        display: block;
+        width: 100%;
+        height: 20px;
+        line-height: 20px;
+        color: #333;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+.other-type {
+  border-top: 1px solid #e5e5e5;
+  margin-top: 20px;
+  background: #fff;
+}
 </style>
 <template>
   <view class="homepage">
-    <view id="ctp-panel" style="overflow:hidden; overflow-y: auto;background: #f5f5f5;">
+    <scroll-view scroll-y  style="height: {{carTypePanel}}px">
       <view id="more-car-type">
         <view class="suit-me">
-          <view class="suit-me-title">适合我的车型</view>
-          <view></view>
+          <text class="suit-me-title">适合我的车型</text>
+          <view class="suit-me-list">
+            <view class="suit-me-card" wx:for="{{suitMeList}}" wx:for-item="suitMe">
+              <image src="{{suitMe.vihicleBrandImg}}" class="suit-me-img"/>
+              <text class="suit-me-name">{{suitMe.vihicleModel}}</text>
+            </view>
+          </view>
         </view>
         <view class="other-type">
-          <view class="type-list">
-
+          <view class="type-list" wx:for="{{brandTypeList}}" wx:for-item="brandType">
+            <text class="type-list-title">{{brandType.brand}}</text>
+            <view class="type-card-list">
+              <view class="type-card" wx:for="{{brandType.brandAry}}" wx:for-item="brand">
+                <image src="{{brand.vihicleBrandImg}}" class="type-img"/>
+                <text class="type-name">{{brand.vihicleModel}}</text>
+              </view>
+            </view>
           </view>
         </view>
       </view>
-    </view>
+    </scroll-view>
   </view>
 </template>
 
@@ -32,10 +135,43 @@
     }
 
     data = {
-
+      carTypePanel: 0,
+      stakeAllCarType: [
+        {
+          vehicleBrand: 'aa',
+          vehicleBrandCode: '1',
+          vihicleBrandImg: '../images/vehicle/Fisker.png',
+          vihicleModel: '宝马'
+        },
+        {
+          vehicleBrand: 'bb',
+          vehicleBrandCode: '2',
+          vihicleBrandImg: '../images/vehicle/Fisker.png',
+          vihicleModel: '宝马'
+        },
+        {
+          vehicleBrand: 'bb',
+          vehicleBrandCode: '3',
+          vihicleBrandImg: '../images/vehicle/Fisker.png',
+          vihicleModel: '宝马2'
+        }
+      ],
+      suitMeList: [
+        {
+          vehicleBrand: 'aa',
+          vehicleBrandCode: '1',
+          vihicleBrandImg: '../images/vehicle/Fisker.png',
+          vihicleModel: '宝马'
+        }
+      ],
+      brandTypeList: []
     }
 
     computed = {
+
+    }
+
+    watch = {
 
     }
 
@@ -48,7 +184,30 @@
     }
 
     onLoad() {
+      this.carTypePanel = wx.getStorageSync('windowH')
+    }
 
+    onShow () {
+      let brand = ''
+      let count = -1
+      this.stakeAllCarType.forEach((e, index, arr) => {
+        if (brand !== e.vehicleBrand) {
+          count++
+          brand = ''
+          this.brandTypeList[count] = {
+            brand: '',
+            brandAry: []
+          }
+          this.brandTypeList[count].brand = e.vehicleBrand
+          this.brandTypeList[count].brandAry.push(e)
+          brand = e.vehicleBrand
+        } else {
+          this.brandTypeList[count].brandAry.push(e)
+        }
+      })
+      console.log('new typelIst:')
+      console.log(this.brandTypeList)
+      this.$apply()
     }
   }
 </script>
