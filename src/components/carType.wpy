@@ -1,0 +1,54 @@
+<style lang="less">
+.scores {
+  display: inline-block;
+}
+</style>
+
+<template>
+  <view id="car-type">
+    <scroll-view class="left-type" >
+      <view>
+      </view>
+      <view class="line-bg" style="height: 100%;"></view>
+    </scroll-view>
+    <scroll-view class="right-type-details" style="height: 32.3rem">
+      <view>
+      </view>
+    </scroll-view>
+    <view id="car-type-btn">确定</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class CarType extends wepy.component {
+    config = {
+
+    }
+
+    props = {
+
+    }
+
+    computed = {
+
+    }
+
+    data = {
+
+    }
+
+    components = {
+
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+  }
+</script>
