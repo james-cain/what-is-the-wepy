@@ -29,6 +29,24 @@
       text-overflow: ellipsis;
       font-size: 15px;
     }
+    &-img {
+      width: 40px;
+      height: 40px;
+      float: left;
+      margin: 8px 5px 9px 15px;
+    }
+    .selected {
+      border: 1px solid #e5e5e5;
+      border-left: 0;
+      border-right: 1px solid #fff;
+      background: #fff;
+      width: 101%;
+    }
+  }
+
+  .left-type-img:first-child,
+  .left-type-img.selected:first-child {
+    border-top: 0;
   }
 
   .line-bg {
@@ -42,7 +60,7 @@
   }
 
   .right-type-details {
-    width: 58%;
+    width: 60%;
     float: right;
     height: inherit;
     overflow: hidden;
@@ -52,6 +70,8 @@
       width: 100%;
     }
     &-card {
+      height: 56px;
+      line-height: 56px;
       width: 80%;
       margin-left: 10%;
       padding-right: 10%;
@@ -62,21 +82,53 @@
       text-overflow: ellipsis;
       font-size: 15px;
     }
+    &-img {
+      height: 15px;
+      width: 15px;
+      float: right;
+      padding: 21px 0;
+    }
+  }
+
+  #car-type-btn {
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    background: rgb(47, 185, 195);
+    color: #fff;
+    font-size: 17px;
+    text-align: center;
+    z-index: 3;
+    position: absolute;
+    left: 0;
+    bottom: 0;
   }
 }
 </style>
 
 <template>
   <view id="car-type">
-    <scroll-view class="left-type">
+    <scroll-view class="left-type" style="height: {{panelHeight}}px">
       <view class="left-type-list">
-        <view class="left-type-card"></view>
+        <view wx:for="{{allCarList}}" wx:for-item="car" wx:key="brand">
+          <view class="left-type-card {{car.selected ? 'selected' : ''}}" @tap="switchBrand({{car.brand}}, {{car.selected}})">
+            <image class="left-type-img" src="{{car.brandImg}}"/>
+            <text>{{car.brand}}</text>
+          </view>
+        </view>
       </view>
       <view class="line-bg" style="height: 100%;"></view>
     </scroll-view>
-    <scroll-view class="right-type-details">
-      <view class="right-type-details-list">
-        <view class="right-type-details-card"></view>
+    <scroll-view class="right-type-details" style="height: {{panelHeight}}px">
+      <view wx:for="{{allCarList}}" wx:for-item="car" wx:key="brand">
+        <view class="right-type-details-list" hidden="{{!car.selected}}">
+          <view wx:for="{{car.brandAry}}" wx:for-item="carbrand" wx:key="vehicleModelCode">
+            <view class="right-type-details-card" @tap="switchCar({{car.brand}}, {{carbrand.vehicleBrandCode}}, {{carbrand.vehicleModelCode}}, {{carbrand.selected}})">
+              {{carbrand.vehicleModel}}
+              <image class="right-type-details-img" src="../images/c_list_tick_ok@2x.png" wx:if="{{carbrand.selected}}"></image>
+            </view>
+          </view>
+        </view>
       </view>
     </scroll-view>
     <view id="car-type-btn">确定</view>
@@ -96,11 +148,71 @@
     }
 
     computed = {
-
+      allCarList () {
+        if (this.initRefresh) {
+          let brand = ''
+          let count = -1
+          let allCarList = []
+          this.vehicleCarList.forEach((e, index, arr) => {
+            if (brand !== e.vehicleBrand) {
+              count++
+              brand = ''
+              allCarList[count] = {
+                brand: '',
+                brandAry: []
+              }
+              allCarList[count].selected = count === 0
+              allCarList[count].brand = e.vehicleBrand
+              allCarList[count].brandImg = e.vehicleBrandImg
+              e.selected = false
+              allCarList[count].brandAry.push(e)
+              brand = e.vehicleBrand
+            } else {
+              e.selected = false
+              allCarList[count].brandAry.push(e)
+            }
+          })
+          console.log('new typelIst:')
+          console.log(allCarList)
+          this.initRefresh = false
+          return allCarList
+        } else {
+          return this.allCarList
+        }
+      },
+      panelHeight () {
+        console.log(wx.getStorageSync('mapH'))
+        return wx.getStorageSync('mapH')
+      }
     }
 
     data = {
-
+      vehicleCarList: [
+        {
+          vehicleBrand: 'aa',
+          vehicleBrandCode: '1',
+          vehicleBrandImg: '../images/vehicle/Fisker.png',
+          vehicleModel: '宝马',
+          vehicleModelCode: 1
+        },
+        {
+          vehicleBrand: 'bb',
+          vehicleBrandCode: '2',
+          vehicleBrandImg: '../images/vehicle/Fisker.png',
+          vehicleModel: '宝马',
+          vehicleModelCode: 1
+        },
+        {
+          vehicleBrand: 'bb',
+          vehicleBrandCode: '3',
+          vehicleBrandImg: '../images/vehicle/Fisker.png',
+          vehicleModel: '宝马2',
+          vehicleModelCode: 2
+        }
+      ],
+      allCarList: [],
+      panelHeight: 0,
+      initRefresh: true
     }
 
     components = {
@@ -108,7 +220,31 @@
     }
 
     methods = {
-
+      switchBrand(brand, selected, e) {
+        if (!selected) {
+          this.allCarList.forEach((e, index, arr) => {
+            e.selected = e.brand === brand
+            e.brandAry.forEach((elm, i, a) => {
+              elm.selected = false
+            })
+          })
+        }
+        this.$apply()
+      },
+      switchCar(brand, vehicleBrandCode, vehicleModelCode, selected, e) {
+        this.allCarList.forEach((e, index, arr) => {
+          if (e.brand === brand) {
+            e.brandAry.forEach((elm, i, a) => {
+              if (vehicleModelCode === elm.vehicleModelCode) {
+                elm.selected = !selected
+              } else {
+                elm.selected = false
+              }
+            })
+          }
+        })
+        this.$apply()
+      }
     }
 
     events = {

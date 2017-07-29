@@ -108,7 +108,7 @@
 </style>
 <template>
   <view class="homepage">
-    <view id="stake-map-filterList" class="stake-map-filterList">
+    <view id="stake-map-filterList" class="stake-map-filterList" hidden="{{carTypeShow}}">
       <text class="title">
         筛选条件
       </text>
@@ -139,7 +139,7 @@
           <text class="filter-car-name"></text>
         </view>
         <view class="change-car-type">
-          <view class="change-car-type-name-area">
+          <view class="change-car-type-name-area" @tap="showCarType">
             <view class="change-car-type-name">
               更换
             </view>
@@ -155,11 +155,13 @@
         <view class="btn-card btn-group-submit left">确定</view>
       </view>
     </view>
+    <carType hidden="{{!carTypeShow}}"></carType>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import carType from '../components/carType'
 
   export default class MapFilter extends wepy.page {
     config = {
@@ -167,7 +169,7 @@
     }
 
     components = {
-
+      carType: carType
     }
 
     data = {
@@ -176,7 +178,8 @@
         false,
         false,
         false
-      ]
+      ],
+      carTypeShow: false
     }
 
     computed = {
@@ -186,6 +189,10 @@
     methods = {
       selectedCard (id, e) {
         this.selectedArr[id] = !this.selectedArr[id]
+        this.$apply()
+      },
+      showCarType (e) {
+        this.carTypeShow = true
         this.$apply()
       }
     }

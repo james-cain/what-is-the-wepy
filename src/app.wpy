@@ -11,7 +11,8 @@
         'pages/electring',
         'pages/station',
         'pages/moreCarType',
-        'pages/mapFilter'
+        'pages/mapFilter',
+        'pages/favorite'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',

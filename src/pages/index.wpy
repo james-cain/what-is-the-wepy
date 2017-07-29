@@ -99,7 +99,7 @@
   import wepy from 'wepy'
   import menu from '../components/menu'
   import tableList from '../components/tableList'
-  import checkNetWorkStatus from '../utils/CheckNetWork'
+  // import checkNetWorkStatus from '../utils/CheckNetWork'
 
   export default class Index extends wepy.page {
     config = {
@@ -494,6 +494,11 @@
           wx.navigateTo({
             url: 'register'
           })
+        } else if (id === 6) {
+          // 收藏
+          wx.navigateTo({
+            url: 'favorite'
+          })
         }
       }
     }
@@ -586,13 +591,13 @@
     // 扫描二维码返回的事件
     scanPile () {
       // 检查网络
-      if (checkNetWorkStatus() === false) {
-        console.log('网络错误')
-      } else {
+      // if (checkNetWorkStatus() === false) {
+      //   console.log('网络错误')
+      // } else {
         // let that = this
-        wx.navigateTo({
-          url: 'electring'
-        })
+      wx.navigateTo({
+        url: 'electring'
+      })
         // wepy.request({
         //   url: that.ElectryUrl.scan,
         //   data: that.electryPileParams,
@@ -607,7 +612,7 @@
         // }).catch(() => {
         //   that.failMessage()
         // })
-      }
+      // }
     }
 
     getUserCurrentLocation() {

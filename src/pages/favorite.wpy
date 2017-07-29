@@ -1,0 +1,129 @@
+<style lang="less">
+.list-tips {
+  width: 200px;
+  text-align: center;
+  position: absolute;
+  top: 156px;
+  left: 50%;
+  margin-left: -100px;
+  display: block;
+  .list-tips-title {
+    font-size: 17px;
+    color: #b7bec8;
+    height: 40px;
+    line-height: 40px;
+  }
+}
+</style>
+<template>
+  <view class="homepage">
+    <view class="list-tips" wx:if="{{pileTableList.length === 0 || !pileTableList}}">
+      <view class="list-tips-title">没有收藏的站点</view>
+      <view class="list-tips-title">快去收藏吧</view>
+    </view>
+    <tableList :pileTableList="pileTableList" :tableHeight="tableHeight"></tableList>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import tableList from '../components/tableList'
+
+  export default class Favorite extends wepy.page {
+    config = {
+      navigationBarTitleText: '收藏'
+    }
+
+    components = {
+      tableList: tableList
+    }
+
+    data = {
+      pileTableList: [
+        {
+          id: 1,
+          name: '碧华庭居充电站',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 2,
+          name: '梅山苑',
+          address: '深圳市福田区梅山苑一期综合楼旁边停车场',
+          distance: '1.07km',
+          isLeisure: false,
+          pilecount: 2
+        },
+        {
+          id: 3,
+          name: '骏景豪园',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 4,
+          name: '梅林一村',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 5,
+          name: '碧华庭居充电站',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 6,
+          name: '特发小区',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 7,
+          name: '梅林二村',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        },
+        {
+          id: 8,
+          name: '碧华庭居充电站',
+          address: '深圳市福田区新洲路1032号地下一楼停车场',
+          distance: '1.2km',
+          isLeisure: true,
+          pilecount: 1
+        }
+      ],
+      tableHeight: 0
+    }
+
+    computed = {
+      tableHeight () {
+        return wx.getStorageSync('windowH')
+      }
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+
+    onLoad() {
+
+    }
+  }
+</script>

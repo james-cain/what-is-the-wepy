@@ -72,7 +72,7 @@
 </style>
 
 <template>
-  <scroll-view scroll-y style="height: {{tableHeight}}px">
+  <scroll-view scroll-y style="height: {{tableH}}px">
     <view class="table-card" wx:for="{{pileTableList}}" wx:for-item="pileTable" wx:key="id">
       <view style="display: flex;">
         <view class="table-card-left">
@@ -106,13 +106,14 @@
     }
 
     props = {
-      pileTableList: {}
+      pileTableList: {},
+      tableHeight: Number
     }
 
     computed = {
-      tableHeight () {
+      tableH () {
         console.log(wx.getStorageSync('mapH'))
-        return wx.getStorageSync('mapH') - 45
+        return this.tableHeight > 0 ? this.tableHeight : wx.getStorageSync('mapH') - 45
       }
     }
 

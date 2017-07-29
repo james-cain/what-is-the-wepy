@@ -101,8 +101,8 @@
           <text class="suit-me-title">适合我的车型</text>
           <view class="suit-me-list">
             <view class="suit-me-card" wx:for="{{suitMeList}}" wx:for-item="suitMe">
-              <image src="{{suitMe.vihicleBrandImg}}" class="suit-me-img"/>
-              <text class="suit-me-name">{{suitMe.vihicleModel}}</text>
+              <image src="{{suitMe.vehicleBrandImg}}" class="suit-me-img"/>
+              <text class="suit-me-name">{{suitMe.vehicleModel}}</text>
             </view>
           </view>
         </view>
@@ -111,8 +111,8 @@
             <text class="type-list-title">{{brandType.brand}}</text>
             <view class="type-card-list">
               <view class="type-card" wx:for="{{brandType.brandAry}}" wx:for-item="brand">
-                <image src="{{brand.vihicleBrandImg}}" class="type-img"/>
-                <text class="type-name">{{brand.vihicleModel}}</text>
+                <image src="{{brand.vehicleBrandImg}}" class="type-img"/>
+                <text class="type-name">{{brand.vehicleModel}}</text>
               </view>
             </view>
           </view>
@@ -140,28 +140,32 @@
         {
           vehicleBrand: 'aa',
           vehicleBrandCode: '1',
-          vihicleBrandImg: '../images/vehicle/Fisker.png',
-          vihicleModel: '宝马'
+          vehicleBrandImg: '../images/vehicle/Fisker.png',
+          vehicleModel: '宝马',
+          vehicleModelCode: 1
         },
         {
           vehicleBrand: 'bb',
           vehicleBrandCode: '2',
-          vihicleBrandImg: '../images/vehicle/Fisker.png',
-          vihicleModel: '宝马'
+          vehicleBrandImg: '../images/vehicle/Fisker.png',
+          vehicleModel: '宝马',
+          vehicleModelCode: 1
         },
         {
           vehicleBrand: 'bb',
           vehicleBrandCode: '3',
-          vihicleBrandImg: '../images/vehicle/Fisker.png',
-          vihicleModel: '宝马2'
+          vehicleBrandImg: '../images/vehicle/Fisker.png',
+          vehicleModel: '宝马2',
+          vehicleModelCode: 2
         }
       ],
       suitMeList: [
         {
           vehicleBrand: 'aa',
           vehicleBrandCode: '1',
-          vihicleBrandImg: '../images/vehicle/Fisker.png',
-          vihicleModel: '宝马'
+          vehicleBrandImg: '../images/vehicle/Fisker.png',
+          vehicleModel: '宝马',
+          vehicleModelCode: 1
         }
       ],
       brandTypeList: []
