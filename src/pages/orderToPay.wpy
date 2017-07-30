@@ -1,0 +1,57 @@
+<style lang="less">
+
+</style>
+
+<template>
+    <view class="homepage">
+        <div id="orderToPay-panel">
+           <div class="orderToPay-station-details">
+                <dl>
+                    <dd class="pic">
+                        <img src=""/>
+                    </dd>
+                    <dt></dt>
+                    <dd class="txt">
+                        <p class="station-name">充电电桩:<span></span></p>
+                        <p class="cid">编号(CID):<span></span></p>
+                    </dd>
+                </dl>
+               <div class="orderToPay-details-params">
+                   <p><span class="charging-panel-details-time">时长:<i></i>分钟</span><span class="charging-panel-details-elect">电量:<i></i>kWh</span></p>
+                   <!--<p><span class="charging-panel-details-elect">电量:<i></i>kWh</span><span class="charging-panel-details-amount">费用:<i></i>元</span></p>-->
+                   <p><span class="charging-panel-details-del-c">减排:<i></i></span></p>
+               </div>
+           </div>
+            <div class="orderToPay-method">
+                <div class="ye"> <span></span>
+                    <p class="orderToPay-method-item-title">
+                       余额支付<i></i>
+                    </p>
+                    <p class="orderToPay-method-item-mark">
+                        推荐使用充电账号余额支付
+                    </p>
+                </div>
+                <!--<div class="wx"><span></span>-->
+                    <!--<p class="orderToPay-method-item-title">-->
+                    <!--微信支付-->
+                    <!--</p>-->
+                    <!--<p class="orderToPay-method-item-mark">-->
+                        <!--推荐安装微信5.0以上版本用户使用-->
+                    <!--</p>-->
+                <!--</div>-->
+
+            </div>
+
+            <div class="orderToPay-btn">
+                确定支付<span></span>
+            </div>
+        </div>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class OrderToPay extends wepy.page {
+
+}
+</script>

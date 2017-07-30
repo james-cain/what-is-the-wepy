@@ -1,9 +1,164 @@
 <style lang="less">
+#charging-panel-charging {
+  width: 100%;
+  height: 100%;
+  background: #222 url('../images/c_charge_bg@2x.gif') center top no-repeat;
+  background-size: 360px 340px;
+  overflow: hidden;
+  overflow-y: auto;
+}
 
+.charging-top {
+    width: 100%;
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 320px;
+}
+
+.charging-end-button {
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    top: 260px;
+    left: 50%;
+    background: url('../images/c_charge_finish_btn_normal@2x.png') center center no-repeat;
+    background-size: 120px 120px;
+    line-height: 280px;
+    color: #ce4b40;
+    text-align: center;
+    font-size: 15px;
+    margin-left: -60px;
+    z-index: 4;
+}
+
+.left-time {
+    width: 156px;
+    height: 74px;
+    position: absolute;
+    right: 10px;
+    top: 30px;
+    background: url('../images/c_charging_time_bg@2x.png') center center no-repeat;
+    background-size: 156px 74px;
+    z-index: 5;
+    line-height: 74px;
+    text-align: center;
+    color: #43b37b;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.charging-panel-details {
+    background: #fff;
+    width: 100%;
+    padding-top: 150px;
+    position: absolute;
+    top: 320px;
+    left: 0;
+    z-index: 3;
+}
+
+.charging-panel-details .charging-panel-details-panel {
+    width: 280px;
+    margin: 0 auto;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    color: #666;
+}
+
+.charging-panel-details .charging-panel-details-panel>view {
+    display: inline-block;
+    width: 120px;
+}
+
+.charging-panel-details .charging-panel-details-panel .charging-panel-details-time {
+    float: left;
+}
+
+.charging-panel-details .charging-panel-details-panel .charging-panel-details-percent {
+    float: right;
+    text-align: right;
+
+}
+
+.charging-panel-details .charging-panel-details-panel .charging-panel-details-percent .left {
+    float: left;
+}
+
+.charging-panel-details .charging-panel-details-panel .charging-panel-details-elect {
+    float: left;
+
+}
+
+.charging-panel-details .charging-panel-details-panel .charging-panel-details-amount {
+    float: right;
+    text-align: right;
+}
+
+.charging-panel-details .charging-panel-details-panel .charging-panel-details-amount .left {
+    float: left;
+}
+
+.charging-panel-details .charging-panel-details-panel .charging-value {
+    font-style: normal;
+}
+
+.charging-panel-details .charging-panel-details-refresh {
+    text-align: center;
+    color: lightseagreen;
+    font-size: 16px;
+}
+
+.charging-panel-details .charging-panel-details-refresh>view {
+    width: 100px;
+    height: inherit;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+    padding: 0;
+}
 </style>
 <template>
   <view class="homepage">
-
+    <view id="charging-panel-charging"  style="overflow: hidden;">
+      <view class="charging-top">
+        <view class="left-time">预计结束:<text></text></view>
+      </view>
+      <view class="charging-end-button" @tap="endCharge">
+        <text>结束充电</text>
+      </view>
+      <view class="charging-panel-details" style="height: {{panelH}}px">
+        <view class="charging-panel-details-panel">
+          <view class="charging-panel-details-time" style="margin-left: 25px; width: 95px;">
+            <image src="../images/c_charge_time_icon@2x.png" style="width: 16px; height: 16px;"/>
+            时长:<text class="charging-value">0</text>分钟
+          </view>
+          <view class="charging-panel-details-percent">
+            <image src="../images/c_charge_percent_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
+            <text class="left charging-value">百分比:0</text>
+          </view>
+        </view>
+        <view class="charging-panel-details-panel">
+          <view class="charging-panel-details-elect" style="margin-left: 25px; width: 95px;">
+            <image src="../images/c_charge_quantity_icon@2x.png" style="width: 16px; height: 16px;"/>
+            电量:<text class="charging-value">0</text>kWh
+          </view>
+          <view class="charging-panel-details-amount">
+            <image src="../images/c_charge_cost_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
+            <text class="left charging-value">费用:0元</text>
+          </view>
+        </view>
+        <view class="charging-panel-details-panel charging-panel-details-refresh" @tap="refresh">
+          <view>
+            <image src="../images/c_map_refresh.png" style="width: 16px; height: 16px;"/>
+            <text>刷新</text>
+          </view>
+        </view>
+      </view>
+      <view class="help-view"></view>
+    </view>
   </view>
 </template>
 
@@ -20,7 +175,7 @@
     }
 
     data = {
-
+      panelH: 0
     }
 
     computed = {
@@ -28,7 +183,29 @@
     }
 
     methods = {
+      endCharge (e) {
+        wx.showModal({
+          title: '结束充电',
+          content: '您确认结束充电吗?',
+          showCancel: true,
+          success: (res) => {
+            this.startC()
+          }
+        })
+      },
+      refresh (e) {
+        getInfo()
+      }
+    }
 
+    getInfo () {
+
+    }
+    
+    startC () {
+      wx.navigateTo({
+        url: 'orderToPay'
+      })
     }
 
     events = {
@@ -36,7 +213,8 @@
     }
 
     onLoad() {
-
+      this.panelH = wx.getStorageSync('windowH') - 320
+      this.$apply()
     }
   }
 </script>

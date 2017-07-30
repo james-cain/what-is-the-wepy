@@ -2,46 +2,39 @@
 #charging-panel {
     width: 100%;
     height: 100%;
-    background: url('../images/c_test_bg.png') left top no-repeat;
-    background-size: 100% 180px;
-}
-
-#charging-panel-charging {
-    width: 100%;
-    height: 100%;
-    background: #222 url('../images/c_charge_bg.gif') center top no-repeat;
-    background-size: 360px 340px;
+    background: url('../images/c_test_bg@2x.png') left top no-repeat;
+    background-size: 100% 400px;
     overflow: hidden;
     overflow-y: auto;
 }
 
 .charging-top-mask {
     width: 100%;
-    height: 400px;
     background: #000;
     opacity: .75;
     position: absolute;
     left: 0;
     top: 0;
     z-index: 0;
+    height: 320px;
 }
 
 .charging-top {
     width: 100%;
-    height: 400px;
     z-index: 1;
     position: absolute;
     left: 0;
     top: 0;
+    height: 320px;
 }
 
 .charging-start-button {
+    top: 260px;
     width: 120px;
     height: 120px;
     position: absolute;
-    top: 340px;
     left: 50%;
-    background: url('../images/c_charge_start_btn_normal.png') center center no-repeat;
+    background: url('../images/c_charge_start_btn_normal@2x.png') center center no-repeat;
     background-size: 120px 120px;
     line-height: 280px;
     color: lightseagreen;
@@ -51,24 +44,8 @@
     margin-left: -60px;
 }
 
-.charging-end-button {
-    width: 120px;
-    height: 120px;
-    position: absolute;
-    top: 260px;
-    left: 50%;
-    background: url('../images/c_charge_finish_btn_normal.png') center center no-repeat;
-    background-size: 120px 120px;
-    line-height: 280px;
-    color: #ce4b40;
-    text-align: center;
-    font-size: 15px;
-    margin-left: -60px;
-    z-index: 4;
-}
-
 .charging-start-button.clicked {
-    background: url('../images/c_charge_start_btn_pressed.png') center center no-repeat;
+    background: url('../images/c_charge_start_btn_pressed@2x.png') center center no-repeat;
     background-size: 120px 120px;
 }
 
@@ -77,7 +54,6 @@
     color: #fff;
     width: 200px;
     text-align: left;
-    line-height: 30px;
     height: 30px;
     margin: 70px auto 0 30px;
     white-space: nowrap;
@@ -108,34 +84,23 @@
     width: 200px;
 }
 
-.charging-elect-type.dc, .charging-elect-type.ac, .charging-elect-price {
-    padding-left: 25px;
-
-}
-
-.charging-elect-type.dc {
-    background: url('../images/c_filtrate_dc_icon.png') left center no-repeat;
-    background-size: 26px 26px;
+.charging-elect-type {
     float: left;
-}
-
-.charging-elect-type.ac {
-    background: url('../images/c_filtrate_ac_icon.png') left center no-repeat;
-    background-size: 26px 26px;
-    float: left;
+    position: relative;
+    top: -11px;
 }
 
 .charging-elect-price {
-    background: url('../images/c_list_price_icon.png') 7px center no-repeat;
-    background-size: 16px 16px;
-    float: right;
+    float: left;
+    position: relative;
+    top: -10px;
+    left: 10px;
 }
 
 .charging-elect-amount-panel {
-    height: 250px;
     width: 100%;
     position: absolute;
-    top: 20rem;
+    top: 320px;
     z-index: 2;
     background-color: #fff;
 }
@@ -160,7 +125,7 @@
 .charging-elect-amount-fullof-button {
     width: 25px;
     height: 25px;
-    background: url('../images/c_list_check_box_normal.png') left center no-repeat;
+    background: url('../images/c_list_check_box_normal@2x.png') left center no-repeat;
     background-size: 25px 25px;
     float: right;
     margin-top: 0px;
@@ -169,145 +134,72 @@
 .charging-elect-amount-fullof-button.clicked {
     width: 25px;
     height: 25px;
-    background: url('../images/c_list_check_box_select.png') left center no-repeat;
+    background: url('../images/c_list_check_box_select@2x.png') left center no-repeat;
     background-size: 25px 25px;
     float: right;
 }
 
 .charging-elect-amount-input {
     width: 50px;
-    text-align: right;
-    border: 0px;
     outline: none;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid green;
+    text-align: left;
+    font-size: 12px;
+    float: left;
 }
 
-.charging-panel-details {
-    background: #fff;
+.charging-start-button-mask {
     width: 100%;
-    height: 130px;
-    padding-top: 80px;
-    position: absolute;
-    top: 320px;
+    height: 100%;
     left: 0;
-    z-index: 3;
-}
-
-.charging-panel-details p {
-    width: 280px;
-    margin: 0 auto;
-    height: 30px;
-    line-height: 30px;
-    font-size: 14px;
-    color: #666;
-}
-
-.charging-panel-details p span {
-    display: inline-block;
-    width: 120px;
-    padding-left: 25px;
-}
-
-.charging-panel-details p span.charging-panel-details-time {
-    background: url('../images/c_charge_time_icon.png') 20px center no-repeat;
-    background-size: 16px 16px;
-    float: left;
-
-}
-
-.charging-panel-details p span.charging-panel-details-percent {
-    /*background: url('../images/c_charge_percent_icon.png') 45px center no-repeat;
-    background-size: 16px 16px;*/
-    float: right;
-    text-align: right;
-
-}
-
-.charging-panel-details p span.charging-panel-details-percent i {
-    float: left;
-}
-
-.charging-panel-details p span.charging-panel-details-elect {
-    background: url('../images/c_charge_quantity_icon.png') 20px center no-repeat;
-    background-size: 16px 16px;
-    float: left;
-
-}
-
-.orderToPay-details-params p span.charging-panel-details-del-c {
-    background: url('../images/c_more_co2_icon.png') left center no-repeat;
-    background-size: 16px 16px;
-    float: left;
-}
-
-.charging-panel-details p span.charging-panel-details-amount {
-    /*    background: url('../images/c_charge_cost_icon.png') 15px center no-repeat;
-        background-size: 16px 16px;*/
-    float: right;
-    text-align: right;
-}
-
-.charging-panel-details p span.charging-panel-details-amount i {
-    float: left;
-}
-
-.charging-panel-details p span i {
-    font-style: normal;
-}
-
-.charging-panel-details p.charging-panel-details-refresh {
-    text-align: center;
-    color: lightseagreen;
-    font-size: 16px;
-}
-
-.charging-panel-details p.charging-panel-details-refresh span.refreshing {
-    /*background: url('../images/c_map_refresh.png') left center no-repeat;*/
-    /*background-size: 30px 30px;*/
-}
-
-.charging-panel-details p.charging-panel-details-refresh span {
-    width: 100px;
-    height: inherit;
-    margin: 0 auto;
-    /*background: url('../images/c_map_refresh.png') left center no-repeat;*/
-    /*background-size: 30px 30px;*/
-    /*padding-left: 30px;*/
-    display: block;
-    text-align: center;
-    padding: 0;
+    top: 51px;
+    position: fixed;
+    z-index: 4;
+    background: #000;
+    opacity: .3;
+    display: none;
 }
 </style>
 <template>
   <view class="homepage">
-    <view id="charging-panel" style="background-size: 100% 400px; overflow: hidden; overflow-y: auto;">
-      <view class="charging-top-mask" style="height: 320px;"></view>
-      <view class="charging-top" style="height: 320px;">
-        <view class="charging-top-position"></view>
+    <view id="charging-panel">
+      <view class="charging-top-mask"></view>
+      <view class="charging-top">
+        <view class="charging-top-position">{{pileDetails.chargePileName}}</view>
         <view class="charging-top-code">
-          编号(CID):<span></span>
+          编号(CID):<text>{{pileDetails.chargePileCode}}</text>
         </view>
         <view class="charging-top-params">
-          <span class="charging-elect-type"></span>
-          <span class="charging-elect-price"></span>
+          <image src="../images/c_filtrate_ac_icon@2x.png" wx:if="{{pileDetails.chargePileType === 1}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0;"></image>
+          <image src="../images/c_filtrate_dc_icon@2x.png" wx:if="{{pileDetails.chargePileType !== 1}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0;"></image>
+          <text class="charging-elect-type">
+               {{pileDetails.chargePileType === '1' ? '直流电' : '交流电'}}
+          </text>
+          <image src="../images/c_list_price_icon@2x.png" style="height: 16px; width: 16px; float: left; position: relative; top: 5px; left: 25px;"></image>
+          <text class="charging-elect-price">
+              {{pileDetails.price + '元/kWh'}}
+          </text>
         </view>
       </view>
-      <view class="charging-elect-amount-panel">
-        <view class="charging-elect-amount-view">
+      <view class="charging-elect-amount-panel" style="height: {{panelH}}px">
+        <view class="charging-elect-amount-div">
           <view class="charging-elect-amount-fullof">
-            <span>充满电为止</span>
-            <i class="defaultChargingText" style="font-style: normal;font-size: 12px; color: #999;"></i>
-            <span class="charging-elect-amount-fullof-button clicked"></span>
+            <text>充满电为止</text>
+            <text class="defaultChargingText" style="font-style: normal;font-size: 12px; color: #999;"></text>
+            <text class="charging-elect-amount-fullof-button {{buttonType === 1 ? 'clicked' : ''}}" @tap="changeType(1)"></text>
           </view>
           <view style="padding: 10px;" class="charging-elect-quota">
-            <span>充电</span>
-            <input type="tel" placeholder="请输入" class="charging-elect-amount-input" style="border-radius: 0;border: 0;border-bottom: 1px solid green;text-align: left; font-size: 12px;"/>
-            <i style="font-style: normal;font-size: 12px; color: #999;font-style: normal;">元(账户余额须大于10元)</i>
-            <span class="charging-elect-amount-fullof-button"></span>
+            <text style="float: left;">充电</text>
+            <input type="number" value="{{clear ? '' : record}}" placeholder="请输入" class="charging-elect-amount-input" @input="recordInput"/>
+            <text style="font-style: normal;font-size: 12px; color: #999;font-style: normal;">元(账户余额须大于10元)</text> 
+            <text class="charging-elect-amount-fullof-button {{buttonType === 2 ? 'clicked' : ''}}" @tap="changeType(2)"></text>
           </view>
         </view>
       </view>
-      <view id="charging-start-button" class="charging-start-button" style="top: 260px;">
-        <span>启动充电</span>
+      <view id="charging-start-button" class="charging-start-button" @tap="charging">
+        <text>启动充电</text>
       </view>
     </view>
     <view id="charging-start-button-mask" class="charging-start-button-mask ctp-mask"></view>
@@ -327,7 +219,10 @@
     }
 
     data = {
-
+        buttonType: 1,
+        clear: false,
+        record: '',
+        panelH: 0
     }
 
     computed = {
@@ -335,7 +230,24 @@
     }
 
     methods = {
-
+        changeType (id, e) {
+            this.buttonType = parseInt(id, 10)
+            if (this.buttonType === 1) {
+                this.clear = true
+                this.record = ''
+                this.clear = false
+            }
+            this.$apply()
+        },
+        recordInput (e) {
+            this.record = e.detail.value
+            this.$apply()
+        },
+        charging (e) {
+            wx.navigateTo({
+                url: 'electring'
+            })
+        }
     }
 
     events = {
@@ -343,7 +255,8 @@
     }
 
     onLoad() {
-
+      this.panelH = wx.getStorageSync('windowH') - 320
+      this.$apply()
     }
   }
 </script>

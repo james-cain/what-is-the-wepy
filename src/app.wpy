@@ -12,7 +12,8 @@
         'pages/station',
         'pages/moreCarType',
         'pages/mapFilter',
-        'pages/favorite'
+        'pages/favorite',
+        'pages/startElectry'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',

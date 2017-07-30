@@ -596,7 +596,7 @@
       // } else {
         // let that = this
       wx.navigateTo({
-        url: 'electring'
+        url: 'startElectry'
       })
         // wepy.request({
         //   url: that.ElectryUrl.scan,
