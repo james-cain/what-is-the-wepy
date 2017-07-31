@@ -294,7 +294,7 @@
         </view>
       </scroll-view>
     </view>
-    <view class="station-details-main-order-btn {{makeAppointment !== 1 || (makeAppointment === 1 && chargingPileNum === 0 ? 'no' : '')}}">点击预约</view>
+    <view class="station-details-main-order-btn {{makeAppointment !== 1 || (makeAppointment === 1 && chargingPileNum === 0 ? 'no' : '')}}" @tap="goToOrder">点击预约</view>
   </view>
 </view>
 </template>
@@ -486,6 +486,11 @@
       moreCarType (e) {
         wx.navigateTo({
           url: 'moreCarType'
+        })
+      },
+      goToOrder (e) {
+        wx.navigateTo({
+          url: 'order'
         })
       }
     }

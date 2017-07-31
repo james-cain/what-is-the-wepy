@@ -1,0 +1,43 @@
+<style lang="less">
+
+</style>
+
+<template>
+  <view class="container">
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class MyOrder extends wepy.page {
+    config = {
+      navigationBarTitleText: '预约'
+    }
+
+    components = {
+
+    }
+
+    data = {
+
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+
+    onLoad() {
+
+    }
+  }
+</script>

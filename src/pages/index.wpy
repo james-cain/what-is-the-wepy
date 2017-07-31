@@ -461,34 +461,37 @@
             url: 'mapFilter'
           })
         } else if (id === 4) {
-          // 扫描二维码
-          wx.scanCode({
-            success: (res) => {
-              that.electryPileParams.device_id = res.result
-              wx.showModal({
-                title: '提示',
-                content: '是否开始充电?',
-                showCancel: true,
-                success: (res) => {
-                  if (res.confirm) {
-                    console.log('用户点击确定')
-                    that.scanPile()
-                  } else if (res.cancel) {
-                    console.log('用户点击取消')
-                  }
-                }
-              })
-            },
-            fail: () => {
-              wx.showToast({
-                title: '扫码失败',
-                icon: 'loading',
-                duration: 2000
-              })
-              that.scanPile()
-            },
-            complete: () => {}
+          wx.navigateTo({
+            url: 'orderToPay'
           })
+          // 扫描二维码
+          // wx.scanCode({
+          //   success: (res) => {
+          //     that.electryPileParams.device_id = res.result
+          //     wx.showModal({
+          //       title: '提示',
+          //       content: '是否开始充电?',
+          //       showCancel: true,
+          //       success: (res) => {
+          //         if (res.confirm) {
+          //           console.log('用户点击确定')
+          //           that.scanPile()
+          //         } else if (res.cancel) {
+          //           console.log('用户点击取消')
+          //         }
+          //       }
+          //     })
+          //   },
+          //   fail: () => {
+          //     wx.showToast({
+          //       title: '扫码失败',
+          //       icon: 'loading',
+          //       duration: 2000
+          //     })
+          //     that.scanPile()
+          //   },
+          //   complete: () => {}
+          // })
         } else if (id === 5) {
           // 登陆注册
           wx.navigateTo({

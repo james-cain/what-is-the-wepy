@@ -1,57 +1,228 @@
 <style lang="less">
+.orderToPay-station-details {
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  &-dl {
+    height: 80px;
+    border-bottom: 1px solid #e5e5e5;
+    overflow: hidden;
+    padding: 10px;
+  }
+  &-dd {
+    width: 80px;
+    height: 80px;
+    float: left;
+    margin-right: 10px;
+  }
+  &-dt {
+    width: 200px;
+    float: left;
+    line-height: 25px;
+    color: #333;
+    font-size: 17px;
+  }
+  .txt {
+    width: 200px;
+    color: #999;
+    float: left;
+    font-size: 14px;
+    line-height: 22px;
+  }
+  .orderToPay-details-params {
+    background: #fff;
+    width: 100%;
+    padding: 10px 0;
+    &-p {
+      width: 90%;
+      margin: 0 auto;
+      height: 30px;
+      line-height: 30px;
+      font-size: 14px;
+      color: #666;
+    }
+    &-span {
+      display: inline-block;
+      width: 42%;
+      padding-left: 15px;
+    }
+    .charging-panel-details-time {
+      background: url('../images/c_charge_time_icon@2x.png') left center no-repeat;
+      background-size: 14px 14px;
+      float: left;
+    }
+    .charging-panel-details-elect {
+      background: url('../images/c_charge_quantity_icon@2x.png') left center no-repeat;
+      background-size: 14px 14px;
+      float: left;
+    }
+    .charging-panel-details-del-c {
+      background: url('../images/c_more_co2_icon@2x.png') left center no-repeat;
+      background-size: 16px 16px;
+      float: left;
+    }
+  }
+}
 
+.orderToPay-method {
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  border-width: 1px 0;
+  margin: 20px 0 30px 0;
+  overflow: hidden;
+  &-div {
+    padding: 5px 0;
+  }
+  &-span {
+    width: 60px;
+    height: 60px;
+    float: right;
+    display: block;
+    background: url('../images/c_list_check_box_normal@2x.png') center center no-repeat;
+    background-size: 30px 30px;
+    .selectedItem {
+      width: 60px;
+      height: 60px;
+      float: right;
+      display: block;
+      background: url('../images/c_list_check_box_select@2x.png') center center no-repeat;
+      background-size: 30px 30px;
+    }
+  }
+  .ye {
+    height: 60px;
+    border-bottom: 1px solid #e5e5e5;
+    background: url('../images/c_pay_charge_card_icon@2x.png') 13px center no-repeat;
+    background-size: 25px 25px;
+    padding-left: 50px;
+  }
+  .orderToPay-method-item-title {
+    font-size: 17px;
+    line-height: 32px;
+    &-i {
+      font-style: normal;
+    }
+  }
+  .orderToPay-method-item-mark {
+    font-size: 13px;
+    color: #ce4b40;
+    line-height: 20px;
+  }
+}
+
+.orderToPay-btn {
+  width: 90%;
+  margin: 0 5%;
+  border-radius: 3px;
+  font-size: 16px;
+  background: lightseagreen;
+  color: #fff;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  &-span {
+    font-size: 20px;
+    padding: 0 10px;
+    font-weight: bold;
+  }
+}
 </style>
 
 <template>
-    <view class="homepage">
-        <div id="orderToPay-panel">
-           <div class="orderToPay-station-details">
-                <dl>
-                    <dd class="pic">
-                        <img src=""/>
-                    </dd>
-                    <dt></dt>
-                    <dd class="txt">
-                        <p class="station-name">充电电桩:<span></span></p>
-                        <p class="cid">编号(CID):<span></span></p>
-                    </dd>
-                </dl>
-               <div class="orderToPay-details-params">
-                   <p><span class="charging-panel-details-time">时长:<i></i>分钟</span><span class="charging-panel-details-elect">电量:<i></i>kWh</span></p>
-                   <!--<p><span class="charging-panel-details-elect">电量:<i></i>kWh</span><span class="charging-panel-details-amount">费用:<i></i>元</span></p>-->
-                   <p><span class="charging-panel-details-del-c">减排:<i></i></span></p>
-               </div>
-           </div>
-            <div class="orderToPay-method">
-                <div class="ye"> <span></span>
-                    <p class="orderToPay-method-item-title">
-                       余额支付<i></i>
-                    </p>
-                    <p class="orderToPay-method-item-mark">
-                        推荐使用充电账号余额支付
-                    </p>
-                </div>
-                <!--<div class="wx"><span></span>-->
-                    <!--<p class="orderToPay-method-item-title">-->
-                    <!--微信支付-->
-                    <!--</p>-->
-                    <!--<p class="orderToPay-method-item-mark">-->
-                        <!--推荐安装微信5.0以上版本用户使用-->
-                    <!--</p>-->
-                <!--</div>-->
+  <view class="homepage">
+    <view id="orderToPay-panel">
+      <view class="orderToPay-station-details">
+        <view class="orderToPay-station-details-dl">
+          <view class="orderToPay-station-details-dd pic">
+            <image src="{{orderDetail.img}}" style="height: 80px; width: 80px;"/>
+          </view>
+          <view class="orderToPay-station-details-dt">{{orderDetail.siteName}}</view>
+          <view class="orderToPay-station-details-dd txt">
+            <view class="station-name">充电电桩:<text>{{orderDetail.siteAddress}}</text></view>
+            <view class="cid">编号(CID):<text>{{orderDetail.siteCode}}</text></view>
+          </view>
+        </view>
+        <view class="orderToPay-details-params">
+          <view class="orderToPay-details-params-p">
+            <view class="orderToPay-details-params-span charging-panel-details-time">时长:<text>{{orderDetail.chargeTime}}</text>分钟</view>
+            <view class="orderToPay-details-params-span charging-panel-details-elect">电量:<text>{{orderDetail.chargeElectricity}}</text>kWh</view>
+          </view>
+          <view class="orderToPay-details-params-p">
+            <view class="orderToPay-details-params-span charging-panel-details-del-c">减排:<text>{{orderDetail.carbonReduction}}</text></view>
+          </view>
+        </view>
+      </view>
+      <view class="orderToPay-method">
+        <view class="orderToPay-method-div ye {{payType === 1 ? 'selectedItem' : ''}}" @tap="payMethod(1)"> <view class="orderToPay-method-span"></view>
+          <view class="orderToPay-method-item-title">
+            余额支付<text class="orderToPay-method-item-title-i"></text>
+          </view>
+          <view class="orderToPay-method-item-mark">
+            推荐使用充电账号余额支付
+          </view>
+        </view>
+      </view>
 
-            </div>
-
-            <div class="orderToPay-btn">
-                确定支付<span></span>
-            </div>
-        </div>
+      <view class="orderToPay-btn" @tap="pay">
+        确定支付<text class="orderToPay-btn-span">{{orderDetail.chargeQuantity}}</text>
+      </view>
     </view>
+  </view>
 </template>
 
 <script>
-import wepy from 'wepy'
-export default class OrderToPay extends wepy.page {
+  import wepy from 'wepy'
 
-}
+  export default class OrderToPay extends wepy.page {
+    config = {
+      navigationBarTitleText: '订单支付'
+    }
+
+    components = {
+
+    }
+
+    data = {
+      orderDetail: {
+        img: '../images/c_default_station@2x.png',
+        siteName: 'aaaa',
+        siteAddress: 'bbbbbb',
+        siteCode: 'Asdf234',
+        chargeTime: 240,
+        carbonReduction: 15,
+        chargeElectricity: 12,
+        chargeQuantity: 12.8
+      },
+      payType: 0
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+      payMethod (id, e) {
+        console.log('选择支付方式')
+        let _id = parseInt(id, 10)
+        if (_id === this.payType) {
+          this.payType = 0
+        } else {
+          this.payType = _id
+        }
+        this.$apply()
+      },
+      pay (e) {
+        wx.navigateTo({
+          url: 'evaluation'
+        })
+      }
+    }
+
+    events = {
+
+    }
+
+    onLoad() {
+
+    }
+  }
 </script>

@@ -13,7 +13,11 @@
         'pages/moreCarType',
         'pages/mapFilter',
         'pages/favorite',
-        'pages/startElectry'
+        'pages/startElectry',
+        'pages/orderToPay',
+        'pages/evaluation',
+        'pages/order',
+        'pages/myOrder'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',

@@ -1,165 +1,165 @@
 <style lang="less">
 #charging-panel {
-    width: 100%;
-    height: 100%;
-    background: url('../images/c_test_bg@2x.png') left top no-repeat;
-    background-size: 100% 400px;
-    overflow: hidden;
-    overflow-y: auto;
+  width: 100%;
+  height: 100%;
+  background: url('../images/c_test_bg@2x.png') left top no-repeat;
+  background-size: 100% 400px;
+  overflow: hidden;
+  overflow-y: auto;
 }
 
 .charging-top-mask {
-    width: 100%;
-    background: #000;
-    opacity: .75;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 0;
-    height: 320px;
+  width: 100%;
+  background: #000;
+  opacity: .75;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 0;
+  height: 320px;
 }
 
 .charging-top {
-    width: 100%;
-    z-index: 1;
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 320px;
+  width: 100%;
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 320px;
 }
 
 .charging-start-button {
-    top: 260px;
-    width: 120px;
-    height: 120px;
-    position: absolute;
-    left: 50%;
-    background: url('../images/c_charge_start_btn_normal@2x.png') center center no-repeat;
-    background-size: 120px 120px;
-    line-height: 280px;
-    color: lightseagreen;
-    text-align: center;
-    font-size: 15px;
-    z-index: 5;
-    margin-left: -60px;
+  top: 260px;
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  left: 50%;
+  background: url('../images/c_charge_start_btn_normal@2x.png') center center no-repeat;
+  background-size: 120px 120px;
+  line-height: 280px;
+  color: lightseagreen;
+  text-align: center;
+  font-size: 15px;
+  z-index: 5;
+  margin-left: -60px;
 }
 
 .charging-start-button.clicked {
-    background: url('../images/c_charge_start_btn_pressed@2x.png') center center no-repeat;
-    background-size: 120px 120px;
+  background: url('../images/c_charge_start_btn_pressed@2x.png') center center no-repeat;
+  background-size: 120px 120px;
 }
 
 .charging-top-position, .charging-top-code, .charging-top-params {
-    font-size: 25px;
-    color: #fff;
-    width: 200px;
-    text-align: left;
-    height: 30px;
-    margin: 70px auto 0 30px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  font-size: 25px;
+  color: #fff;
+  width: 200px;
+  text-align: left;
+  height: 30px;
+  margin: 70px auto 0 30px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #charging-top-code-transfer-btn {
-    color: rgb(47, 185, 195);
-    font-size: 14px;
-    text-decoration: none;
+  color: rgb(47, 185, 195);
+  font-size: 14px;
+  text-decoration: none;
 }
 
 .charging-top-code {
-    font-size: 14px;
-    margin: 0 auto 0 30px;
-    text-align: left;
-    color: #595858;
-    padding-bottom: 20px;
-    width: 200px;
-    border-bottom: 1px solid #595858;
+  font-size: 14px;
+  margin: 0 auto 0 30px;
+  text-align: left;
+  color: #595858;
+  padding-bottom: 20px;
+  width: 200px;
+  border-bottom: 1px solid #595858;
 }
 
 .charging-top-params {
-    font-size: 14px;
-    margin: 0 auto;
-    color: #999;
-    width: 200px;
+  font-size: 14px;
+  margin: 0 auto;
+  color: #999;
+  width: 200px;
 }
 
 .charging-elect-type {
-    float: left;
-    position: relative;
-    top: -11px;
+  float: left;
+  position: relative;
+  top: -11px;
 }
 
 .charging-elect-price {
-    float: left;
-    position: relative;
-    top: -10px;
-    left: 10px;
+  float: left;
+  position: relative;
+  top: -10px;
+  left: 10px;
 }
 
 .charging-elect-amount-panel {
-    width: 100%;
-    position: absolute;
-    top: 320px;
-    z-index: 2;
-    background-color: #fff;
+  width: 100%;
+  position: absolute;
+  top: 320px;
+  z-index: 2;
+  background-color: #fff;
 }
 
 .charging-elect-amount-div {
-    top: 7.5rem;
-    position: absolute;
-    border: 1px solid #e5e5e5;
-    width: 92%;
-    left: 4%;
-    font-size: 14px;
-    line-height: 25px;
-    color: #666;
-    border-radius: 3px;
+  top: 7.5rem;
+  position: absolute;
+  border: 1px solid #e5e5e5;
+  width: 92%;
+  left: 4%;
+  font-size: 14px;
+  line-height: 25px;
+  color: #666;
+  border-radius: 3px;
 }
 
 .charging-elect-amount-fullof {
-    padding: 10px;
-    border-bottom: 1px solid #e5e5e5;
+  padding: 10px;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .charging-elect-amount-fullof-button {
-    width: 25px;
-    height: 25px;
-    background: url('../images/c_list_check_box_normal@2x.png') left center no-repeat;
-    background-size: 25px 25px;
-    float: right;
-    margin-top: 0px;
+  width: 25px;
+  height: 25px;
+  background: url('../images/c_list_check_box_normal@2x.png') left center no-repeat;
+  background-size: 25px 25px;
+  float: right;
+  margin-top: 0px;
 }
 
 .charging-elect-amount-fullof-button.clicked {
-    width: 25px;
-    height: 25px;
-    background: url('../images/c_list_check_box_select@2x.png') left center no-repeat;
-    background-size: 25px 25px;
-    float: right;
+  width: 25px;
+  height: 25px;
+  background: url('../images/c_list_check_box_select@2x.png') left center no-repeat;
+  background-size: 25px 25px;
+  float: right;
 }
 
 .charging-elect-amount-input {
-    width: 50px;
-    outline: none;
-    border-radius: 0;
-    border: 0;
-    border-bottom: 1px solid green;
-    text-align: left;
-    font-size: 12px;
-    float: left;
+  width: 50px;
+  outline: none;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid green;
+  text-align: left;
+  font-size: 12px;
+  float: left;
 }
 
 .charging-start-button-mask {
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 51px;
-    position: fixed;
-    z-index: 4;
-    background: #000;
-    opacity: .3;
-    display: none;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 51px;
+  position: fixed;
+  z-index: 4;
+  background: #000;
+  opacity: .3;
+  display: none;
 }
 </style>
 <template>
@@ -193,7 +193,7 @@
           <view style="padding: 10px;" class="charging-elect-quota">
             <text style="float: left;">充电</text>
             <input type="number" value="{{clear ? '' : record}}" placeholder="请输入" class="charging-elect-amount-input" @input="recordInput"/>
-            <text style="font-style: normal;font-size: 12px; color: #999;font-style: normal;">元(账户余额须大于10元)</text> 
+            <text style="font-style: normal;font-size: 12px; color: #999;font-style: normal;">元(账户余额须大于10元)</text>
             <text class="charging-elect-amount-fullof-button {{buttonType === 2 ? 'clicked' : ''}}" @tap="changeType(2)"></text>
           </view>
         </view>
@@ -219,10 +219,10 @@
     }
 
     data = {
-        buttonType: 1,
-        clear: false,
-        record: '',
-        panelH: 0
+      buttonType: 1,
+      clear: false,
+      record: '',
+      panelH: 0
     }
 
     computed = {
@@ -230,24 +230,24 @@
     }
 
     methods = {
-        changeType (id, e) {
-            this.buttonType = parseInt(id, 10)
-            if (this.buttonType === 1) {
-                this.clear = true
-                this.record = ''
-                this.clear = false
-            }
-            this.$apply()
-        },
-        recordInput (e) {
-            this.record = e.detail.value
-            this.$apply()
-        },
-        charging (e) {
-            wx.navigateTo({
-                url: 'electring'
-            })
+      changeType (id, e) {
+        this.buttonType = parseInt(id, 10)
+        if (this.buttonType === 1) {
+          this.clear = true
+          this.record = ''
+          this.clear = false
         }
+        this.$apply()
+      },
+      recordInput (e) {
+        this.record = e.detail.value
+        this.$apply()
+      },
+      charging (e) {
+        wx.navigateTo({
+          url: 'electring'
+        })
+      }
     }
 
     events = {
