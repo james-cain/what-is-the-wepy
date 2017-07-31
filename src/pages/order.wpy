@@ -1,15 +1,204 @@
 <style lang="less">
+  .filter-elect-list,
+  .filter-car-list {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
+    display: flex;
+    flex-wrap: wrap;
+  }
 
+  .filter-elect-list .filter-elect-card,
+  .filter-car-list .filter-car-list-my-car-type {
+    border: 1px solid #e5e5e5;
+    width: 29%;
+    height: 60px;
+    padding: 5px 0;
+    border-radius: 3px;
+    display: inline-block;
+    text-align: center;
+    margin: 0 5px 5px 5px;
+  }
+
+  .filter-elect-list .selected {
+    background-color: rgb(234, 248, 249);
+    border: 1px solid rgb(47, 185, 195)
+  }
+
+  .filter-elect-img,
+  .filter-car-img {
+    width: 35px;
+    height: 35px;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .filter-elect-name,
+  .filter-car-name {
+    color: #333;
+    font-size: 15px;
+  }
+
+  .change-car-type {
+    width: 29%;
+    height: 60px;
+    padding: 5px 0;
+    border-radius: 3px;
+    display: inline-block;
+    text-align: center;
+    margin: 0 5px 5px 5px;
+    border: 1px dashed rgb(47, 185, 195);
+    &-name-area {
+      display: inline-block;
+      padding: 12px 0;
+    }
+    &-name {
+      color: rgb(47, 185, 195);
+      width: 60px;
+      font-size: 14px;
+    }
+    .more {
+      height: 20px;
+      width: 10px;
+    }
+  }
+
+  .order-top {
+    width: 100%;
+    height: 50px;
+    padding-top: 60px;
+    background: #1e1b22;
+    position: relative;
+  }
+
+  .order-top-white-bg {
+    width: 100%;
+    height: 50px;
+    background: #fff;
+  }
+
+  .order-top-icon {
+    width: 60px;
+    height: 60px;
+    padding: 3px;
+    border-radius: 3px;
+    background: #fff;
+    position: absolute;
+    left: 10px;
+    bottom: 15px;
+  }
+
+  .order-top-icon image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .order-top-stake-name {
+    color: #fff;
+    position: absolute;
+    width: 200px;
+    bottom: 60px;
+    left: 90px;
+    font-size: 14px;
+  }
+
+  .order-details-main-title {
+    font-size: 12px;
+    color: #999;
+    font-weight: normal;
+    line-height: 35px;
+    padding-left: 15px;
+  }
+
+  .order-btn {
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+    background: rgb(47, 185, 195);
+    font-size: 17px;
+    color: #fff;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+  }
+
+  .work-time {
+    width: 180px;
+    margin-left: 90px;
+    color: #999;
+    line-height: 17px;
+    font-size: 14px;
+  }
 </style>
 
 <template>
   <view class="container">
-
+    <view id="order-details" hidden="{{carTypeShow}}">
+      <view class="order-top">
+        <view class="order-top-icon">
+          <image src="{{stakeDetails.img}}"/>
+        </view>
+        <view class="order-top-stake-name">{{stakeDetails.siteName}}</view>
+        <view class="order-top-white-bg">
+          <view class="work-time" wx:if="{{stakeDetails.workingTime !== '' && stakeDetails.workingTime !== undefined}}">
+            {{workingTimeOnWork}}
+          </view>
+          <view class="work-time" wx:if="{{stakeDetails.workingTime !== '' && stakeDetails.workingTime !== undefined}}">
+            {{worlingTimeOnHoliday}}
+          </view>
+          <view class="work-time" style="color: orange;" wx:if="{{stakeDetails.workingTime === '' || stakeDetails.workingTime === undefined}}">
+            本站点暂不对外开放
+          </view>
+        </view>
+        <!-- <view class="order-top-white-bg">
+          <text style="width: 130px;margin-left: 90px;color: #999;line-height: 17px;">{{stakeDetails.workingTime}}</text>
+        </view> -->
+      </view>
+      <view class="order-details-main">
+        <text class="order-details-main-title">输电方式</text>
+        <view class="filter-elect-list">
+          <view class="filter-elect-card zld {{selectedArr[0] ? 'selected' : ''}}" @tap="selectedCard(0)">
+            <image src="../images/c_filtrate_dc_icon@2x.png" class="filter-elect-img"/>
+            <text class="filter-elect-name">直流电</text>
+          </view>
+          <view class="filter-elect-card jlkc {{selectedArr[1] ? 'selected' : ''}}" @tap="selectedCard(1)">
+            <image src="../images/c_filtrate_ac_fast_icon@2x.png" class="filter-elect-img" />
+            <text class="filter-elect-name">交流快充</text>
+          </view>
+          <view class="filter-elect-card jlmc {{selectedArr[2] ? 'selected' : ''}}" @tap="selectedCard(2)">
+            <image src="../images/c_filtrate_ac_icon@2x.png" class="filter-elect-img" />
+            <text class="filter-elect-name">交流慢充</text>
+          </view>
+        </view>
+        <text class="order-details-main-title">选择车型</text>
+        <view class="filter-car-list">
+          <view class="filter-car-list-my-car-type" style="margin-top: 0;" wx:if="">
+            <image src="" class="filter-car-img"/>
+            <text class="filter-car-name"></text>
+          </view>
+          <view class="change-car-type">
+            <view class="change-car-type-name-area" @tap="showCarType">
+              <view class="change-car-type-name">
+                更换
+              </view>
+              <view class="change-car-type-name">
+                车型
+              </view>
+            </view>
+            <image src="../images/c_right_icon_cyan@2x.png" class="more"/>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="order-btn" hidden="{{carTypeShow}}" @tap="goToAppointment">确定预约</view>
+    <carType hidden="{{!carTypeShow}}"></carType>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import carType from '../components/carType'
 
   export default class Order extends wepy.page {
     config = {
@@ -17,19 +206,47 @@
     }
 
     components = {
-
+      carType: carType
     }
 
     data = {
-
+      selectedArr: [
+        false,
+        false,
+        false,
+        false
+      ],
+      carTypeShow: false,
+      stakeDetails: {
+        img: '../images/c_default_station@2x.png',
+        siteName: 'aaaa充电站',
+        workingTime: '工作日：0:00到24:00节假日：0:00到24:00'
+      }
     }
 
     computed = {
-
+      workingTimeOnWork () {
+        return this.stakeDetails.workingTime.substr(0, this.stakeDetails.workingTime.indexOf('节假日'))
+      },
+      worlingTimeOnHoliday () {
+        return this.stakeDetails.workingTime.substr(this.stakeDetails.workingTime.indexOf('节假日'), this.stakeDetails.workingTime.length)
+      }
     }
 
     methods = {
-
+      selectedCard (id, e) {
+        this.selectedArr[id] = !this.selectedArr[id]
+        this.$apply()
+      },
+      showCarType (e) {
+        this.carTypeShow = true
+        this.$apply()
+      },
+      goToAppointment (e) {
+        wx.navigateTo({
+          url: 'appointment'
+        })
+      }
     }
 
     events = {
@@ -37,7 +254,8 @@
     }
 
     onLoad() {
-
+      this.carTypeShow = false
+      this.$apply()
     }
   }
 </script>
