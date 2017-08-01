@@ -17,7 +17,8 @@
         'pages/orderToPay',
         'pages/evaluation',
         'pages/order',
-        'pages/myOrder'
+        'pages/myOrder',
+        'pages/inputScanCode'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',

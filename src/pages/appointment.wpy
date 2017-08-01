@@ -1,0 +1,80 @@
+<style lang="less">
+
+</style>
+
+<template>
+<view id="order-list">
+  <!-- <view class="order-list-top" style="display: none;">
+    <image src="../images/c_test_bg@2x.png" class="order-station-icon"/>
+    <view class="dhArrow"></view>
+    <view class="time">{{currentTime}}</view>
+    <view class="details" style="font-size: 15px;">详情</view>
+    <view class="address" style="font-size: 14px;"></view>
+  </view>
+  <view class="appointmentList ctp-list-box" style="height: 100%; position:relative;background: #f1f5f8; overflow: hidden; overflow-y: auto;">
+    <view class="list-tips">
+      <p class="list-tips-title">无预约记录</p>
+      <p>请查找充电桩进行预约</p>
+    </view>
+    <ul class="order-list-main">
+
+    </ul>
+    <view class="add-more" @tap="more"></view>
+  </view>
+  <view class="cancel-order" style="background: #fafafa; color:#e46456;border-top: 1px solid #e5e5e5;" @tap="cancel">取消预约</view> -->
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Me extends wepy.page {
+    config = {
+      navigationBarTitleText: '预约历史'
+    }
+
+    components = {
+
+    }
+
+    data = {
+      stateArr: [
+        '预约中',
+        '已取消',
+        '已超期',
+        '已结束'
+      ],
+      pageNo: 1,
+      pageSize: 20,
+      orderList: [
+        {
+          state: 1,
+          siteAddress: 'xxx充电站',
+          reservationCode: 'station1',
+          reservationRestTime: ''
+        }
+      ]
+    }
+
+    watched = {
+      currentTime () {
+
+      }
+    }
+    computed = {
+
+    }
+
+    methods = {
+
+    }
+
+    events = {
+
+    }
+
+    onLoad() {
+
+    }
+  }
+</script>

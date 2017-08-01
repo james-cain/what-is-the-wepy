@@ -1,0 +1,198 @@
+<style lang="less">
+.inputScanCode-panel-top {
+    height: 50px;
+    color: #999;
+    padding: 40px 0;
+    text-align: center;
+    font-size: 14px;
+    visibility: hidden;
+}
+
+.inputScanCode-panel-top text:first-child {
+    color: #d35454;
+    font-size: 17px;
+    line-height: 40px;
+}
+
+.inputScanCode-panel-center .inputScanCode-panel-center-p {
+  width: 90%;
+  height: 60px;
+  margin: 10px auto 20px auto;
+}
+
+.inputScanCode-panel-center .charging-code input {
+  width: 100%;
+  height: 50px;
+  background: #fff;
+  border: 0;
+  border-radius: 3px;
+  outline: none;
+  font-size: 17px;
+  text-indent: 10px;
+}
+
+.inputScanCode-panel-center .submit-btn text {
+  display: block;
+  width: 100%;
+  height: 50px;
+  background: rgb(47, 185, 195);
+  border: 0;
+  border-radius: 3px;
+  outline: none;
+  font-size: 17px;
+  text-indent: 10px;
+  color: #fff;
+  line-height: 50px;
+  text-align: center;
+}
+
+.inputScanCode-panel-center .submit-btn.waiting text {
+  display: block;
+  width: 100%;
+  height: 50px;
+  background: #666;
+  border: 0;
+  border-radius: 3px;
+  outline: none;
+  font-size: 17px;
+  text-indent: 10px;
+  color: #fff;
+  line-height: 50px;
+  text-align: center;
+}
+
+.inputScanCode-panel-bottom {
+  position: absolute;
+  left: 0;
+  top: 280px;
+  width: 100%;
+  height: 200px;
+  color: #fff;
+  overflow: hidden;
+}
+
+.scan-control {
+  width: 50%;
+  height: 150px;
+  float: left;
+  text-align: center;
+  font-size: 17px;
+  line-height: 270px;
+}
+
+.scan-control {
+  background: url("../images/c_scan_scan_btn_normal@2x.png") center center no-repeat;
+  background-size: 60px 60px;
+}
+</style>
+
+<template>
+<view class="container">
+  <view id="ctp-panel" style="background: #232323; height: {{scanH}}px;">
+    <view id="inputScanCode-panel">
+      <view class="inputScanCode-panel-top">
+        <text>无法识别编码</text>
+        <text>请重新校对一下充电桩上的编码</text>
+      </view>
+      <view class="inputScanCode-panel-center">
+        <view class="inputScanCode-panel-center-p charging-code"><input type="number" id="charging-code-code-input" placeholder="请输入充电桩设备号"/></view>
+        <view class="inputScanCode-panel-center-p submit-btn"><text>确定输入</text></view>
+      </view>
+      <view class="inputScanCode-panel-bottom">
+        <view class="scan-control" style="float: initial;margin: 0 auto;" @tap="scan">扫二维码</view>
+      </view>
+    </view>
+  </view>
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class InputScanCode extends wepy.page {
+    config = {
+      navigationBarTitleText: '扫描二维码'
+    }
+
+    components = {
+
+    }
+
+    data = {
+      scanH: 0
+    }
+
+    computed = {
+
+    }
+
+    methods = {
+      scan (e) {
+        // 扫描二维码
+        wx.scanCode({
+          success: (res) => {
+            // that.electryPileParams.device_id = res.result
+            wx.showModal({
+              title: '提示',
+              content: '是否开始充电?',
+              showCancel: true,
+              success: (res) => {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                  this.scanPile()
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                }
+              }
+            })
+          },
+          fail: () => {
+            wx.showToast({
+              title: '扫码失败',
+              icon: 'loading',
+              duration: 2000
+            })
+            this.scanPile()
+          },
+          complete: () => {}
+        })
+      }
+    }
+
+    // 扫描二维码返回的事件
+    scanPile () {
+      // 检查网络
+      // if (checkNetWorkStatus() === false) {
+      //   console.log('网络错误')
+      // } else {
+        // let that = this
+      wx.navigateTo({
+        url: 'startElectry'
+      })
+        // wepy.request({
+        //   url: that.ElectryUrl.scan,
+        //   data: that.electryPileParams,
+        //   method: 'POST',
+        //   header: {
+        //     'content-type': 'application/x-www-form-urlencoded'
+        //   }
+        // }).then((res) => {
+        //   wx.navigateTo({
+        //     url: 'electring'
+        //   })
+        // }).catch(() => {
+        //   that.failMessage()
+        // })
+      // }
+    }
+
+    events = {
+
+    }
+
+    onLoad () {
+      this.scanH = wx.getStorageSync('windowH')
+      this.$apply()
+    }
+  }
+</script>
