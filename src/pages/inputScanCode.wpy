@@ -166,7 +166,7 @@
       //   console.log('网络错误')
       // } else {
         // let that = this
-      wx.navigateTo({
+      wx.redirectTo({
         url: 'startElectry'
       })
         // wepy.request({

@@ -4,7 +4,26 @@
 
 <template>
   <view class="container">
-
+    <view class="ctp-list-box"  style="height: inherit;background: #f1f5f7; position:relative;overflow: hidden; ">
+      <view class="list-tips">
+        <p class="list-tips-title">无充电订单</p>
+        <p>请使用APP进行充电</p>
+      </view>
+      <view id="myOrderList" style="overflow:hidden; overflow-y: auto;">
+        <ul class="myOrderList">
+          <li data-orderState="{{order.orderState}}" data-carbonReduction="{{order.carbonReduction}}" data-chargeTime="{{order.chargeTime}}" data-siteName="{{order.siteName}}" data-chargeElectricity="{{order.chargeElectricity}}" data-img="{{order.img}}" data-siteAddress="{{order.siteAddress}}" data-chargeQuantity="{{order.chargeQuantity}}" data-site="{{order.siteCode}}" id="{{order.orderCode}}">
+            {{btnArea}}
+            <p class="order-list-item-title"><span>{{orderStartTime}}</span>{{order.siteName}}</p>
+            <p class="order-list-item-mark">
+              <span class="charging-time"></span>
+              <span class="charging-quality"></span>
+              <span class="charging-electricity"></span>
+            </p>
+          </li>        
+        </ul>
+        <view class="add-more"></view>
+      </view>
+    </view>
   </view>
 </template>
 
@@ -13,7 +32,7 @@
 
   export default class MyOrder extends wepy.page {
     config = {
-      navigationBarTitleText: '预约'
+      navigationBarTitleText: '订单列表'
     }
 
     components = {
@@ -21,11 +40,18 @@
     }
 
     data = {
-
+      pageNo: 1,
+      pageSize: 20
     }
 
     computed = {
 
+    }
+
+    initMyOrder (type) {
+      function initData(myOrderList) {
+
+      }
     }
 
     methods = {

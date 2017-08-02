@@ -67,6 +67,7 @@
       left: 2px;
     }
   }
+
 </style>
 <template>
    <view class="homepage">

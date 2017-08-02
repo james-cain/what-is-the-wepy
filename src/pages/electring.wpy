@@ -201,7 +201,7 @@
     }
 
     startC () {
-      wx.navigateTo({
+      wx.redirectTo({
         url: 'orderToPay'
       })
     }
