@@ -1,4 +1,142 @@
 <style lang="less">
+.ctp-list-box {
+  width: 100%;
+  overflow: hidden;
+  overflow-y: auto;
+  background: #f1f5f8;
+  .list-tips {
+    display: none;
+    .list-tips-title {
+      font-size: 17px;
+      color: #b7bec8;
+      height: 40px;
+      line-height: 40px;
+    }
+  }
+}
+
+.myOrderList {
+  &-li {
+    height: 59px;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 5px 10px;
+    position: relative;
+    background: #fff;
+  }
+}
+
+.order-list-item-title {
+  height: 35px;
+  line-height: 35px;
+  font-size: 15px;
+}
+
+.order-list-item-title text {
+  color: #999;
+  font-size: 10px;
+  position: absolute;
+  text-align: right;
+  right: 10px;
+  top: 15px;
+  display: block;
+  width: 100px;
+  height: 15px;
+  line-height: 15px;
+}
+
+.order-list-item-mark {
+  view {
+    padding-left: 12px;
+    padding-right: 10px;
+    font-size: 11px;
+    color: #666;
+    height: 20px;
+    line-height: 20px;
+    display: inline-block;
+  }
+
+  .charging-time {
+    background: url('../images/c_charge_time_icon@2x.png') left center no-repeat;
+    background-size: 10px 10px;
+  }
+
+  .charging-quality {
+    background: url('../images/c_charge_quantity_icon@2x.png') left center no-repeat;
+    background-size: 10px 10px;
+  }
+
+  .charging-electricity {
+    background: url('../images/c_list_price_icon@2x.png') left center no-repeat;
+    background-size: 10px 10px;
+  }
+}
+
+.eval-btn {
+  width: 40px;
+  height: 23px;
+  border: 1px solid rgb(47, 185, 195);
+  color: rgb(47, 185, 195);
+  line-height: 23px;
+  text-align: center;
+  border-radius: 3px;
+  position: absolute;
+  right: 10px;
+  bottom: 11px;
+  background: #fff;
+  font-size: 15px;
+}
+
+.to-pay {
+  width: 40px;
+  height: 23px;
+  border: 1px solid #d11616;
+  color: #fff;
+  line-height: 23px;
+  text-align: center;
+  border-radius: 3px;
+  position: absolute;
+  right: 10px;
+  bottom: 11px;
+  background: #d11616;
+  font-size: 15px;
+}
+
+.charging-span {
+  width: 46px;
+  height: 23px;
+  color: green;
+  line-height: 23px;
+  border-radius: 3px;
+  position: absolute;
+  right: 10px;
+  bottom: 11px;
+  padding-left: 20px;
+  background: url("../images/c_order_list_charging_icon@2x.png") left center no-repeat;
+  background-size: 15px 15px;
+  font-size: 15px;
+}
+
+.hangup-span {
+  width: 40px;
+  height: 23px;
+  color: #df5557;
+  line-height: 23px;
+  border-radius: 3px;
+  position: absolute;
+  right: 10px;
+  bottom: 11px;
+  padding-left: 20px;
+  background: url("../images/c_no_connection_icon@2x.png") left center no-repeat;
+  background-size: 15px 15px;
+  font-size: 15px;
+}
+
+.add-more {
+  height: 50px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 14px;
+}
 
 </style>
 
@@ -6,22 +144,24 @@
   <view class="container">
     <view class="ctp-list-box"  style="height: inherit;background: #f1f5f7; position:relative;overflow: hidden; ">
       <view class="list-tips">
-        <p class="list-tips-title">无充电订单</p>
-        <p>请使用APP进行充电</p>
+        <text class="list-tips-title">无充电订单</text>
+        <text>请使用APP进行充电</text>
       </view>
       <view id="myOrderList" style="overflow:hidden; overflow-y: auto;">
-        <ul class="myOrderList">
-          <li data-orderState="{{order.orderState}}" data-carbonReduction="{{order.carbonReduction}}" data-chargeTime="{{order.chargeTime}}" data-siteName="{{order.siteName}}" data-chargeElectricity="{{order.chargeElectricity}}" data-img="{{order.img}}" data-siteAddress="{{order.siteAddress}}" data-chargeQuantity="{{order.chargeQuantity}}" data-site="{{order.siteCode}}" id="{{order.orderCode}}">
-            {{btnArea}}
-            <p class="order-list-item-title"><span>{{orderStartTime}}</span>{{order.siteName}}</p>
-            <p class="order-list-item-mark">
-              <span class="charging-time"></span>
-              <span class="charging-quality"></span>
-              <span class="charging-electricity"></span>
-            </p>
-          </li>        
-        </ul>
-        <view class="add-more"></view>
+        <view class="myOrderList">
+          <view wx:for="{{orderList}}" wx:for-item="order" wx:key="orderCode">
+            <view class="myOrderList-li" @tap="goToDetailPage({{order.orderState}}, {{index}})" data-orderState="{{order.orderState}}" data-carbonReduction="{{order.carbonReduction}}" data-chargeTime="{{order.chargeTime}}" data-siteName="{{order.siteName}}" data-chargeElectricity="{{order.chargeElectricity}}" data-img="{{order.img}}" data-siteAddress="{{order.siteAddress}}" data-chargeQuantity="{{order.chargeQuantity}}" data-site="{{order.siteCode}}" id="{{order.orderCode}}">
+               <view wx:if="{{(order.orderState !== '4' || order.isComment !== '2') && order.orderState !== '1'}}" class="{{order.orderState !== '' ? orderClass[order.orderState]: ''}}" @tap.stop="goToOtherPage({{order.orderState}}, {{order.isComment}}, {{index}})">{{orderBtn[order.orderState]}}</view>
+               <view class="order-list-item-title"><text>{{order.orderTime}}</text>{{order.siteName}}</view>
+               <view class="order-list-item-mark">
+                <view class="charging-time">{{order.chargeMinuteTime}} 分钟</view>
+                <view class="charging-quality">{{order.chargeQuantity === null ? '0' : order.chargeQuantity}} kWh</view>
+                <view class="charging-electricity">{{order.chargeElectricity === null ? '无' : order.chargeElectricity}}元</view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="add-more" @tap="more">{{showInfo}}</view>
       </view>
     </view>
   </view>
@@ -40,22 +180,285 @@
     }
 
     data = {
+      orderClass: [
+        '',
+        '',
+        'charging-span',
+        'to-pay',
+        'eval-btn',
+        'hangup-span'
+      ],
+      orderBtn: [
+        '',
+        '',
+        '充电中',
+        '支付',
+        '评价',
+        '挂起'
+      ],
       pageNo: 1,
-      pageSize: 20
+      pageSize: 20,
+      showInfo: '加载更多',
+      isNoMore: false,
+      flg: true,
+      orderList: [],
+      myOrderList: [
+        {
+          orderCode: 'order1',
+          orderState: '1',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '2',
+          orderStartTime: '2017-08-01 11:11:0000'
+        },
+        {
+          orderCode: 'order2',
+          orderState: '2',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '1',
+          orderStartTime: '2017-08-01 11:11:0000'
+        },
+        {
+          orderCode: 'order3',
+          orderState: '3',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '1',
+          orderStartTime: '2017-08-01 11:11:0000'
+        },
+        {
+          orderCode: 'order4',
+          orderState: '4',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '1',
+          orderStartTime: '2017-08-01 11:11:0000'
+        },
+        {
+          orderCode: 'order5',
+          orderState: '4',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '2',
+          orderStartTime: '2017-08-01 11:11:0000'
+        },
+        {
+          orderCode: 'order6',
+          orderState: '5',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '2',
+          orderStartTime: '2017-08-01 11:11:0000'
+        }
+      ],
+      other: [
+        {
+          orderCode: 'order7',
+          orderState: '1',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '2',
+          orderStartTime: '2017-08-01 11:11:0000'
+        },
+        {
+          orderCode: 'order8',
+          orderState: '2',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '1',
+          orderStartTime: '2017-08-01 11:11:0000'
+        },
+        {
+          orderCode: 'order9',
+          orderState: '3',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '1',
+          orderStartTime: '2017-08-01 11:11:0000'
+        },
+        {
+          orderCode: 'order10',
+          orderState: '4',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '1',
+          orderStartTime: '2017-08-01 11:11:0000'
+        },
+        {
+          orderCode: 'order11',
+          orderState: '4',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '2',
+          orderStartTime: '2017-08-01 11:11:0000'
+        },
+        {
+          orderCode: 'order12',
+          orderState: '5',
+          carbonReduction: 11,
+          chargeTime: 3600,
+          siteName: '海岸城充电站',
+          chargeElectricity: '10',
+          img: '',
+          siteAddress: '景田',
+          chargeQuantity: '2',
+          siteCode: '1',
+          isComment: '2',
+          orderStartTime: '2017-08-01 11:11:0000'
+        }
+      ]
+    }
+
+    watched = {
+
     }
 
     computed = {
 
     }
 
-    initMyOrder (type) {
-      function initData(myOrderList) {
+    myOrderList2OrderList () {
+      let that = this
+      that.orderList.length = 0
+      that.myOrderList.forEach((e, index, arr) => {
+        let order = {}
+        order = e
+        let orderTime = e.orderStartTime.split(' ')
+        orderTime = orderTime[0].substring(5, orderTime[0].length) + ' ' + orderTime[1].substring(0, orderTime[0].length - 5)
+        order.orderTime = orderTime
+        order.chargeMinuteTime = (e.chargeTime * 1 / 60).toFixed(0)
+        that.orderList.push(order)
+      })
+      that.$apply()
+    }
 
+    initMyOrder (type) {
+      // if (this.myOrderList.length < this.pageSize) {
+      //   this.showInfo = '没有更多数据了！'
+      //   this.isNoMore = true
+      // } else {
+      //   this.showInfo = '加载更多'
+      // }
+      if (type === 'append') {
+        this.other.forEach((e, index, arr) => {
+          this.myOrderList.push(e)
+        })
+        console.log('当前orderlist长度' + this.myOrderList.length)
+        this.isNoMore = true
+        this.showInfo = '没有更多数据了！'
+      } else {
+        this.showInfo = '加载更多'
       }
+      this.$apply()
+      this.myOrderList2OrderList()
     }
 
     methods = {
-
+      goToOtherPage (orderState, isComment, index) {
+        console.log('当前状态：' + orderState + ',' + isComment + ',' + index)
+        if (orderState === '4' && isComment === '1') {
+          wx.setStorageSync('chargedPayment', JSON.stringify(this.myOrderList[index]))
+          wx.setStorageSync('evaluationNeedparams', JSON.stringify(this.myOrderList[index]))
+          wx.navigateTo({
+            url: 'evaluation'
+          })
+        } else if (orderState === '3' && isComment === '1') {
+          wx.setStorageSync('chargedPayment', JSON.stringify(this.myOrderList[index]))
+          wx.navigateTo({
+            url: 'orderToPay'
+          })
+        }
+      },
+      more (e) {
+        let that = this
+        if (!that.isNoMore && that.flg) {
+          that.pageNo++
+          that.showInfo = '加载中...'
+          that.initMyOrder('append')
+          that.flg = false
+          setTimeout(function() {
+            that.flg = true
+          }, 500)
+        }
+      },
+      goToDetailPage (orderState, index, e) {
+        if (orderState === '2') {
+          wx.navigateTo({
+            url: 'electring'
+          })
+        } else {
+          wx.navigateTo({
+            url: 'myOrderDetail'
+          })
+        }
+      }
     }
 
     events = {
@@ -63,7 +466,7 @@
     }
 
     onLoad() {
-
+      this.initMyOrder('')
     }
   }
 </script>

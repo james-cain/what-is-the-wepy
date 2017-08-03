@@ -473,7 +473,7 @@
         } else if (id === 6) {
           // 收藏
           wx.navigateTo({
-            url: 'favorite'
+            url: 'myOrder'
           })
         }
       }

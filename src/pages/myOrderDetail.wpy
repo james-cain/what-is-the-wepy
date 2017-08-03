@@ -1,0 +1,285 @@
+<style lang="less">
+.myOrderDetails-top {
+    height: 90px;
+    background: #000;
+    position: relative;
+}
+
+.myOrderDetails-top .top-bg-img {
+    width: 100%;
+    height: 100%;
+    opacity: .2;
+    background: url("../images/c_test_bg@2x.png") center top no-repeat;
+    background-size: 100% 100%;
+}
+
+.payMount,
+.payState,
+.yezf {
+    position: absolute;
+    color: #fff;
+}
+
+.payMount {
+    left: 10px;
+    top: 10px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 19px;
+}
+
+.yezf {
+    color: #999;
+    font-size: 15px;
+    left: 10px;
+    top: 47px;
+}
+
+.payMount text {
+    color: #fedc62;
+    font-size: 21px;
+}
+
+.payMount .payMount-count {
+    font-size: 22px;
+    font-style: normal;
+}
+
+.payState {
+    font-size: 14px;
+    right: 10px;
+    top: 20px;
+    width: 50px;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 18px;
+}
+
+.payState.done {
+    background: url('../images/c_order_paid_icon@2x.png') left center no-repeat;
+    background-size: 20px 20px;
+}
+
+.payState.notDone {
+    background: rgb(47, 185, 195);
+    color: #fff;
+    border-radius: 3px;
+    width: 40px;
+    padding: 0;
+    text-align: center;
+    line-height: 25px;
+    height: 25px;
+}
+
+.myOrderDetails-station {
+    height: 72px;
+    padding: 8px;
+    border-bottom: 1px solid #e5e5e5;
+    position: relative;
+    background: #fff;
+}
+
+.myOrderDetails-station .station-dt {
+    float: left;
+    width: 70%;
+    height: 27px;
+    line-height: 27px;
+    font-size: 17px;
+    padding-left: 5px;
+}
+
+.myOrderDetails-station .txt {
+    float: left;
+    width: 70%;
+    padding-left: 5px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #999;
+}
+
+.myOrderDetails-station .img {
+    width: 70px;
+    height: 70px;
+    float: left;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.myOrderDetails-station .img image {
+    width: 70px;
+    height: 70px;
+}
+
+.img image {
+    width: 50px;
+    height: 50px;
+}
+
+.myOrderDetails-station .myOrderDetails-station-arrow {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 0px;
+    top: 35px;
+    background: url("../images/c_list_right_gray@2x.png") center center no-repeat;
+    background-size: 10px 20px;
+}
+
+#myOrderDetails .mark {
+    height: 80px;
+    border: 1px solid #e5e5e5;
+    border-width: 1px 0;
+    margin-top: 10px;
+    background: #fff;
+    font-size: 15px;
+}
+
+#myOrderDetails .mark .mark-p {
+    height: 40px;
+    line-height: 40px;
+    margin: 0 5px;
+    color: #999;
+}
+
+#myOrderDetails .mark .mark-p:first-child {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+#myOrderDetails .mark .mark-p text {
+    float: right;
+    padding-right: 5px;
+}
+
+.orderDetails-menu {
+    padding: 12px 0;
+    height: 81px;
+    border: 1px solid #e5e5e5;
+    border-width: 1px 0;
+    margin-top: 10px;
+    background: #fff;
+    color: #999;
+}
+
+.orderDetails-menu .menu-p {
+    height: 27px;
+    line-height: 27px;
+    margin-left: 5px;
+    color: #999;
+    font-size: 15px;
+}
+
+.orderDetails-menu .menu-p text {
+    padding-left: 8px;
+}
+</style>
+
+<template>
+  <view class="container">
+    <view id="myOrderDetails">
+      <view class="myOrderDetails-top">
+        <view class="top-bg-img"></view>
+        <view class="payMount">订单金额:<text>￥<text class="payMount-count">{{myOrderDetails.chargeElectricity === null ? 0: myOrderDetails.chargeElectricity}}</text></text></view>
+        <view class="yezf">(余额支付)</view>
+        <view class="payState {{orderStateClass[myOrderDetails.orderState]}}" @tap.stop="goToPay({{myOrderDetails.orderState}})">{{orderStateText[myOrderDetails.orderState]}}</view>
+      </view>
+      <view class="myOrderDetails-station" @tap.stop="goToStation({{myOrderDetails.orderCode}})">
+        <view class="myOrderDetails-station-arrow"></view>
+        <view class="img">
+            <image src="{{myOrderDetails.img}}"/>
+        </view>
+        <view class="station-dt">{{myOrderDetails.siteName}}</view>
+        <view class="txt">
+            <view class="charging">充电电桩:<text>{{myOrderDetails.chargePileName}}</text></view>
+            <view class="cid">编号(CID):<text>{{myOrderDetails.chargePileCode}}</text></view>
+        </view>
+      </view>
+      <view class="mark">
+        <view class="mark-p mark-charging-amout"><text>{{myOrderDetails.chargeElectricity === null ? 0: myOrderDetails.chargeElectricity}}kWh</text>充电电量</view>
+        <view class="mark-p mark-charging-time"><text>{{chargeTime}}</text>充电时长</view>
+      </view>
+      <view class="orderDetails-menu">
+        <view class="menu-p order-code">订单编号:<text>{{myOrderDetails.orderCode}}</text></view>
+        <view class="menu-p order-start-time">开始时间:<text>{{myOrderDetails.orderStartTime}}</text></view>
+        <view class="menu-p order-end-time">结束时间:<text>{{myOrderDetails.orderEndTime == null ? '': myOrderDetails.orderEndTime}}</text></view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class MyOrderDetail extends wepy.page {
+    config = {
+      navigationBarTitleText: '订单详情'
+    }
+
+    components = {
+
+    }
+
+    data = {
+      orderStateClass: [
+        'notDone',
+        'notDone',
+        'notDone',
+        'notDone',
+        'done',
+        'hangup'
+      ],
+      orderStateText: [
+        '',
+        '支付',
+        '支付',
+        '支付',
+        '已完成',
+        '挂起'
+      ],
+      myOrderDetails: {
+        img: '../images/c_default_station@2x.png',
+        orderCode: 'order1',
+        chargePileName: 'xxx充电站',
+        chargePileCode: '752534652',
+        orderState: '1',
+        carbonReduction: 11,
+        chargeTime: 3600,
+        siteName: '海岸城充电站',
+        chargeElectricity: '10',
+        siteAddress: '景田',
+        chargeQuantity: '2',
+        siteCode: '1',
+        isComment: '2',
+        orderStartTime: '2017-08-01 11:11:0000'
+      }
+    }
+
+    computed = {
+      chargeTime () {
+        return (this.myOrderDetails.chargeTime * 1 / 60).toFixed(0) + '分钟'
+      }
+    }
+
+    methods = {
+      goToStation (orderCode, e) {
+        wx.navigateTo({
+          url: 'station'
+        })
+      },
+      goToPay (orderState, e) {
+        if (orderState * 1 < 4) {
+          wx.navigateTo({
+            url: 'orderToPay'
+          })
+        }
+      }
+    }
+
+    events = {
+
+    }
+
+    onLoad() {
+
+    }
+  }
+</script>
