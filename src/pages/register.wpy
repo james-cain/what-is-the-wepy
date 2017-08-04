@@ -1,91 +1,114 @@
 <style lang="less">
-.phoneLb {
-  position: absolute;
-  left: 0;
-  top: 60rpx;
-  width: 200rpx;
-  height: 80rpx;
-  background-color: #FFFFFF;
-  font-size: 32rpx;
-  font-weight: bold;
-  font-family: Times New Roman;
-  text-align: center;
-  line-height: 80rpx;
+.btn {
+  button {
+    display: block;
+    width: 90%;
+    height: 40px;
+    line-height: 40px;
+    outline: none;
+    margin: 30px 5%;
+    background-color: rgb(47, 185, 195);
+    color: #fff;
+    text-align: center;
+    border: 0;
+    border-radius: 3px;
+    font-size: 15px;
+  }
 }
 
-.phoneTf {
-  position: absolute;
-  left: 200rpx;
-  top: 60rpx;
-  width: 300rpx;
-  height: 80rpx;
-  background-color: #FFFFFF;
-  font-size: 32rpx;
+#ctp-user-bind-form {
+  font-size: 15px;
+  .tel, .pwd, .confirmation-pwd {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #e5e5e5;
+    border-width: 1px 0;
+    background: #fff;
+  }
+  .tel {
+    border-bottom: 0px;
+  }
+  .pwd, .confirmation-pwd {
+    display: none;
+  }
+  .tel input, .pwd input, .confirmation-pwd input {
+    width: 100%;
+    text-indent: 10px;
+    height: 50px;
+    border: 0;
+    outline: none;
+    padding: 0px 10px;
+  }
+  .description {
+    line-height: 18px;
+    font-size: 10px;
+    color: #999;
+    padding: 3px 10px;
+  }
+  .sendCode {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #e5e5e5;
+    border-width: 1px 0;
+    background: #fff;
+    margin-bottom: 20px;
+    input {
+      width: 75%;
+      text-indent: 10px;
+      height: 50px;
+      border: 0;
+      outline: none;
+      display: inline-block;
+      padding: 0px 10px;
+      box-sizing: border-box;
+    }
+    .getCodeBtn {
+      display: inline-block;
+      width: 25%;
+      font-size: 13px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      float: right;
+      color: rgb(47, 185, 195);
+      text-decoration: none;
+    }
+  }
+  .pwd {
+    border-bottom: 0;
+  }
+  .btn {
+    height: 40px;
+  }
 }
-
-.getCodeBtn {
-  position: absolute;
-  right: 0px;
-  top: 60rpx;
-  width: 300rpx;
-  height: 80rpx;
-  background-color: #FFFFFF;
-  font-size: 32rpx;
-}
-
-.codeLb {
-  position: absolute;
-  left: 0;
-  top: 142rpx;
-  width: 200rpx;
-  height: 80rpx;
-  background-color: #FFFFFF;
-  font-size: 32rpx;
-  font-weight: bold;
-  font-family: Times New Roman;
-  text-align: center;
-  line-height: 80rpx;
-}
-
-.codeTf {
-  position: absolute;
-  left: 200rpx;
-  top: 142rpx;
-  right: 0rpx;
-  height: 80rpx;
-  background-color: #FFFFFF;
-  font-size: 32rpx;
-}
-
-.loginBtn {
-  position: absolute;
-  left: 40rpx;
-  top: 330rpx;
-  width: 670rpx;
-  height: 80rpx;
-  line-height: 80rpx;
-}
-
 </style>
 
 <template>
   <view class="homepage">
-    <text class="phoneLb">手机号码</text>
-    <input class="phoneTf" @input="phoneTfInput" maxLength="11" type="number" placeholder="填写手机号" focus="true" />
-    <button class="getCodeBtn" style="color: {{getCodeBtnProperty.titleColor}}" type="default" @tap="getCodeAct" disabled="{{getCodeBtnProperty.disabled}}" loading="{{getCodeBtnProperty.loading}}">{{getCodeBtnProperty.title}}</button>
-    <text class="codeLb">验证码</text>
-    <input class="codeTf" @input="codeTfInput" maxLength="4" type="number" placeholder="输入验证码" focus="{{codeTfFocus}}" />
-    <button class="loginBtn" type="primary" @tap="loginAct" disabled="{{loginBtnProperty.disabled}}" loading="{{loginBtnProperty.loading}}">登录</button>
+    <view id="ctp-panel" style="background: #f5f5f5;padding-top: 20px;">
+      <view id="ctp-user-bind-form-container">
+        <form id="ctp-user-bind-form">
+          <view class="tel"><input type="number" @input="phoneTfInput" placeholder="请输入手机号码" focus="true"/></view>
+          <view class="sendCode">
+            <input type="number" maxLength="11" @input="codeTfInput" placeholder="请输入验证码" focus="{{codeTfFocus}}"/>
+            <view class="getCodeBtn" style="color: {{getCodeBtnProperty.titleColor}}" type="default" @tap="getCodeAct" disabled="{{getCodeBtnProperty.disabled}}" loading="{{getCodeBtnProperty.loading}}">{{getCodeBtnProperty.title}}</view>
+          </view>
+          <view class="btn">
+            <button style="color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="nextAct" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">下一步</button>
+          </view>
+        </form>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import checkNetWorkStatus from '../utils/CheckNetWork'
+  // import checkNetWorkStatus from '../utils/CheckNetWork'
 
   export default class Register extends wepy.page {
     config = {
-      navigationBarTitleText: '登录注册'
+      navigationBarTitleText: '注册'
     }
 
     components = {}
@@ -97,7 +120,8 @@
         loading: false,
         title: '获取验证码'
       },
-      loginBtnProperty: {
+      nextBtnProperty: {
+        backcolor: '#CCCCCC',
         disabled: true,
         loading: false
       },
@@ -125,7 +149,7 @@
         if (length === 11) {
           that.getCodeParams.mobile = inputValue
           that.registerParams.mobile = inputValue
-          that.getCodeBtnProperty.titleColor = '#34B5E3'
+          that.getCodeBtnProperty.titleColor = '#2fb9c3'
           that.getCodeBtnProperty.disabled = false
         } else {
           that.getCodeParams.mobile = ''
@@ -137,29 +161,28 @@
       },
       // 获取验证码
       getCodeAct () {
-        if (checkNetWorkStatus() === false) {
-          console.log('网络错误')
-        } else {
-          let that = this
-          that.getCodeBtnProperty.loading = true
-          // 测试写法begin
-          wx.showToast({
-            title: '获取验证码：\n',
-            icon: 'success',
-            duration: 2000
-          })
-          let number = 60
-          let time = setInterval(function() {
-            number--
-            that.getCodeBtnProperty.title = number + '秒'
-            that.getCodeBtnProperty.disabled = true
-            if (number === 0) {
-              that.getCodeBtnProperty.title = '重新获取'
-              that.getCodeBtnProperty.disabled = false
-              clearInterval(time)
-            }
-          }, 1000)
-          that.codeTfFocus = true
+        // if (checkNetWorkStatus() === false) {
+        //   console.log('网络错误')
+        // } else {
+        let that = this
+        that.getCodeBtnProperty.loading = true
+        // 测试写法begin
+        let number = 60
+        let time = setInterval(function() {
+          console.log('进入定时器')
+          number--
+          that.getCodeBtnProperty.title = number + '秒后重发'
+          that.getCodeBtnProperty.disabled = true
+          that.$apply()
+          if (number === 0) {
+            that.getCodeBtnProperty.title = '重新获取'
+            that.getCodeBtnProperty.disabled = false
+            that.getCodeBtnProperty.loading = false
+            that.$apply()
+            clearInterval(time)
+          }
+        }, 1000)
+        that.codeTfFocus = true
           // 测试写法end
           // wepy.request({
           //   url: that.ElectryUrl.getCode,
@@ -193,42 +216,44 @@
           //   console.log(err)
           //   that.failMessage()
           // })
-          that.$apply()
-        }
+        that.$apply()
+        // }
       },
       // 输入验证码
       codeTfInput (e) {
         let that = this
         let inputValue = e.detail.value
-        let length = e.detail.value.value
-        if (length === 4) {
-          that.loginBtnProperty.disabled = false
+        let length = e.detail.value.length
+        if (length !== 0) {
+          that.nextBtnProperty.disabled = false
+          that.nextBtnProperty.backcolor = '#2fb9c3'
           that.registerParams.code = inputValue
         } else {
-          that.loginBtnProperty.disabled = true
+          that.nextBtnProperty.disabled = true
+          that.nextBtnProperty.backcolor = '#cccccc'
           that.registerParams.code = ''
         }
         that.$apply()
       },
-      // 注册登录
-      loginAct () {
+      // 注册下一步
+      nextAct () {
         let that = this
         that.codeTfFocus = false
-        if (checkNetWorkStatus() === false) {
-          console.log('网络错误')
-        } else {
-          that.loginBtnProperty.loading = true
-          // 测试begin
-          wx.showToast({
-            title: '注册登录：\n' + 'OK',
-            icon: 'success',
-            duration: 2000
-          })
-          // 转回主界面
-          setTimeout(function () {
-            wx.navigationBack()
-          }, 1500)
-          that.loginBtnProperty.loading = false
+        // if (checkNetWorkStatus() === false) {
+        //   console.log('网络错误')
+        // } else {
+        that.nextBtnProperty.loading = true
+        // 测试begin
+        wx.showToast({
+          title: '注册登录：\n' + 'OK',
+          icon: 'success',
+          duration: 2000
+        })
+        // 转回主界面
+        setTimeout(function () {
+          wx.navigationBack()
+        }, 1500)
+        that.nextBtnProperty.loading = false
           // 测试end
           // wepy.request({
           //   url: that.ElectryUrl.register,
@@ -257,7 +282,7 @@
           // }).catch(() => {
           //   that.failMessage()
           // })
-        }
+        // }
         that.$apply()
       }
     }

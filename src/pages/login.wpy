@@ -1,0 +1,148 @@
+<style lang="less">
+.app-head {
+  height: 220px;
+  text-align: center;
+  padding: 70px 0;
+  box-sizing: border-box;
+  .app-img {
+    height: 80px;
+    width: 80px;
+    display: block;
+    margin: 0 auto;
+  }
+  .app-title {
+    font-size: 16px;
+    color: #808080;
+    font-weight: bold;
+    margin-top: 20px;
+    display: block;
+  }
+}
+.basic {
+  height: 45px;
+  width: 322px;
+  margin: 0 auto;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  input {
+    height: 15px;
+    width: 290px;
+    float: right;
+    margin: 10px 0;
+    font-size: 15px;
+  }
+}
+.account {
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_login_user_icon@2x.png') left center no-repeat;
+  background-size: 30px 30px;
+}
+.pwd {
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_login_password_icon@2x.png') left center no-repeat;
+  background-size: 30px 30px;
+}
+.mt10 {
+  margin-top: 10px;
+}
+.login-btn {
+  height: 45px;
+  width: 322px;
+  margin-top: 25px;
+  color: #ffffff;
+}
+.goto {
+  height: 15px;
+  width: 322px;
+  font-size: 14px;
+  line-height: 15px;
+  color: #2fb9c3;
+  margin: 25px auto;
+  .register {
+    float: left;
+  }
+  .forget {
+    float: right;
+  }
+}
+</style>
+
+<template>
+  <view class="homepage">
+    <view class="app-head">
+      <image src="{{appImg}}" class="app-img"/>
+      <text class="app-title">充电桩</text>
+    </view>
+    <form>
+      <view class="basic account"><input type="text" placeholder="手机/账号" focus="true"/></view>
+      <view class="basic pwd mt10"><input type="text" password="true" @input="pwdInput" placeholder="请输入登录密码"/></view>
+      <button class="login-btn" style="background-color: {{loginBtnProperty.backcolor}}; color: #ffffff;" type="default" @tap="loginAct" disabled="{{loginBtnProperty.disabled}}" loading="{{loginBtnProperty.loading}}">登录</button>
+    </form>
+    <view class="goto">
+      <view class="register" @tap="gotoregister">注册</view>
+      <view class="forget" @tap="gotoforget">忘记密码</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  // import checkNetWorkStatus from '../utils/CheckNetWork'
+
+  export default class Login extends wepy.page {
+    config = {
+      navigationBarTitleText: '登录'
+    }
+
+    components = {}
+
+    data = {
+      loginBtnProperty: {
+        backcolor: '#CCCCCC',
+        disabled: true,
+        loading: false
+      },
+      appImg: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_app_logo160@2x.png'
+    }
+
+    methods = {
+      // 输入验证码
+      pwdInput (e) {
+        let that = this
+        let length = e.detail.value.length
+        if (length !== 0) {
+          that.loginBtnProperty.disabled = false
+          that.loginBtnProperty.backcolor = '#2fb9c3'
+        } else {
+          that.loginBtnProperty.disabled = true
+          that.loginBtnProperty.backcolor = '#CCCCCC'
+        }
+        that.$apply()
+      },
+      // 登录
+      loginAct () {
+
+      },
+      gotoregister (e) {
+        wx.navigateTo({
+          url: 'register'
+        })
+      },
+      gotoforget(e) {
+        wx.navigateTo({
+          url: 'forget'
+        })
+      }
+    }
+
+    failMessage () {
+      wx.showToast({
+        title: '连接服务器失败',
+        icon: 'loading',
+        duration: 2000
+      })
+    }
+
+    events = {}
+
+    onLoad () {}
+  }
+</script>

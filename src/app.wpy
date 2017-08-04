@@ -7,6 +7,7 @@
       'pages': [
         'pages/index',
         'pages/me',
+        'pages/login',
         'pages/register',
         'pages/electring',
         'pages/station',

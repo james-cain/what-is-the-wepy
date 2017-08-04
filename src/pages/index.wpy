@@ -14,7 +14,6 @@
     }
     &-search{
       flex: 1;
-      margin: 8px 0;
       border-radius: 3px;
       background-color: #e6e6e6;
       display: flex;
@@ -413,7 +412,7 @@
       goUserPage (e) {
         console.log(e)
         wx.navigateTo({
-          url: 'register'
+          url: 'login'
         })
       },
       switchType (e) {
