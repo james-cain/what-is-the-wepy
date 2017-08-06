@@ -1,0 +1,26 @@
+<style lang="less">
+
+</style>
+
+<template>
+  <view class="homepage">
+    <carType></carType>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import carType from '../components/carType'
+
+  export default class CarTypeBox extends wepy.page {
+    config = {
+      navigationBarTitleText: '更多车型'
+    }
+
+    data = {}
+
+    components = {
+      carType: carType
+    }
+  }
+</script>

@@ -20,7 +20,16 @@
         'pages/order',
         'pages/myOrder',
         'pages/myOrderDetail',
-        'pages/inputScanCode'
+        'pages/inputScanCode',
+        'pages/improveInfo',
+        'pages/carTypeBox',
+        'pages/userTerms',
+        'pages/forget',
+        'pages/settings',
+        'pages/myCarType',
+        'pages/addMoney',
+        'pages/account',
+        'pages/mineInfo'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',
@@ -50,6 +59,11 @@
           wx.setStorageSync('kScreenH', kScreenH)
         }
       })
+      // this.getUserInfo(function (userInfo) {
+      //   that.globalData.userInfo = userInfo
+      //   wx.setStorageSync('userInfo', userInfo)
+      //   console.log(userInfo)
+      // })
     }
 
     getUserInfo(cb) {

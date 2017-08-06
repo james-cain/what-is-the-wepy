@@ -412,7 +412,7 @@
       goUserPage (e) {
         console.log(e)
         wx.navigateTo({
-          url: 'login'
+          url: 'me'
         })
       },
       switchType (e) {
@@ -467,7 +467,7 @@
         } else if (id === 5) {
           // 登陆注册
           wx.navigateTo({
-            url: 'register'
+            url: 'login'
           })
         } else if (id === 6) {
           // 收藏
@@ -597,7 +597,9 @@
       this.$parent.getUserInfo(function (userInfo) {
         if (userInfo) {
           that.userInfo = userInfo
-          console.log('用户信息:' + userInfo)
+          wx.setStorageSync('userInfo', userInfo)
+          console.log('用户信息:')
+          console.log(userInfo)
         }
         // 这个设置是必须的，要在该接口完成后才能执行onShow里的方法
         that.completeStatus = true

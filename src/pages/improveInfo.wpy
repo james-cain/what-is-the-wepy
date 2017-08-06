@@ -1,0 +1,132 @@
+<style lang="less">
+.doneInfo {
+  height: 100px;
+  line-height: 100px;
+  font-size: 15px;
+  text-align: center;
+}
+
+.doneInfo-cancel {
+  color: rgb(47, 185, 195);
+}
+
+.doneInfo-arrow {
+  padding-left: 20px;
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_tick_ok@2x.png') center center no-repeat;
+  background-size: 20px 20px;
+}
+
+#improve-info-form-container {
+  background: #fff;
+  height: 120px;
+}
+
+#improve-info-form-container .container-item {
+  height: 45px;
+  line-height: 45px;
+  border-top: 1px solid #e5e5e5;
+  overflow: hidden;
+  background: #fff;
+}
+
+#improve-info-form-container .container-item:last-child {
+  background: none;
+}
+
+#improve-info-form-container .container-item input.txt {
+  text-indent: 10px;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+#improve-info-form-container .container-item.btn text {
+  display: block;
+  width: 90%;
+  height: 45px;
+  line-height: 45px;
+  background: rgb(47, 185, 195);
+  color: #fff;
+  font-size: 17px;
+  text-align: center;
+  margin: 10px auto;
+}
+
+.car .icon {
+  width: 18%;
+  height: 40px;
+  display: inline-block;
+  margin-top: 5px;
+  float: right;
+  background:url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_right_gray@2x.png') 90% center no-repeat;
+  background-size: 15px 30px;
+}
+
+.car image {
+  display: inline-block;
+  width: 20px;
+  height: 32px;
+  margin-top: 12px;
+  float: left;
+  margin-left: 10px;
+  background: #fff;
+}
+</style>
+
+<template>
+  <view class="doneInfo">
+    <text class="doneInfo-arrow"></text>您已经注册成功,请完善相关资料。<text class="doneInfo-cancel">跳过</text>
+  </view>
+  <view id="improve-info-form-container">
+    <form id="ctp-user-bind-form">
+      <view class="container-item nickname"><input class="txt" value="{{weChatAccount.name}}" type="text" placeholder="请输入昵称"/></view>
+      <view class="container-item account"><input class="txt" type="text" placeholder="请输入登录账号(只能设置一次)"/></view>
+      <view class="container-item car" @tap="selectedCar">
+        <view><image src="{{myCarType.img}}" style="height: 20px; width: 20px;"></image></view>
+        <input style="width: 70%;text-indent: 0; float: left;" class="txt" type="text" placeholder="请选择车型" value="{{myCarType.name}}" disabled/>
+        <view class="icon"></view>
+      </view>
+      <view class="container-item btn" style="height: 65px;"><text>提交</text></view>
+    </form>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class ImproveInfo extends wepy.page {
+    config = {
+      navigationBarTitleText: '完善资料'
+    }
+
+    data = {
+      weChatAccount: {
+        name: 'jamescain'
+      },
+      myCarType: {
+        modelCode: 'byd',
+        brandCode: 'bydbrand',
+        name: '比亚迪',
+        img: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_car_brand_byd@2x.png'
+      }
+    }
+
+    methods = {
+      selectedCar (e) {
+        wx.navigateTo({
+          url: 'carTypeBox'
+        })
+      }
+    }
+
+    events = {
+
+    }
+
+    onload () {
+
+    }
+  }
+</script>

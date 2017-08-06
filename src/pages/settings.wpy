@@ -1,0 +1,88 @@
+<style lang="less">
+.ctp-panel-settings {
+    padding: 20px 0;
+}
+
+.ctp-panel-settings .settings-p  {
+    height: 45px;
+    line-height: 45px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-width: 1px 0;
+    margin-bottom: 20px;
+    text-indent: 10px;
+    font-size: 15px;
+}
+
+.ctp-panel-settings .settings-p .arrow {
+    display: block;
+    width: 15px;
+    height: 30px;
+    margin: 5px 10px;
+    float: right;
+    background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_right_gray.png") left center no-repeat;
+    background-size: 15px 30px;
+}
+
+.account-security {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-width: 1px 0;
+    height: 45px;
+    line-height: 45px;
+    width: 100%;
+    font-size: 17px;
+    margin: 0 0 5px 0;
+}
+</style>
+
+<template>
+  <view class="container" style="background: #f1f5f8; height: {{windowH}}px">
+    <view class="ctp-panel-settings">
+      <view class="settings-p account-security" @tap="goToAccountSecurity"><view class="arrow"></view>账户安全</view>
+      <view class="settings-p comments" @tap="goToComments"><view class="arrow"></view>意见和反馈</view>
+      <view class="settings-p about" @tap="goToAbout"><view class="arrow"></view>关于</view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Settings extends wepy.page {
+    config = {
+      navigationBarTitleText: '系统设置'
+    }
+
+    data = {
+      windowH: 0
+    }
+
+    methods = {
+      goToAccountSecurity (e) {
+        wx.navigateTo({
+          url: 'accountSecurity'
+        })
+      },
+      goToComments (e) {
+        wx.navigateTo({
+          url: 'comments'
+        })
+      },
+      goToAbout (e) {
+        wx.navigateTo({
+          url: 'about'
+        })
+      }
+    }
+
+    events = {
+
+    }
+
+    onLoad () {
+      this.windowH = wx.getStorageSync('windowH')
+      this.$apply()
+    }
+  }
+</script>

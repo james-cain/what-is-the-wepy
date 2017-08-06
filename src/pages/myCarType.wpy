@@ -1,0 +1,115 @@
+<style lang="less">
+.filter-car-list {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.filter-car-list .filter-car-list-my-car-type {
+  border: 1px solid #e5e5e5;
+  width: 29%;
+  height: 60px;
+  padding: 5px 0;
+  border-radius: 3px;
+  display: inline-block;
+  text-align: center;
+  margin: 0 5px 5px 5px;
+}
+
+.filter-car-img {
+  width: 35px;
+  height: 35px;
+  display: block;
+  margin: 0 auto;
+}
+
+.filter-car-name {
+  color: #333;
+  font-size: 15px;
+}
+
+.change-car-type {
+  width: 29%;
+  height: 60px;
+  padding: 5px 0;
+  border-radius: 3px;
+  display: inline-block;
+  text-align: center;
+  margin: 0 5px 5px 5px;
+  border: 1px dashed rgb(47, 185, 195);
+  &-name-area {
+    display: inline-block;
+    padding: 12px 0;
+  }
+  &-name {
+    color: rgb(47, 185, 195);
+    width: 60px;
+    font-size: 14px;
+  }
+  .more {
+    height: 20px;
+    width: 10px;
+  }
+}
+</style>
+
+<template>
+  <view class="container">
+    <view class="filter-car-list">
+      <view class="filter-car-list-my-car-type" style="margin-top: 0;">
+        <image src="" class="filter-car-img"/>
+        <text class="filter-car-name"></text>
+      </view>
+      <view class="change-car-type">
+        <view class="change-car-type-name-area" @tap="showCarType">
+          <view class="change-car-type-name">
+            更换
+          </view>
+          <view class="change-car-type-name">
+            车型
+          </view>
+        </view>
+        <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_right_icon_cyan@2x.png" class="more"/>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import carType from '../components/carType'
+
+  export default class MyCarType extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的车型'
+    }
+
+    data = {
+
+    }
+
+    components = {
+      carType: carType
+    }
+
+    methods = {
+      showCarType (e) {
+        wx.navigateTo({
+          url: 'carTypeBox'
+        })
+        this.$apply()
+      }
+    }
+
+    events = {
+
+    }
+
+    onLoad () {
+
+    }
+  }
+</script>

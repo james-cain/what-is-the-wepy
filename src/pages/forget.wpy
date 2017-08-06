@@ -1,0 +1,135 @@
+<style lang="less">
+.btn {
+  button {
+    display: block;
+    width: 90%;
+    height: 40px;
+    line-height: 40px;
+    outline: none;
+    margin: 30px 5%;
+    background-color: rgb(47, 185, 195);
+    color: #fff;
+    text-align: center;
+    border: 0;
+    border-radius: 3px;
+    font-size: 15px;
+  }
+}
+
+#ctp-user-bind-form {
+  font-size: 15px;
+  .pwd, .confirmation-pwd {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #e5e5e5;
+    border-width: 1px 0;
+    background: #fff;
+  }
+  .pwd {
+    border-bottom: 0px;
+  }
+  .pwd input, .confirmation-pwd input {
+    width: 100%;
+    text-indent: 10px;
+    height: 50px;
+    border: 0;
+    outline: none;
+    padding: 0px 10px;
+  }
+}
+</style>
+
+<template>
+  <view class="homepage">
+    <view id="ctp-panel" style="background: #f5f5f5;padding-top: 20px;">
+      <view id="ctp-user-bind-form-container">
+        <form id="ctp-user-bind-form">
+          <view class="pwd"><input type="text" password="true" @input="pwdInput" placeholder="请输入新的登录密码" focus="true"/></view>
+          <view class="confirmation-pwd">
+            <input type="text" password="true" @input="rePwdInput" placeholder="重复输入"/>
+          </view>
+          <view class="btn">
+            <button style="color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="commit" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">提交</button>
+          </view>
+        </form>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+
+  export default class Forget extends wepy.page {
+    config ={
+      navigationBarTitleText: '修改密码'
+    }
+
+    data = {
+      nextBtnProperty: {
+        backcolor: '#CCCCCC',
+        disabled: true,
+        loading: false
+      },
+      codeTfFocus: false
+    }
+
+    methods = {    
+      // 输入新的密码
+      pwdInput (e) {
+        let that = this
+        let inputValue = e.detail.value
+        let length = e.detail.value.length
+        if (length === 11) {
+          that.getCodeBtnProperty.titleColor = '#2fb9c3'
+          that.getCodeBtnProperty.disabled = false
+          that.phoneValue = e.detail.value
+          if (that.phoneValue && that.codeValue && that.isTerms) {
+            that.nextBtnProperty.disabled = false
+            that.nextBtnProperty.backcolor = '#2fb9c3'
+          } else {
+            that.nextBtnProperty.disabled = true
+            that.nextBtnProperty.backcolor = '#cccccc'
+          }
+        } else {
+          that.getCodeParams.mobile = ''
+          that.registerParams.mobile = ''
+          that.getCodeBtnProperty.titleColor = '#B4B4B4'
+          that.getCodeBtnProperty.disabled = true
+          that.nextBtnProperty.disabled = true
+          that.nextBtnProperty.backcolor = '#cccccc'
+        }
+        that.$apply()
+      },
+      // 校验密码
+      rePwdInput (e) {
+        let that = this
+        let inputValue = e.detail.value
+        that.codeValue = e.detail.value
+        let length = e.detail.value.length
+        if (length !== 0) {
+          that.registerParams.code = inputValue
+        } else {
+          that.registerParams.code = ''
+        }
+        if (that.phoneValue && that.codeValue && that.isTerms) {
+          that.nextBtnProperty.disabled = false
+          that.nextBtnProperty.backcolor = '#2fb9c3'
+        } else {
+          that.nextBtnProperty.disabled = true
+          that.nextBtnProperty.backcolor = '#cccccc'
+        }
+        that.$apply()
+      },
+      // 提交
+      commit () {
+        let that = this
+        that.codeTfFocus = false
+        that.nextBtnProperty.loading = true
+        wx.navigateBack()
+        that.nextBtnProperty.loading = false
+        that.$apply()
+      }
+    }
+  }
+</script>

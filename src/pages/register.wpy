@@ -80,6 +80,24 @@
   .btn {
     height: 40px;
   }
+  .terms {
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') left center no-repeat;
+    background-size: 22px 22px;
+    margin-left: 10px;
+    padding-left: 22px;
+    font-size: 13px;
+    height: 23px;
+    line-height: 23px;
+    display: inline-block;
+    view {
+      display: inline-block;
+      color: #2fb9c3;
+    }
+  }
+  .terms.selected {
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') left center no-repeat;
+    background-size: 22px 22px;
+  }
 }
 </style>
 
@@ -91,8 +109,9 @@
           <view class="tel"><input type="number" @input="phoneTfInput" placeholder="请输入手机号码" focus="true"/></view>
           <view class="sendCode">
             <input type="number" maxLength="11" @input="codeTfInput" placeholder="请输入验证码" focus="{{codeTfFocus}}"/>
-            <view class="getCodeBtn" style="color: {{getCodeBtnProperty.titleColor}}" type="default" @tap="getCodeAct" disabled="{{getCodeBtnProperty.disabled}}" loading="{{getCodeBtnProperty.loading}}">{{getCodeBtnProperty.title}}</view>
+            <button class="getCodeBtn" style="color: {{getCodeBtnProperty.titleColor}}" type="default" @tap="getCodeAct" disabled="{{getCodeBtnProperty.disabled}}">{{getCodeBtnProperty.title}}</button>
           </view>
+          <view class="terms {{isTerms ? 'selected' : ''}}" @tap="okTerms">注册即代表您同意<view @tap.stop="showTerms">《小南充电服务协议》</view></view>
           <view class="btn">
             <button style="color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="nextAct" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">下一步</button>
           </view>
@@ -114,6 +133,9 @@
     components = {}
 
     data = {
+      isTerms: false,
+      phoneValue: '',
+      codeValue: '',
       getCodeBtnProperty: {
         titleColor: '#B4B4B4',
         disabled: true,
@@ -151,11 +173,21 @@
           that.registerParams.mobile = inputValue
           that.getCodeBtnProperty.titleColor = '#2fb9c3'
           that.getCodeBtnProperty.disabled = false
+          that.phoneValue = e.detail.value
+          if (that.phoneValue && that.codeValue && that.isTerms) {
+            that.nextBtnProperty.disabled = false
+            that.nextBtnProperty.backcolor = '#2fb9c3'
+          } else {
+            that.nextBtnProperty.disabled = true
+            that.nextBtnProperty.backcolor = '#cccccc'
+          }
         } else {
           that.getCodeParams.mobile = ''
           that.registerParams.mobile = ''
           that.getCodeBtnProperty.titleColor = '#B4B4B4'
           that.getCodeBtnProperty.disabled = true
+          that.nextBtnProperty.disabled = true
+          that.nextBtnProperty.backcolor = '#cccccc'
         }
         that.$apply()
       },
@@ -223,15 +255,19 @@
       codeTfInput (e) {
         let that = this
         let inputValue = e.detail.value
+        that.codeValue = e.detail.value
         let length = e.detail.value.length
         if (length !== 0) {
+          that.registerParams.code = inputValue
+        } else {
+          that.registerParams.code = ''
+        }
+        if (that.phoneValue && that.codeValue && that.isTerms) {
           that.nextBtnProperty.disabled = false
           that.nextBtnProperty.backcolor = '#2fb9c3'
-          that.registerParams.code = inputValue
         } else {
           that.nextBtnProperty.disabled = true
           that.nextBtnProperty.backcolor = '#cccccc'
-          that.registerParams.code = ''
         }
         that.$apply()
       },
@@ -244,15 +280,13 @@
         // } else {
         that.nextBtnProperty.loading = true
         // 测试begin
-        wx.showToast({
-          title: '注册登录：\n' + 'OK',
-          icon: 'success',
-          duration: 2000
+        wx.navigateTo({
+          url: 'improveInfo'
         })
         // 转回主界面
-        setTimeout(function () {
-          wx.navigationBack()
-        }, 1500)
+        // setTimeout(function () {
+        //   wx.navigationBack()
+        // }, 1500)
         that.nextBtnProperty.loading = false
           // 测试end
           // wepy.request({
@@ -284,6 +318,23 @@
           // })
         // }
         that.$apply()
+      },
+      okTerms (e) {
+        let that = this
+        this.isTerms = !this.isTerms
+        if (that.phoneValue && that.codeValue && that.isTerms) {
+          that.nextBtnProperty.disabled = false
+          that.nextBtnProperty.backcolor = '#2fb9c3'
+        } else {
+          that.nextBtnProperty.disabled = true
+          that.nextBtnProperty.backcolor = '#cccccc'
+        }
+        that.$apply()
+      },
+      showTerms (e) {
+        wx.navigateTo({
+          url: 'userTerms'
+        })
       }
     }
 
