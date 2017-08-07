@@ -112,7 +112,6 @@
 
     computed = {
       tableH () {
-        console.log(wx.getStorageSync('mapH'))
         return this.tableHeight > 0 ? this.tableHeight : wx.getStorageSync('mapH') - 45
       }
     }

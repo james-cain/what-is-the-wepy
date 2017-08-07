@@ -64,6 +64,19 @@
       //   wx.setStorageSync('userInfo', userInfo)
       //   console.log(userInfo)
       // })
+      wepy.getUserInfo({
+        success (res) {
+          let userInfo = res.userInfo
+          let weChatAccount = {}
+          weChatAccount.nickName = userInfo.nickName
+          weChatAccount.avatarUrl = userInfo.avatarUrl
+          weChatAccount.gender = userInfo.gender
+          weChatAccount.id = ''
+          console.log('weChatAccount:')
+          console.log(weChatAccount)
+          wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
+        }
+      })
     }
 
     getUserInfo(cb) {

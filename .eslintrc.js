@@ -17,7 +17,8 @@ module.exports = {
     'html/html-extensions': ['.html', '.wpy']
   },
   "globals": {
-    "wx": true
+    "wx": true,
+    "wepy": true
   },
   // add your custom rules here
   'rules': {
