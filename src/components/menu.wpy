@@ -54,8 +54,8 @@
         <view class="pile-menu-tab" style="width: {{menuTabWidth}}px" wx:for="{{pileMenuList}}" wx:for-item="pileMenu" wx:key="id">
           <view @tap.stop="menuSelected({{pileMenu.id}})">
             <text class="pile-menu-tab-name {{pileMenu.selected ? 'selected' : ''}}">{{pileMenu.name}}</text>
-            <image src="../images/c_downward_icon@2x.png" mode="scaleToFill" class="tag-down" wx:if="{{!pileMenu.selected}}"></image>
-            <image src="../images/c_upward_icon_select@2x.png" mode="scaleToFill" class="tag-up" wx:if="{{pileMenu.selected}}"></image>
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_downward_icon@2x.png" mode="scaleToFill" class="tag-down" wx:if="{{!pileMenu.selected}}"></image>
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_upward_icon_select@2x.png" mode="scaleToFill" class="tag-up" wx:if="{{pileMenu.selected}}"></image>
           </view>
           <view class="pile-menu-tab-list" style="width: {{menuChildWidth}}px; left: {{-1 * menuTabWidth * pileMenu.id}}px" wx:for="{{pileMenu.list}}" wx:for-index="listId" wx:for-item="pileChild" wx:if="{{pileMenu.selected}}" wx:key="childId">
             <view @tap.stop="childSelected({{pileMenu.id}}, {{pileChild.childId}})">
@@ -75,7 +75,9 @@
     }
 
     props = {
-      pileMenuList: {}
+      pileMenuList: {
+        twoWay: true
+      }
     }
 
     data = {
@@ -129,6 +131,9 @@
             e.selected = false
           }
         })
+        console.log('父组件中的菜单变化:')
+        console.log(this.$parent.pileMenuList)
+        this.$emit('initStakeList')
       }
     }
 

@@ -1,8 +1,9 @@
 import { hexSha1 } from './sha1'
 import wepy from 'wepy'
-
 let CTP = function() {
   let weChatAccount = JSON.parse(wx.getStorageSync('weChatAccount'))
+
+  let session = wx.getStorageSync('session')
 
   let SERVER_URL = 'http://mspshow.szcomtop.com'
 
@@ -156,6 +157,7 @@ let CTP = function() {
   return {
     // 获取微信账号信息
     weChatAccount: weChatAccount,
+    session: session,
     // 校验用户是否登录
     checkLogin: checkLogin,
     // 请求统一接口

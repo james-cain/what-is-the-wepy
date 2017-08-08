@@ -6,9 +6,9 @@
 
 <template>
   <view class="scores">
-    <image src="../images/c_grade_star_yellow@2x.png" mode="scaleToFill" wx:for="{{allStar}}" style="height: {{size}}px; width: {{size}}px;"></image>
-    <image src="../images/c_grade_star_half@2x.png" mode="scaleToFill" wx:if="{{isHalf}}" style="height: {{size}}px; width: {{size}}px;"></image>
-    <image src="../images/c_grade_star_gray@2x.png" mode="scaleToFill" wx:for="{{nvlStar}}" style="height: {{size}}px; width: {{size}}px;"></image>
+    <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png" mode="scaleToFill" wx:for="{{allStar}}" style="height: {{size}}px; width: {{size}}px;"></image>
+    <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_half@2x.png" mode="scaleToFill" wx:if="{{isHalf}}" style="height: {{size}}px; width: {{size}}px;"></image>
+    <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png" mode="scaleToFill" wx:for="{{nvlStar}}" style="height: {{size}}px; width: {{size}}px;"></image>
     {{isScoreStatic === 1 ? scores + '分' : ''}}
   </view>
 </template>

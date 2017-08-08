@@ -72,15 +72,15 @@
    <view class="homepage">
      <view class="menu" style="height: {{menuHeight}}px;">
        <view class="menu-login">
-          <image src="../images/c_main_more_icon.png" mode="scaleToFill" class="login-img" @tap="goUserPage"></image>
+          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_main_more_icon.png" mode="scaleToFill" class="login-img" @tap="goUserPage"></image>
        </view>
        <view class="menu-search">
          <view class="search-icon-area">
-            <image src="../images/c_search_box_icon@2x.png" mode="scaleToFill" class="search-icon"/>
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_search_box_icon@2x.png" mode="scaleToFill" class="search-icon"/>
          </view>
          <input class="search-input" type="text" @input="search" placeholder="搜索站点" placeholder-style="font-size: 14px; color: #999999;" confirm-type="search"/>
          <view class="search-del-area">
-           <image src="../images/s_text_view_delete_icon.png" mode="scaleToFill" class="search-delete"/>
+           <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/s_text_view_delete_icon.png" mode="scaleToFill" class="search-delete"/>
          </view>
        </view>
        <view class="menu-switch" @tap="switchType">
@@ -88,8 +88,8 @@
        </view>
     </view>
     <view style="position: relative; width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px" wx:if="{{switchType === 'map' ? false : true}}">
-      <menu :pileMenuList="pileMenuList"></menu>
-      <tableList :pileTableList="pileTableList"></tableList>
+      <menu :pileMenuList.sync="pileMenuList" ></menu>
+      <tableList :pileTableList.sync="pileTableList"></tableList>
     </view>
     <map id="map" longitude="{{point.longitude}}" latitude="{{point.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px"  wx:if="{{switchType === 'map' ? true : false}}"></map>
    </view>
@@ -176,72 +176,7 @@
           ]
         }
       ],
-      pileTableList: [
-        {
-          id: 1,
-          name: '碧华庭居充电站',
-          address: '深圳市福田区新洲路1032号地下一楼停车场',
-          distance: '1.2km',
-          isLeisure: true,
-          pilecount: 1
-        },
-        {
-          id: 2,
-          name: '梅山苑',
-          address: '深圳市福田区梅山苑一期综合楼旁边停车场',
-          distance: '1.07km',
-          isLeisure: false,
-          pilecount: 2
-        },
-        {
-          id: 3,
-          name: '骏景豪园',
-          address: '深圳市福田区新洲路1032号地下一楼停车场',
-          distance: '1.2km',
-          isLeisure: true,
-          pilecount: 1
-        },
-        {
-          id: 4,
-          name: '梅林一村',
-          address: '深圳市福田区新洲路1032号地下一楼停车场',
-          distance: '1.2km',
-          isLeisure: true,
-          pilecount: 1
-        },
-        {
-          id: 5,
-          name: '碧华庭居充电站',
-          address: '深圳市福田区新洲路1032号地下一楼停车场',
-          distance: '1.2km',
-          isLeisure: true,
-          pilecount: 1
-        },
-        {
-          id: 6,
-          name: '特发小区',
-          address: '深圳市福田区新洲路1032号地下一楼停车场',
-          distance: '1.2km',
-          isLeisure: true,
-          pilecount: 1
-        },
-        {
-          id: 7,
-          name: '梅林二村',
-          address: '深圳市福田区新洲路1032号地下一楼停车场',
-          distance: '1.2km',
-          isLeisure: true,
-          pilecount: 1
-        },
-        {
-          id: 8,
-          name: '碧华庭居充电站',
-          address: '深圳市福田区新洲路1032号地下一楼停车场',
-          distance: '1.2km',
-          isLeisure: true,
-          pilecount: 1
-        }
-      ],
+      pileTableList: [],
       switchType: 'map',
       // 菜单的高度
       menuHeight: 0,
@@ -255,7 +190,24 @@
         longitude: 0
       },
       // 站桩标志物
-      markers: [],
+      markers: [
+        // {
+        //   latitude: 22.562405,
+        //   longitude: 114.039072,
+        //   id: 0,
+        //   iconPath: '../images/c_map_stake_leisure@2x.png',
+        //   width: 20,
+        //   height: 30
+        // },
+        // {
+        //   latitude: 22.943099,
+        //   longitude: 114.357868,
+        //   id: 1,
+        //   iconPath: '../images/c_map_station_other_leisure@2x.png',
+        //   width: 20,
+        //   height: 30
+        // }
+      ],
       // 当前地图的缩放级别
       mapScale: 16,
       // 地图上不可移动的控件
@@ -407,7 +359,117 @@
     }
 
     events = {
+      // 获取站点信息
+      initStakeList () {
+        wx.showToast({
+          title: '正在查询站点',
+          icon: 'loading',
+          duraction: 5000,
+          mask: true
+        })
+        let that = this
+        let chargePileType = ''
+        let isFree = ''
+        let chargeRateType = ''
+        let carType = ''
+        let sortType = ''
+        let firstName = that.pileMenuList[0].name
+        let secondName = that.pileMenuList[1].name
+        let thirdName = that.pileMenuList[2].name
+        let _params = {}
+        let session = CTP().session
+        console.log(that.pileMenuList)
 
+        if (firstName === '直流电') {
+          chargePileType = '1'
+        } else if (firstName === '交流快充') {
+          chargePileType = '2'
+          chargeRateType = '1'
+        } else if (firstName === '交流慢充') {
+          chargePileType = '2'
+          chargeRateType = '2'
+        } else if (firstName === '空闲中') {
+          isFree = '1'
+        }
+        if (secondName === '距离最近') {
+          sortType = '2'
+        } else if (secondName === '好评优先') {
+          sortType = '3'
+        }
+        if (thirdName === '不限车型') {
+          carType = ''
+        }
+
+        _params = {
+          userCode: session === null || session === '' ? '' : JSON.parse(session).user.userId,
+          longitude: that.point.longitude,
+          latitude: that.point.latitude,
+          keyword: '',
+          chargePileType: chargePileType,
+          chargeRateType: chargeRateType,
+          isFree: isFree,
+          sortType: (typeof sortType !== 'undefined' ? sortType : 2),
+          carType: (typeof carType !== 'undefined' ? carType : ''),
+          lstSite: '',
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'station.search',
+          locale: 'zh_CN',
+          appKey: session === null || session === '' ? '' : JSON.parse(session).appKey,
+          timestamp: new Date().getTime()
+        }
+
+        CTP().Ajax({
+          params: _params,
+          url: '/msp-charge/router',
+          success: function (e) {
+            let data = e.data.data
+            console.log('列表：data')
+            console.log(e.data)
+            if (data !== undefined) {
+              that.pileTableList = data
+            } else {
+              that.pileTableList = []
+            }
+            that.pileMenuList.forEach((e, index, arr) => {
+              e.selected = false
+            })
+            that.$apply()
+            wx.hideToast()
+          }
+        })
+      },
+      // 进入充电详情页前数据获取
+      stationData (siteCode, distance) {
+        let that = this
+        let session = CTP().session
+        let paramsDetails = {
+          userCode: session === null || session === '' ? '' : JSON.parse(session).user.userId,
+          siteCode: siteCode,
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'station.info',
+          locale: 'zh_CN',
+          appKey: session !== null || session === '' ? session.appKey : '',
+          sessionId: session !== null || session === '' ? session.sessionId : '',
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: paramsDetails,
+          url: '/msp-charge/router',
+          success: function (e) {
+            console.log('站点详情：')
+            console.log(e.data)
+            wx.setStorageSync('stakeDetails', JSON.stringify(e.data))
+            wx.navigateTo({
+              url: 'station?v=' + new Date().getTime() + '&distance=' + distance + '&currentPositionLat=' + that.point.latitude + '&currentPositionLng=' + that.point.longitude
+            })
+          }
+        })
+      }
     }
     // 创建图表对象
     addMarker (arg) {
@@ -499,22 +561,22 @@
           let data = e.data
           console.log('所有站点信息:')
           console.log(data)
-          markers.push({
-            latitude: Number(that.getPileListParams.latitude),
-            longitude: Number(that.getPileListParams.longitude),
-            id: 0,
-            iconPath: '../images/c_map_stake_leisure@2x.png',
-            width: 20 * wx.getStorageSync('kScreenW'),
-            height: 30 * wx.getStorageSync('kScreenH')
-          })
-          markers.push({
-            latitude: Number(that.getPileListParams.latitude) + 1,
-            longitude: Number(that.getPileListParams.longitude) + 1,
-            id: 1,
-            iconPath: '../images/c_map_stake_leisure@2x.png',
-            width: 20 * wx.getStorageSync('kScreenW'),
-            height: 30 * wx.getStorageSync('kScreenH')
-          })
+          // markers.push({
+          //   latitude: Number(that.getPileListParams.latitude),
+          //   longitude: Number(that.getPileListParams.longitude),
+          //   id: 0,
+          //   iconPath: '/images/c_map_stake_leisure@2x.png',
+          //   width: 20 * wx.getStorageSync('kScreenW'),
+          //   height: 30 * wx.getStorageSync('kScreenH')
+          // })
+          // markers.push({
+          //   latitude: Number(that.getPileListParams.latitude) + 2,
+          //   longitude: Number(that.getPileListParams.longitude) + 2,
+          //   id: 1,
+          //   iconPath: '/images/c_map_station_other_leisure@2x.png',
+          //   width: 20 * wx.getStorageSync('kScreenW'),
+          //   height: 30 * wx.getStorageSync('kScreenH')
+          // })
           data.data.forEach((e, index, arr) => {
             markers.push(that.addMarker(e))
           })
@@ -528,8 +590,80 @@
       })
     }
 
-    getUserCurrentLocation() {
-      this.mapCtx.moveToLocation()
+    // 获取站点信息
+    initStakeList () {
+      let that = this
+      let chargePileType = ''
+      let isFree = ''
+      let chargeRateType = ''
+      let carType = ''
+      let sortType = ''
+      let firstName = that.pileMenuList[0].name
+      let secondName = that.pileMenuList[1].name
+      let thirdName = that.pileMenuList[2].name
+      let _params = {}
+      let session = CTP().session
+      console.log(that.pileMenuList)
+
+      if (firstName === '直流电') {
+        chargePileType = '1'
+      } else if (firstName === '交流快充') {
+        chargePileType = '2'
+        chargeRateType = '1'
+      } else if (firstName === '交流慢充') {
+        chargePileType = '2'
+        chargeRateType = '2'
+      } else if (firstName === '空闲中') {
+        isFree = '1'
+      }
+      if (secondName === '距离最近') {
+        sortType = '2'
+      } else if (secondName === '好评优先') {
+        sortType = '3'
+      }
+      if (thirdName === '不限车型') {
+        carType = ''
+      }
+
+      _params = {
+        userCode: session === null || session === '' ? '' : JSON.parse(session).user.userId,
+        longitude: that.point.longitude,
+        latitude: that.point.latitude,
+        keyword: '',
+        chargePileType: chargePileType,
+        chargeRateType: chargeRateType,
+        isFree: isFree,
+        sortType: (typeof sortType !== 'undefined' ? sortType : 2),
+        carType: (typeof carType !== 'undefined' ? carType : ''),
+        lstSite: '',
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'station.search',
+        locale: 'zh_CN',
+        appKey: session === null || session === '' ? '' : JSON.parse(session).appKey,
+        timestamp: new Date().getTime()
+      }
+
+      CTP().Ajax({
+        params: _params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          let data = e.data.data
+          console.log('列表：data')
+          console.log(e.data)
+          if (data !== undefined) {
+            that.pileTableList = data
+          } else {
+            that.pileTableList = []
+          }
+          that.pileMenuList.forEach((e, index, arr) => {
+            e.selected = false
+          })
+          that.$apply()
+        }
+      })
     }
 
     failMessage () {
@@ -557,6 +691,7 @@
             latitude: latitude,
             longitude: longitude
           }
+          // wx.setStorageSync('currentPosition', JSON.stringify(that.point))
           that.completeStatus = true
           that.$apply()
         }
@@ -595,6 +730,7 @@
               that.getPileList('')
             }
           })
+          that.initStakeList()
           that.$apply()
         } else {
           console.log('定时器没有停止执行')

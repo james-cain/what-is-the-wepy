@@ -126,7 +126,7 @@
           font-size: 10px;
           color: #ccc;
           text-indent: 0;
-          background: url("../images/c_details_navi_btn_pressed@2x.png") center 5px no-repeat;
+          background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_details_navi_btn_pressed@2x.png") center 5px no-repeat;
           background-size: 38px 24px;
         }
       }
@@ -236,14 +236,14 @@
   <view id="station-panel">
     <view id="station-details">
       <view class="station-details-top">
-        <view class="fav-star">
-          <image class="fav" src="../images/c_details_add_favorite@2x.png" wx:if="{{!isFav}}"></image>
-          <image class="fav" src="../images/c_details_favorite_select@2x.png" wx:if="{{isFav}}"></image>
-        </view>
-        <view class="station-details-icon"><image src="../images/c_default_station@2x.png" mode="scaleToFill" style="height: 70px; width: 70px;"/></view>
+        <!-- <view class="fav-star">
+          <image class="fav" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_details_add_favorite@2x.png" wx:if="{{!isFav}}"></image>
+          <image class="fav" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_details_favorite_select@2x.png" wx:if="{{isFav}}"></image>
+        </view> -->
+        <view class="station-details-icon"><image src="{{imgUrl}}" mode="scaleToFill" style="height: 70px; width: 70px;"/></view>
         <view class="station-details-params">
           <view class="score">
-            <score :scores="scores"></score>
+            <score :scores.sync="score"></score>
           </view>
         </view>
         <view class="station-details-top-bottom">
@@ -260,19 +260,19 @@
           </view>
         </view>
         <view class="station-details-tab">
-          <view class="tab {{desSelected ? 'selected' : ''}}" @tap="selectPage(1)">详情</view>
+          <view class="tab {{desSelected ? 'selected' : ''}}" @tap="selectPage(1)">详情({{pileIsNotWroking}}闲)</view>
           <view class="tab {{evaSelected ? 'selected' : ''}}" @tap="selectPage(2)">用户评价</view>
         </view>
       </view>
       <scroll-view scroll-y style="height: {{stationH}}px" class="station-details-main">
         <view class="station-details-tab-sub-details {{desSelected ? 'selected' : ''}}">
-          <view class="station-details-tab-sub-details-location"  @tap="">
+          <view class="station-details-tab-sub-details-location" @tap="lacationTo">
             <view class="location">
               <view class="location-address">{{address}}</view>
-              <view class="location-gis">{{gis + 'km'}}</view>
+              <view class="location-gis">{{getDis + 'km'}}</view>
             </view>
             <view class="icon">
-              <image src="../images/c_list_parking_icon@2x.png" mode="scaleToFill" wx:if="{{isPark}}" style="width: 15px; height: 15px;position: relative; top: 3px;"></image>
+              <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_parking_icon@2x.png" mode="scaleToFill" wx:if="{{isPark}}" style="width: 15px; height: 15px;position: relative; top: 3px;"></image>
               {{isPark ? '停车费用：' + parkingRate : ''}}
             </view>
           </view>
@@ -286,15 +286,15 @@
             <view class="station-details-tab-sub-details-carType-btn" @tap="moreCarType"><view>更多</view><view>车型</view></view>
           </view>
           <view class="station-details-tab-sub-details-list">
-             <pileList :pilelist="pilelist"></pileList>
+             <pileList :pilelist.sync="pilelist"></pileList>
           </view>
         </view>
         <view class="station-details-tab-sub-comment {{evaSelected ? 'selected' : ''}}">
-          <commentList class="comment-body" :commentlist="commentlist"></commentList>
+          <commentList class="comment-body" :commentlist.sync="commentlist"></commentList>
         </view>
       </scroll-view>
     </view>
-    <view class="station-details-main-order-btn {{makeAppointment !== 1 || (makeAppointment === 1 && chargingPileNum === 0 ? 'no' : '')}}" @tap="goToOrder">点击预约</view>
+    <!-- <view class="station-details-main-order-btn {{makeAppointment !== 1 || (makeAppointment === 1 && chargingPileNum === 0 ? 'no' : '')}}" @tap="goToOrder">点击预约</view> -->
   </view>
 </view>
 </template>
@@ -304,6 +304,7 @@
   import score from '../components/score'
   import pileList from '../components/pileList'
   import commentList from '../components/commentList'
+  import CTP from '../utils/ajax'
 
   export default class Station extends wepy.page {
     config = {
@@ -311,19 +312,23 @@
     }
 
     data = {
+      session: '',
       desSelected: true,
       evaSelected: false,
-      stationName: '',
-      isFav: false,
-      scores: 3.5,
-      stationH: 0,
-      workingTime: '工作日：0:00到24:00节假日：0:00到24:00',
-      makeAppointment: 1,
-      chargingPileNum: 6,
+      stakeDetails: {},
+      imgUrl: '',
+      siteCode: '',
+      siteName: '',
+      workingTime: '',
+      carType: '',
       address: '',
-      isPark: true,
-      parkingRate: 10,
-      gis: 1.2,
+      score: 0,
+      isPark: '',
+      parkingRate: '',
+      pilelist: [],
+      pileIsNotWroking: 0,
+      detailLat: 0,
+      detailLng: 0,
       carTypeList: [
         {
           vehicleBrandImg: '../images/vehicle/Fisker.png',
@@ -342,128 +347,19 @@
           vehicleModel: '保时捷'
         }
       ],
-      pilelist: [
-        {
-          id: 1,
-          chargePileType: 1,
-          ratedPower: 4,
-          chargePileName: '#1交流慢充7kw（######）',
-          chargePrice: '',
-          servicePrice: '',
-          chargePileCode: '234243454654656',
-          workingState: 1
-        },
-        {
-          id: 2,
-          chargePileType: 2,
-          ratedPower: 7,
-          chargePileName: '#1交流慢充7kw（######）',
-          chargePrice: '',
-          servicePrice: '',
-          chargePileCode: '234243454654656',
-          workingState: 3
-        },
-        {
-          id: 3,
-          chargePileType: 1,
-          ratedPower: 8,
-          chargePileName: '#1交流慢充7kw（######）',
-          chargePrice: '',
-          servicePrice: '',
-          chargePileCode: '234243454654656',
-          workingState: 4
-        },
-        {
-          id: 4,
-          chargePileType: 1,
-          ratedPower: 4,
-          chargePileName: '#1交流慢充7kw（######）',
-          chargePrice: '',
-          servicePrice: '',
-          chargePileCode: '234243454654656',
-          workingState: 1
-        },
-        {
-          id: 5,
-          chargePileType: 1,
-          ratedPower: 4,
-          chargePileName: '#1交流慢充7kw（######）',
-          chargePrice: '',
-          servicePrice: '',
-          chargePileCode: '234243454654656',
-          workingState: 1
-        },
-        {
-          id: 6,
-          chargePileType: 1,
-          ratedPower: 4,
-          chargePileName: '#1交流慢充7kw（######）',
-          chargePrice: '',
-          servicePrice: '',
-          chargePileCode: '234243454654656',
-          workingState: 1
-        }
-      ],
-      commentlist: [
-        {
-          commentId: 1,
-          isThumbUp: 1,
-          avatar: '',
-          labelList: [
-            {
-              labelCode: 'label1',
-              labelName: '环境好'
-            },
-            {
-              labelCode: 'label2',
-              labelName: '价格实惠'
-            }
-          ],
-          commentList: [
-            {
-              userName: '小王',
-              content: '价格真的便宜吗'
-            },
-            {
-              userName: '小明',
-              content: '价格真的便宜吗'
-            }
-          ],
-          thumbUpNum: 4,
-          userName: '用户1',
-          comment: '价格好，划算',
-          score: 5
-        },
-        {
-          commentId: 2,
-          isThumbUp: 2,
-          avatar: '',
-          labelList: [
-            {
-              labelCode: 'label1',
-              labelName: '环境好'
-            },
-            {
-              labelCode: 'label2',
-              labelName: '价格实惠'
-            }
-          ],
-          commentList: [
-            {
-              userName: '小王',
-              content: '价格真的便宜吗'
-            },
-            {
-              userName: '小明',
-              content: '价格真的便宜吗'
-            }
-          ],
-          thumbUpNum: 0,
-          userName: '用户2',
-          comment: '价格好，划算',
-          score: 3.5
-        }
-      ]
+      chargingPileNum: 0,
+      makeAppointment: 0,
+      isForeignOpen: 0,
+      stationH: 0,
+      getDis: 0,
+      distance: 0,
+      currentPositionLat: 0,
+      currentPositionLng: 0,
+
+      evalPageNo: 1,
+      evalPageSize: 20,
+
+      commentlist: []
     }
 
     methods = {
@@ -479,6 +375,7 @@
           if (this.evaSelected === false) {
             this.evaSelected = true
             this.desSelected = false
+            this.getCommentList()
           }
         }
         this.$apply()
@@ -492,6 +389,36 @@
         wx.navigateTo({
           url: 'order'
         })
+      },
+      lacationTo (e) {
+        let that = this
+        if (!that.isForeignOper) {
+          wx.showModal({
+            title: '提示',
+            content: '该站点暂未对外开放，是否要开始导航？',
+            success: function(res) {
+              if (res.confirm) {
+                wx.openLocation({
+                  latitude: that.detailLat, // 纬度，浮点数，范围为90 ~ -90
+                  longitude: that.detailLng, // 经度，浮点数，范围为180 ~ -180。
+                  name: that.siteName, // 位置名
+                  address: that.address, // 地址详情说明
+                  scale: 15 // 地图缩放级别,整形值,范围从1~28。默认为最大
+                })
+              } else if (res.cancel) {
+
+              }
+            }
+          })
+        } else {
+          wx.openLocation({
+            latitude: that.detailLat, // 纬度，浮点数，范围为90 ~ -90
+            longitude: that.detailLng, // 经度，浮点数，范围为180 ~ -180。
+            name: that.siteName, // 位置名
+            address: that.address, // 地址详情说明
+            scale: 15 // 地图缩放级别,整形值,范围从1~28。默认为最大
+          })
+        }
       }
     }
 
@@ -510,12 +437,117 @@
       commentList: commentList
     }
 
-    onLoad (option) {
-      this.stationH = wx.getStorageSync('windowH') - 141
-      this.address = option.address
-      wx.setNavigationBarTitle({
-        title: option.name
+    // 获取评论列表
+    getCommentList (type) {
+      let that = this
+      let paramsEvaluation = {
+        userCode: that.session === '' ? '' : that.session.user.userId,
+        siteCode: that.siteCode,
+        pageNo: that.evalPageNo,
+        pageSize: that.evalPageSize,
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'station.evaluation',
+        locale: 'zh_CN',
+        appKey: that.session === '' ? '' : that.session.appKey,
+        sessionId: that.session === '' ? '' : that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: paramsEvaluation,
+        url: '/msp-charge/router',
+        success: function (e) {
+          let data = e.data
+          console.log('评价列表')
+          console.log(data)
+          that.commentlist = data.data
+          that.$apply()
+        }
       })
+    }
+
+    fD (a, b, c) {
+      if (a > c) {
+        a -= c - b
+      }
+      if (a < b) {
+        a += c - b
+      }
+      return a
+    }
+
+    jD (a, b, c) {
+      b != null && (a = Math.max(a, b))
+      c != null && (a = Math.min(a, c))
+      return a
+    }
+
+    yk (a) {
+      return Math.PI * a / 180
+    }
+
+    Ce (a, b, c, d) {
+      var dO = 6370996.81
+      return dO * Math.acos(Math.sin(c) * Math.sin(d) + Math.cos(c) * Math.cos(d) * Math.cos(b - a))
+    }
+
+    // 计算距离方法
+    getDistance (a, b) {
+      if (!a || !b) {
+        return 0
+      }
+      a.lng = this.fD(a.lng, -180, 180)
+      a.lat = this.jD(a.lat, -74, 74)
+      b.lng = this.fD(b.lng, -180, 180)
+      b.lat = this.jD(b.lat, -74, 74)
+      return this.Ce(this.yk(a.lng), this.yk(b.lng), this.yk(a.lat), this.yk(b.lat))
+    }
+
+    onLoad (option) {
+      let stakeDetails = JSON.parse(wx.getStorageSync('stakeDetails')).data
+      console.log('stakeDetails:')
+      console.log(stakeDetails)
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.stationH = wx.getStorageSync('windowH') - 141
+      this.stakeDetails = stakeDetails
+      this.imgUrl = stakeDetails.img === '' || stakeDetails.img === null ? 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_station@2x.png' : stakeDetails.img
+      this.siteCode = stakeDetails.siteCode
+      this.siteName = stakeDetails.siteName
+      this.workingTime = stakeDetails.workingTime
+      this.carType = stakeDetails.carType
+      this.address = stakeDetails.address
+      this.score = (parseInt(stakeDetails.score)) + (stakeDetails.score - parseInt(stakeDetails.score) > 0 ? 0.5 : 0)
+      this.isPark = stakeDetails.isPark * 1
+      this.isCollect = stakeDetails.isCollect
+      this.parkingRate = stakeDetails.parkingRate
+      this.pilelist = stakeDetails.pileList
+      // this.carTypeList = stakeDetails.carTypeList
+      this.chargingPileNum = stakeDetails.chargingPileNum * 1
+      this.makeAppointment = stakeDetails.makeAppointment * 1
+      this.isForeignOpen = stakeDetails.isForeignOpen * 1
+      this.detailLat = stakeDetails.latitude * 1
+      this.detailLng = stakeDetails.longitude * 1
+      this.distance = option.distance
+      this.currentPositionLat = option.currentPositionLat * 1
+      this.currentPositionLng = option.currentPositionLng * 1
+      this.getDis = this.distance || (this.getDistance({
+        lng: this.currentPositionLng,
+        lat: this.currentPositionLat
+      }, {
+        lng: this.detailLng,
+        lat: this.detailLat
+      }) / 1000 / 1000).toFixed(2)
+      this.pilelist.forEach((e, index, arr) => {
+        if (e.workingState === '1') {
+          this.pileIsNotWroking++
+        }
+      })
+      wx.setNavigationBarTitle({
+        title: stakeDetails.siteName
+      })
+      this.$apply()
     }
   }
 </script>

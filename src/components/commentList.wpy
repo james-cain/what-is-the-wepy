@@ -135,7 +135,6 @@
   line-height: 30px;
   text-align: center;
   font-size: 14px;
-  margin-bottom: 45px;
 }
 
 .comment-body {
@@ -146,7 +145,7 @@
 <template>
 <view class="comment-body {{commentlist.length === 0 && commentlist !== ''? 'comment-no-data' : ''}}">
   <view class="list-tips">
-    <image src="../images/c_nodata_grade_list@2x.png" mode="scaleToFill" style="width: 155px; height: 106px; display: block; margin: 0 auto;"/>
+    <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_nodata_grade_list@2x.png" mode="scaleToFill" style="width: 155px; height: 106px; display: block; margin: 0 auto;"/>
     <view class="list-tips-title">暂无评价</view>
     <view class="list-tips-title">手指运动起来，写出你的想法</view>
   </view>
@@ -156,12 +155,12 @@
         <view id="{{comment.commentId}}">
           <view class="user">
             <view class="good-num">
-              <image class="comment-icon" src="../images/c_like_normal@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp !== 2}}"></image>
-              <image class="comment-icon" src="../images/c_like_pressed@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp === 2}}"></image>
+              <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_like_normal@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp !== 2}}"></image>
+              <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_like_pressed@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp === 2}}"></image>
               {{comment.thumbUpNum}}
             </view>
             <view class="comment-num">
-              <image class="comment-icon" src="../images/c_comment_normal@2x.png" mode="scaleToFill"></image>
+              <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_comment_normal@2x.png" mode="scaleToFill"></image>
               {{comment.commentList.length}}
             </view>
             <image class="user-avatar" src="{{comment.avatar === null || comment.avatar === '' ? tempImg : comment.avatar}}" mode="scaleToFill"></image>
@@ -204,7 +203,7 @@
     }
 
     data = {
-      tempImg: '../images/c_default_avatar@2x.png'
+      tempImg: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'
     }
 
     components = {

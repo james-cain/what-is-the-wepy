@@ -6,7 +6,6 @@
 
 .pile-li:last-child {
   border: 0;
-  margin-bottom: 45px;
 }
 
 .pile-li .line {
@@ -23,22 +22,22 @@
 }
 
 .pile-li .status-1 {
-  background: url("../images/c_filtrate_list_leisure_icon@2x.png") no-repeat center 10px;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_list_leisure_icon@2x.png") no-repeat center 10px;
   background-size: 35px 35px;
 }
 
 .pile-li .status-2 {
-  background: url("../images/c_list_not_available_icon@2x.png") no-repeat center 10px;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_not_available_icon@2x.png") no-repeat center 10px;
   background-size: 35px 35px;
 }
 
 .pile-li .status-3 {
-  background: url("../images/c_list_alert_icon@2x.png") no-repeat center 10px;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_alert_icon@2x.png") no-repeat center 10px;
   background-size: 35px 35px;
 }
 
 .pile-li .status-4 {
-  background: url("../images/c_list_off_line_icon@2x.png") no-repeat center 10px;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_off_line_icon@2x.png") no-repeat center 10px;
   background-size: 35px 35px;
 }
 
@@ -89,25 +88,25 @@
 }
 
 .pile-item .ac {
-  background: url("../images/c_list_ac_icon@2x.png") left center no-repeat;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_ac_icon@2x.png") left center no-repeat;
   background-size: 11px 11px;
 }
 
 .pile-item .dc {
-  background: url("../images/c_list_dc_icon@2x.png") left center no-repeat;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_dc_icon@2x.png") left center no-repeat;
   background-size: 11px 11px;
 }
 
 .pile-item .price {
   padding-left: 13px;
-  background: url("../images/c_list_price_icon@2x.png") left center no-repeat;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_price_icon@2x.png") left center no-repeat;
   background-size: 11px 11px;
 }
 
 </style>
 
 <template>
-<view wx:for="{{pilelist}}" wx:for-item="pileItem" class="pile-li" wx:key="id">
+<view wx:for="{{pilelist}}" wx:for-item="pileItem" class="pile-li" wx:key="chargePileCode">
   <view class="line {{'status-' + pileItem.workingState}}">
     {{statusAry[pileItem.workingState * 1 - 1]}}
   </view>

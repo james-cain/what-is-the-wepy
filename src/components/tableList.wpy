@@ -53,7 +53,7 @@
   &-name {
     position: relative;
     display: inline-block;
-    width: 165px;
+    width: 175px;
   }
   &-img {
     position: relative;
@@ -73,14 +73,15 @@
 
 <template>
   <scroll-view scroll-y style="height: {{tableH}}px">
-    <view class="table-card" wx:for="{{pileTableList}}" wx:for-item="pileTable" wx:key="id">
-      <view style="display: flex;">
+    <view class="table-card" wx:for="{{pileTableListBak}}" wx:for-item="pileTable" wx:key="siteCode">
+      <view style="display: flex;" @tap="gotostation({{pileTable.siteCode}}, {{pileTable.distanceBak}})">
         <view class="table-card-left">
           <view class="table-card-name">
-            <text class="pile-table-name">{{pileTable.name}}</text>
-            <image src="../images/c_list_leisure_icon@2x.png" mode="scaleToFill" class="pile-table-img" wx:if="{{pileTable.isLeisure}}"></image>
-            <image src="../images/c_list_leisure_icon_gray@2x.png" mode="scaleToFill" class="pile-table-img" wx:if="{{!pileTable.isLeisure}}"></image>
-            <text class="pile-table-pilecount">{{pileTable.pilecount}}</text>
+            <text class="pile-table-name">{{pileTable.siteNameBak}}</text>
+            <text wx:if= "{{pileTable.isForeignOpen * 1 === 0}}" style="font-weight: normal; font-size: 12px; color: orange">(暂不对外开放)</text>
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_leisure_icon@2x.png" mode="scaleToFill" class="pile-table-img" wx:if="{{pileTable.isForeignOpen * 1 !== 0 && pileTable.chargingPileNum * 1 !== 0}}"></image>
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_leisure_icon_gray@2x.png" mode="scaleToFill" class="pile-table-img" wx:if="{{pileTable.isForeignOpen * 1 !== 0 && pileTable.chargingPileNum * 1 === 0}}"></image>
+            <text wx:if= "{{pileTable.isForeignOpen * 1 !== 0}}" class="pile-table-pilecount">{{pileTable.chargingPileNum}}</text>
           </view>
           <view class="table-card-address">
             <text class="pile-table-address">{{pileTable.address}}</text>
@@ -88,9 +89,9 @@
         </view>
         <view class="table-card-right">
           <view class="table-card-distance">
-            <text class="pile-table-distance">{{pileTable.distance}}</text>
+            <text class="pile-table-distance">{{pileTable.distanceBak}}km</text>
           </view>
-          <view class="table-card-button" @tap.stop="gotostation({{pileTable.name}}, {{pileTable.id}}, {{pileTable.address}})">预约</view>
+          <!-- <view class="table-card-button" @tap.stop="gotostation({{pileTable.name}}, {{pileTable.id}}, {{pileTable.address}})">预约</view> -->
         </view>
       </view>
     </view>
@@ -116,8 +117,23 @@
       }
     }
 
-    data = {
+    watch = {
+      pileTableList (list) {
+        let that = this
+        that.pileTableListBak.length = 0
+        list.forEach((e, index, arr) => {
+          that.pileTableListBak[index] = e
+          that.pileTableListBak[index].distanceBak = (e.distance / 1000).toFixed(2)
+          that.pileTableListBak[index].siteNameBak = e.siteName.length > 10 ? e.siteName.slice(0, 10) + '...' : e.siteName
+        })
+        console.log('that.pileTableListBak.length:' + that.pileTableListBak.length)
+        console.log(that.pileTableListBak)
+        that.$apply()
+      }
+    }
 
+    data = {
+      pileTableListBak: []
     }
 
     components = {
@@ -125,10 +141,8 @@
     }
 
     methods = {
-      gotostation (stationName, stationId, address, e) {
-        wx.navigateTo({
-          url: '../pages/station?name=' + stationName + '&id=' + stationId + '&address=' + address
-        })
+      gotostation (siteCode, distanceBak, e) {
+        this.$emit('stationData', siteCode, distanceBak)
       }
     }
 
