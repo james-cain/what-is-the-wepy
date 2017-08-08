@@ -10,7 +10,7 @@ let CTP = function() {
   let getHomeInfo = function () {}
 
   function checkLogin () {
-    let curSession = JSON.parse(wx.getStorageSync('session'))
+    let curSession = wx.getStorageSync('session') === '' ? null : JSON.parse(wx.getStorageSync('session'))
     let bool = true
     if (curSession === null) {
       bool = false

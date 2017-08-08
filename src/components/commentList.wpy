@@ -154,21 +154,22 @@
       <view class="comment-card">
         <view id="{{comment.commentId}}">
           <view class="user">
-            <view class="good-num">
-              <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_like_normal@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp !== 2}}"></image>
-              <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_like_pressed@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp === 2}}"></image>
+            <view class="good-num" @tap="thumbUp({{comment.commentId}}, {{comment.isThumbUp}})">
+              <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_like_normal@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp !== 2}}"/>
+              <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_like_pressed@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp === 2}}"/>
               {{comment.thumbUpNum}}
             </view>
             <view class="comment-num">
-              <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_comment_normal@2x.png" mode="scaleToFill"></image>
+              <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_comment_normal@2x.png" mode="scaleToFill"/>
               {{comment.commentList.length}}
             </view>
-            <image class="user-avatar" src="{{comment.avatar === null || comment.avatar === '' ? tempImg : comment.avatar}}" mode="scaleToFill"></image>
+            <image wx:if="{{comment.avatar === null}}" class="user-avatar" src="{{tempImg}}" mode="scaleToFill"/>
+            <image wx:if="{{comment.avatar !== null}}" class="user-avatar" src="{{tempImg}}" mode="scaleToFill"/>
             <view class="user-name">{{comment.userName}}</view>
           </view>
           <view class="score">
             <view style="display: inline-block; margin: 0 10px 0 5px;">评分:</view>
-            <score class="scores" :scores="comment.score" :isScoreStatic="0"></score>
+            <scoresing class="scores" :scores="comment.score" :isScoreStatic="0"></scoresing>
           </view>
           <view class="labels-p">
             <view class="stations-label labelCode" wx:for="{{comment.labelList}}" wx:for-item="label" wx:key="labelCode">{{label.labelName}}</view>
@@ -191,7 +192,7 @@
 
 <script>
   import wepy from 'wepy'
-  import score from './score'
+  import scoring from './score'
 
   export default class CommentList extends wepy.component {
     config = {
@@ -206,12 +207,21 @@
       tempImg: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'
     }
 
+    watch = {
+      commentlist (val) {
+        console.log('组件内部评论内容')
+        console.log(val)
+      }
+    }
+
     components = {
-      score: score
+      scoresing: scoring
     }
 
     methods = {
-
+      thumbUp(commentId, isThumbUp) {
+        this.$emit('thumbUp', commentId, isThumbUp)
+      }
     }
 
     events = {
