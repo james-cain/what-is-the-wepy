@@ -108,18 +108,18 @@
 
 <template>
   <view id="car-type">
-    <scroll-view class="left-type" style="height: {{panelHeight}}px">
+    <scroll-view class="left-type" scroll-y style="height: {{panelHeight}}px">
       <view class="left-type-list">
         <view wx:for="{{allCarList}}" wx:for-item="car" wx:key="brand">
-          <view class="left-type-card {{car.selected ? 'selected' : ''}}" @tap="switchBrand({{car.brand}}, {{car.selected}})">
-            <image class="left-type-img" src="{{car.brandImg}}"/>
+          <view class="left-type-card {{car.selected ? 'selected' : ''}}" @tap.stop="switchBrand({{car.brand}}, {{car.selected}})">
+             <image class="left-type-img" src="{{car.brandImg}}"/> 
             <text>{{car.brand}}</text>
           </view>
         </view>
       </view>
       <view class="line-bg" style="height: 100%;"></view>
     </scroll-view>
-    <scroll-view class="right-type-details" style="height: {{panelHeight}}px">
+    <scroll-view class="right-type-details" scroll-y style="height: {{panelHeight}}px">
       <view wx:for="{{allCarList}}" wx:for-item="car" wx:key="brand">
         <view class="right-type-details-list" hidden="{{!car.selected}}">
           <view wx:for="{{car.brandAry}}" wx:for-item="carbrand" wx:key="vehicleModelCode">
@@ -131,7 +131,7 @@
         </view>
       </view>
     </scroll-view>
-    <view id="car-type-btn">确定</view>
+    <view id="car-type-btn" @tap="selectedCar">确定</view>
   </view>
 </template>
 
@@ -149,101 +149,62 @@
 
     watch = {
       vehicleCarList (val) {
-        let brand = ''
-        let count = -1
-        let allCarList = []
-        val.forEach((e, index, arr) => {
-          if (brand !== e.vehicleBrand) {
-            count++
-            brand = ''
-            allCarList[count] = {
-              brand: '',
-              brandAry: []
+        if (this.initRefresh) {
+          let brand = ''
+          let count = -1
+          let allCarList = []
+          let flg = 1
+          val.forEach((e, index, arr) => {
+            if (brand !== e.vehicleBrand) {
+              for (let i = 0; i < count; i++) {
+                if (e.vehicleBrand === allCarList[i].brand) {
+                  allCarList[i].brandAry.push(e)
+                  flg = 2
+                  break
+                }
+              }
+              if (flg === 1) {
+                count++
+                brand = ''
+                allCarList[count] = {
+                  brand: '',
+                  brandAry: []
+                }
+                allCarList[count].selected = count === 0
+                allCarList[count].brand = e.vehicleBrand
+                allCarList[count].brandImg = e.vehicleBrandImg
+                e.selected = false
+                allCarList[count].brandAry.push(e)
+                brand = e.vehicleBrand
+              } else {
+                flg = 1
+              }
+            } else {
+              e.selected = false
+              allCarList[count].brandAry.push(e)
             }
-            allCarList[count].selected = count === 0
-            allCarList[count].brand = e.vehicleBrand
-            allCarList[count].brandImg = e.vehicleBrandImg
-            e.selected = false
-            allCarList[count].brandAry.push(e)
-            brand = e.vehicleBrand
-          } else {
-            e.selected = false
-            allCarList[count].brandAry.push(e)
-          }
-        })
-        console.log('new typelIst:')
-        console.log(allCarList)
-        this.allCarList = allCarList
-        this.$apply()
+          })
+          console.log('new typelIst:')
+          console.log(allCarList)
+          console.log('this.initRefresh:' + this.initRefresh)
+          this.allCarList = allCarList
+          this.initRefresh = false
+          this.$apply()
+        }
       }
     }
 
     computed = {
-      // allCarList () {
-      //   if (this.initRefresh) {
-      //     let brand = ''
-      //     let count = -1
-      //     let allCarList = []
-      //     this.vehicleCarList.forEach((e, index, arr) => {
-      //       if (brand !== e.vehicleBrand) {
-      //         count++
-      //         brand = ''
-      //         allCarList[count] = {
-      //           brand: '',
-      //           brandAry: []
-      //         }
-      //         allCarList[count].selected = count === 0
-      //         allCarList[count].brand = e.vehicleBrand
-      //         allCarList[count].brandImg = e.vehicleBrandImg
-      //         e.selected = false
-      //         allCarList[count].brandAry.push(e)
-      //         brand = e.vehicleBrand
-      //       } else {
-      //         e.selected = false
-      //         allCarList[count].brandAry.push(e)
-      //       }
-      //     })
-      //     console.log('new typelIst:')
-      //     console.log(allCarList)
-      //     this.initRefresh = false
-      //     return allCarList
-      //   } else {
-      //     return this.allCarList
-      //   }
-      // },
       panelHeight () {
-        console.log(wx.getStorageSync('mapH'))
         return wx.getStorageSync('mapH')
       }
     }
 
     data = {
-      // vehicleCarList: [
-      //   {
-      //     vehicleBrand: 'aa',
-      //     vehicleBrandCode: '1',
-      //     vehicleBrandImg: '../images/vehicle/Fisker.png',
-      //     vehicleModel: '宝马',
-      //     vehicleModelCode: 1
-      //   },
-      //   {
-      //     vehicleBrand: 'bb',
-      //     vehicleBrandCode: '2',
-      //     vehicleBrandImg: '../images/vehicle/Fisker.png',
-      //     vehicleModel: '宝马',
-      //     vehicleModelCode: 1
-      //   },
-      //   {
-      //     vehicleBrand: 'bb',
-      //     vehicleBrandCode: '3',
-      //     vehicleBrandImg: '../images/vehicle/Fisker.png',
-      //     vehicleModel: '宝马2',
-      //     vehicleModelCode: 2
-      //   }
-      // ],
       allCarList: [],
       panelHeight: 0,
-      initRefresh: true
+      initRefresh: true,
+      selectedCarItem: {}
     }
 
     components = {
@@ -252,6 +213,7 @@
 
     methods = {
       switchBrand(brand, selected, e) {
+        console.log('brand:' + brand + ',selected:' + selected)
         if (!selected) {
           this.allCarList.forEach((e, index, arr) => {
             e.selected = e.brand === brand
@@ -263,11 +225,13 @@
         this.$apply()
       },
       switchCar(brand, vehicleBrandCode, vehicleModelCode, selected, e) {
+        let that = this
         this.allCarList.forEach((e, index, arr) => {
           if (e.brand === brand) {
             e.brandAry.forEach((elm, i, a) => {
               if (vehicleModelCode === elm.vehicleModelCode) {
                 elm.selected = !selected
+                that.selectedCarItem = elm.selected ? elm : {}
               } else {
                 elm.selected = false
               }
@@ -275,6 +239,10 @@
           }
         })
         this.$apply()
+      },
+      selectedCar (e) {
+        let that = this
+        that.$emit('selectedCar', that.selectedCarItem)
       }
     }
 

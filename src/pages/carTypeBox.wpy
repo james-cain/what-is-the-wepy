@@ -27,6 +27,13 @@
       carType: carType
     }
 
+    events = {
+      selectedCar (selectedCarItem) {
+        console.log('选中的车型：')
+        console.log(selectedCarItem)
+      }
+    }
+
     getCarList () {
       let that = this
       let carTypeParams = {
