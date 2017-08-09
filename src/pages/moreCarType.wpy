@@ -124,6 +124,7 @@
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class MoreCarType extends wepy.page {
     config = {
@@ -136,39 +137,11 @@
 
     data = {
       carTypePanel: 0,
-      stakeAllCarType: [
-        {
-          vehicleBrand: 'aa',
-          vehicleBrandCode: '1',
-          vehicleBrandImg: '../images/vehicle/Fisker.png',
-          vehicleModel: '宝马',
-          vehicleModelCode: 1
-        },
-        {
-          vehicleBrand: 'bb',
-          vehicleBrandCode: '2',
-          vehicleBrandImg: '../images/vehicle/Fisker.png',
-          vehicleModel: '宝马',
-          vehicleModelCode: 1
-        },
-        {
-          vehicleBrand: 'bb',
-          vehicleBrandCode: '3',
-          vehicleBrandImg: '../images/vehicle/Fisker.png',
-          vehicleModel: '宝马2',
-          vehicleModelCode: 2
-        }
-      ],
-      suitMeList: [
-        {
-          vehicleBrand: 'aa',
-          vehicleBrandCode: '1',
-          vehicleBrandImg: '../images/vehicle/Fisker.png',
-          vehicleModel: '宝马',
-          vehicleModelCode: 1
-        }
-      ],
-      brandTypeList: []
+      stakeAllCarType: [],
+      suitMeList: [],
+      brandTypeList: [],
+      stakeDetails: {},
+      session: {}
     }
 
     computed = {
@@ -187,8 +160,47 @@
 
     }
 
+    getMyCarType () {
+      let that = this
+      let paramsMyCarType = {
+        userCode: that.session === '' ? '' : that.session.user.userId,
+        siteCode: that.stakeDetails.siteCode,
+        pageNo: 1,
+        pageSize: 20,
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'car.list',
+        locale: 'zh_CN',
+        appKey: that.session === '' ? '' : that.session.appKey,
+        sessionId: that.session === '' ? '' : that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: paramsMyCarType,
+        url: '/msp-charge/router',
+        success: function (e) {
+          var data = e.data
+          if (data.length) {
+            console.log('适合我的车型有：')
+            console.log(data)
+            that.suitMeList = data
+            that.$apply()
+          }
+        }
+      })
+    }
+
     onLoad() {
+      this.stakeDetails = JSON.parse(wx.getStorageSync('stakeDetails')).data
+      console.log('stakeDetails2:')
+      console.log(this.stakeDetails)
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.stakeAllCarType = wx.getStorageSync('stakeAllCarType') === '' ? [] : JSON.parse(wx.getStorageSync('stakeAllCarType'))
       this.carTypePanel = wx.getStorageSync('windowH')
+      this.getMyCarType()
+      this.$apply()
     }
 
     onShow () {

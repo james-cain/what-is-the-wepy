@@ -59,11 +59,15 @@
           wx.setStorageSync('kScreenH', kScreenH)
         }
       })
-      // this.getUserInfo(function (userInfo) {
-      //   that.globalData.userInfo = userInfo
-      //   wx.setStorageSync('userInfo', userInfo)
-      //   console.log(userInfo)
-      // })
+      wx.login({
+        success: function (res) {
+          if (res.code) {
+            console.log('用户登录态code:' + res.code)
+          } else {
+            console.log('获取用户登录态失败！' + res.errMsg)
+          }
+        }
+      })
       wepy.getUserInfo({
         success (res) {
           let userInfo = res.userInfo

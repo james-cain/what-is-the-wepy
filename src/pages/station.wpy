@@ -237,7 +237,6 @@
   left: 0;
   top: 0;
   background: #000;
-  display: none;
   z-index: 11;
   opacity: .3;
 }
@@ -249,7 +248,6 @@
   text-align: center;
   background: #fff;
   border-radius: 5px;
-  display: none;
   z-index: 12;
   position: absolute;
   top: 50%;
@@ -356,7 +354,7 @@
               {{isPark ? '停车费用：' + parkingRate : ''}}
             </view>
           </view>
-          <view class="station-details-tab-sub-details-carType">
+          <view class="station-details-tab-sub-details-carType" wx:if="{{isShowCarTypeList}}">
             <view class="station-details-tab-sub-details-carType-list">
               <view class="carType" wx:for="{{carTypeList}}" wx:for-item="carType" wx:for-index="index">
                 <image class="carType-image" src="{{carType.vehicleBrandImg}}" mode="scaleToFill"></image>
@@ -370,17 +368,17 @@
           </view>
         </view>
         <view class="station-details-tab-sub-comment {{evaSelected ? 'selected' : ''}}">
-          <commentList class="comment-body" :commentlist.sync="commentlist"></commentList>
+          <commentList class="comment-body" :commentlist.sync="commentlist" :commentlistLength.sync="commentlistLength" :evalPageSize.sync="evalPageSize" :isCommentRecord.sync="isCommentRecord"></commentList>
         </view>
-        <view class="ctp-edit-box-mask ctp-mask"></view>
-        <view id="ctp-edit-box" class="ctp-edit-box">
+        <view class="ctp-edit-box-mask ctp-mask" wx:if="{{isEdit}}"></view>
+        <view id="ctp-edit-box" class="ctp-edit-box" wx:if="{{isEdit}}">
           <text class="title">填写评论</text>
           <view class="textarea-box">
-            <textarea></textarea>
+            <textarea @input="inputCommentValue"></textarea>
           </view>
           <view class="ctp-edit-btn">
-            <view class="ctp-edit-btn-cancel">取消</view>
-            <view class="ctp-edit-btn-submit">提交</view> 
+            <view class="ctp-edit-btn-cancel" @tap="commentCancel">取消</view>
+            <view class="ctp-edit-btn-submit" @tap="commentSubmit">提交</view> 
           </view>
         </view>
       </scroll-view>
@@ -420,24 +418,7 @@
       pileIsNotWroking: 0,
       detailLat: 0,
       detailLng: 0,
-      carTypeList: [
-        {
-          vehicleBrandImg: '../images/vehicle/Fisker.png',
-          vehicleModel: 'Fisker'
-        },
-        {
-          vehicleBrandImg: '../images/vehicle/奥迪.png',
-          vehicleModel: '奥迪'
-        },
-        {
-          vehicleBrandImg: '../images/vehicle/宝马.png',
-          vehicleModel: '宝马'
-        },
-        {
-          vehicleBrandImg: '../images/vehicle/保时捷.png',
-          vehicleModel: '保时捷'
-        }
-      ],
+      carTypeList: [],
       chargingPileNum: 0,
       makeAppointment: 0,
       isForeignOpen: 0,
@@ -447,10 +428,17 @@
       currentPositionLat: 0,
       currentPositionLng: 0,
 
+      isShowCarTypeList: false,
+
       evalPageNo: 1,
       evalPageSize: 20,
 
-      commentlist: []
+      isCommentRecord: false,
+      commentlist: [],
+      commentlistLength: 0,
+      isEdit: false,
+      editCommentId: '',
+      commentContent: ''
     }
 
     methods = {
@@ -510,6 +498,54 @@
             scale: 15 // 地图缩放级别,整形值,范围从1~28。默认为最大
           })
         }
+      },
+      inputCommentValue (e) {
+        this.commentContent = e.detail.value
+        this.$apply()
+      },
+      commentCancel (e) {
+        this.isEdit = false
+        this.$apply()
+      },
+      commentSubmit (e) {
+        let that = this
+        if (that.commentContent === '') {
+          wx.showToast({
+            title: '请输入评论内容',
+            icon: 'loading',
+            duration: 2000
+          })
+          return
+        }
+        let _params = {
+          userCode: that.session.user.userId,
+          siteCode: that.siteCode,
+          parentCommentId: that.editCommentId,
+          content: that.commentContent,
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'station.submitcomment',
+          locale: 'zh_CN',
+          appKey: that.session.appKey,
+          timestamp: new Date().getTime(),
+          sessionId: that.session.sessionId
+        }
+        CTP().Ajax({
+          params: _params,
+          url: '/msp-charge/router',
+          success: function (e) {
+            console.log('提交', e)
+            if (e.state === '0') {
+              that.isEdit = false
+              that.$apply()
+              that.getCommentList()
+            }
+          },
+          error: function (e) {
+
+          }
+        })
       }
     }
 
@@ -549,6 +585,66 @@
             url: 'login'
           })
         }
+      },
+      getCommentList (type) {
+        let that = this
+        if (type === 'append') {
+          that.evalPageNo++
+        }
+        let paramsEvaluation = {
+          userCode: that.session === '' ? '' : that.session.user.userId,
+          siteCode: that.siteCode,
+          pageNo: that.evalPageNo,
+          pageSize: that.evalPageSize,
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'station.evaluation',
+          locale: 'zh_CN',
+          appKey: that.session === '' ? '' : that.session.appKey,
+          sessionId: that.session === '' ? '' : that.session.sessionId,
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: paramsEvaluation,
+          url: '/msp-charge/router',
+          success: function (e) {
+            let data = e.data
+            console.log('评价列表')
+            console.log(data)
+            if (type === 'append') {
+              that.commentlistLength = data.data && data.data.length !== 0 ? data.data.length : 0
+              if (data.data && data.data.length !== 0) {
+                data.data.forEach((e, index, arr) => {
+                  that.commentlist.push(e)
+                })
+              }
+            } else {
+              if (data.data && data.data.length !== 0) {
+                that.isCommentRecord = true
+                that.commentlistLength = data.data.length
+                that.commentlist = data.data
+              } else {
+                that.isCommentRecord = false
+                that.commentlistLength = 0
+                that.commentlist = []
+              }
+            }
+            that.$apply()
+          }
+        })
+      },
+      commentOpen (commentId) {
+        console.log('评论编号：' + commentId)
+        if (CTP().checkLogin()) {
+          this.isEdit = true
+          this.editCommentId = commentId
+          this.$apply()
+        } else {
+          wx.navigateTo({
+            url: 'login'
+          })
+        }
       }
     }
 
@@ -570,6 +666,9 @@
     // 获取评论列表
     getCommentList (type) {
       let that = this
+      if (type === 'append') {
+        that.evalPageNo++
+      }
       let paramsEvaluation = {
         userCode: that.session === '' ? '' : that.session.user.userId,
         siteCode: that.siteCode,
@@ -591,7 +690,24 @@
           let data = e.data
           console.log('评价列表')
           console.log(data)
-          that.commentlist = data.data
+          if (type === 'append') {
+            that.commentlistLength = data.data && data.data.length !== 0 ? data.data.length : 0
+            if (data.data && data.data.length !== 0) {
+              data.data.forEach((e, index, arr) => {
+                that.commentlist.push(e)
+              })
+            }
+          } else {
+            if (data.data && data.data.length !== 0) {
+              that.isCommentRecord = true
+              that.commentlistLength = data.data.length
+              that.commentlist = data.data
+            } else {
+              that.isCommentRecord = false
+              that.commentlistLength = 0
+              that.commentlist = []
+            }
+          }
           that.$apply()
         }
       })
@@ -653,7 +769,9 @@
       this.isCollect = stakeDetails.isCollect
       this.parkingRate = stakeDetails.parkingRate
       this.pilelist = stakeDetails.pileList
-      // this.carTypeList = stakeDetails.carTypeList
+      this.carTypeList = stakeDetails.carTypeList
+      this.isShowCarTypeList = stakeDetails.carTypeList && stakeDetails.carTypeList.length !== 0
+      wx.setStorageSync('stakeAllCarType', JSON.stringify(this.carTypeList))
       this.chargingPileNum = stakeDetails.chargingPileNum * 1
       this.makeAppointment = stakeDetails.makeAppointment * 1
       this.isForeignOpen = stakeDetails.isForeignOpen * 1
