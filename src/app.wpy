@@ -47,6 +47,31 @@
     globalData = {
       userInfo: null
     }
+    // 全局变量对象
+    __globalVal = {}
+    // 全局bus总线变量
+    __messages = {}
+    // 全局订阅方法
+    subscribe (type, fn) {
+      if (typeof this.__messages[type] === 'undefined') {
+        this.__messages[type] = [fn]
+      } else {
+        this.__messages[type].push(fn)
+      }
+    }
+    // 全局发布方法
+    publish (type, args) {
+      if (!this.__messages[type]) {
+        return
+      }
+      let events = {
+        type: type,
+        args: args || {}
+      }
+      for (let i = 0; i < this.__messages[type].length; i++) {
+        this.__messages[type][i].call(this, events)
+      }
+    }
 
     onLaunch() {
       wx.getSystemInfo({

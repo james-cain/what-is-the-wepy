@@ -125,7 +125,7 @@
           <view wx:for="{{car.brandAry}}" wx:for-item="carbrand" wx:key="vehicleModelCode">
             <view class="right-type-details-card" @tap="switchCar({{car.brand}}, {{carbrand.vehicleBrandCode}}, {{carbrand.vehicleModelCode}}, {{carbrand.selected}})">
               {{carbrand.vehicleModel}}
-              <image class="right-type-details-img" src="../images/c_list_tick_ok@2x.png" wx:if="{{carbrand.selected}}"></image>
+              <image class="right-type-details-img" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_tick_ok@2x.png" wx:if="{{carbrand.selected}}"></image>
             </view>
           </view>
         </view>
@@ -144,42 +144,73 @@
     }
 
     props = {
+      vehicleCarList: {}
+    }
 
+    watch = {
+      vehicleCarList (val) {
+        let brand = ''
+        let count = -1
+        let allCarList = []
+        val.forEach((e, index, arr) => {
+          if (brand !== e.vehicleBrand) {
+            count++
+            brand = ''
+            allCarList[count] = {
+              brand: '',
+              brandAry: []
+            }
+            allCarList[count].selected = count === 0
+            allCarList[count].brand = e.vehicleBrand
+            allCarList[count].brandImg = e.vehicleBrandImg
+            e.selected = false
+            allCarList[count].brandAry.push(e)
+            brand = e.vehicleBrand
+          } else {
+            e.selected = false
+            allCarList[count].brandAry.push(e)
+          }
+        })
+        console.log('new typelIst:')
+        console.log(allCarList)
+        this.allCarList = allCarList
+        this.$apply()
+      }
     }
 
     computed = {
-      allCarList () {
-        if (this.initRefresh) {
-          let brand = ''
-          let count = -1
-          let allCarList = []
-          this.vehicleCarList.forEach((e, index, arr) => {
-            if (brand !== e.vehicleBrand) {
-              count++
-              brand = ''
-              allCarList[count] = {
-                brand: '',
-                brandAry: []
-              }
-              allCarList[count].selected = count === 0
-              allCarList[count].brand = e.vehicleBrand
-              allCarList[count].brandImg = e.vehicleBrandImg
-              e.selected = false
-              allCarList[count].brandAry.push(e)
-              brand = e.vehicleBrand
-            } else {
-              e.selected = false
-              allCarList[count].brandAry.push(e)
-            }
-          })
-          console.log('new typelIst:')
-          console.log(allCarList)
-          this.initRefresh = false
-          return allCarList
-        } else {
-          return this.allCarList
-        }
-      },
+      // allCarList () {
+      //   if (this.initRefresh) {
+      //     let brand = ''
+      //     let count = -1
+      //     let allCarList = []
+      //     this.vehicleCarList.forEach((e, index, arr) => {
+      //       if (brand !== e.vehicleBrand) {
+      //         count++
+      //         brand = ''
+      //         allCarList[count] = {
+      //           brand: '',
+      //           brandAry: []
+      //         }
+      //         allCarList[count].selected = count === 0
+      //         allCarList[count].brand = e.vehicleBrand
+      //         allCarList[count].brandImg = e.vehicleBrandImg
+      //         e.selected = false
+      //         allCarList[count].brandAry.push(e)
+      //         brand = e.vehicleBrand
+      //       } else {
+      //         e.selected = false
+      //         allCarList[count].brandAry.push(e)
+      //       }
+      //     })
+      //     console.log('new typelIst:')
+      //     console.log(allCarList)
+      //     this.initRefresh = false
+      //     return allCarList
+      //   } else {
+      //     return this.allCarList
+      //   }
+      // },
       panelHeight () {
         console.log(wx.getStorageSync('mapH'))
         return wx.getStorageSync('mapH')
@@ -187,29 +218,29 @@
     }
 
     data = {
-      vehicleCarList: [
-        {
-          vehicleBrand: 'aa',
-          vehicleBrandCode: '1',
-          vehicleBrandImg: '../images/vehicle/Fisker.png',
-          vehicleModel: '宝马',
-          vehicleModelCode: 1
-        },
-        {
-          vehicleBrand: 'bb',
-          vehicleBrandCode: '2',
-          vehicleBrandImg: '../images/vehicle/Fisker.png',
-          vehicleModel: '宝马',
-          vehicleModelCode: 1
-        },
-        {
-          vehicleBrand: 'bb',
-          vehicleBrandCode: '3',
-          vehicleBrandImg: '../images/vehicle/Fisker.png',
-          vehicleModel: '宝马2',
-          vehicleModelCode: 2
-        }
-      ],
+      // vehicleCarList: [
+      //   {
+      //     vehicleBrand: 'aa',
+      //     vehicleBrandCode: '1',
+      //     vehicleBrandImg: '../images/vehicle/Fisker.png',
+      //     vehicleModel: '宝马',
+      //     vehicleModelCode: 1
+      //   },
+      //   {
+      //     vehicleBrand: 'bb',
+      //     vehicleBrandCode: '2',
+      //     vehicleBrandImg: '../images/vehicle/Fisker.png',
+      //     vehicleModel: '宝马',
+      //     vehicleModelCode: 1
+      //   },
+      //   {
+      //     vehicleBrand: 'bb',
+      //     vehicleBrandCode: '3',
+      //     vehicleBrandImg: '../images/vehicle/Fisker.png',
+      //     vehicleModel: '宝马2',
+      //     vehicleModelCode: 2
+      //   }
+      // ],
       allCarList: [],
       panelHeight: 0,
       initRefresh: true

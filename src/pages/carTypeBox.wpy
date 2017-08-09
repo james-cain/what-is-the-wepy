@@ -4,23 +4,59 @@
 
 <template>
   <view class="homepage">
-    <carType></carType>
+    <carType :vehicleCarList.sync="carList"></carType>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
   import carType from '../components/carType'
+  import CTP from '../utils/ajax'
 
   export default class CarTypeBox extends wepy.page {
     config = {
       navigationBarTitleText: '更多车型'
     }
 
-    data = {}
+    data = {
+      session: {},
+      carList: []
+    }
 
     components = {
       carType: carType
+    }
+
+    getCarList () {
+      let that = this
+      let carTypeParams = {
+        nonce: 'abc',
+        format: 'json',
+        v: '1.0',
+        method: 'car.all',
+        locale: 'zh_CN',
+        appKey: that.session === '' ? '' : that.session.appKey,
+        session: that.session === '' ? '' : that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: carTypeParams,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('汽车品牌列表：')
+          console.log(e.data)
+          that.carList = e.data.data
+          that.$apply()
+        }
+      })
+    }
+
+    onLoad () {
+      console.log('更多车型load。。。')
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.getCarList()
+      // this.$parent.__globalVal.
     }
   }
 </script>

@@ -344,16 +344,6 @@
           wx.navigateTo({
             url: 'inputScanCode'
           })
-        } else if (id === 5) {
-          // 登陆注册
-          wx.navigateTo({
-            url: 'login'
-          })
-        } else if (id === 6) {
-          // 收藏
-          wx.navigateTo({
-            url: 'myOrder'
-          })
         }
       }
     }
