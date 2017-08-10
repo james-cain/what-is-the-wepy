@@ -37,13 +37,13 @@
   float: left;
   width: 30px;
   height: 30px;
-  background: url("../images/c_grade_star_gray@2x.png") center center no-repeat;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png") center center no-repeat;
   background-size: 30px 30px;
   margin-right: 11px;
 }
 
 .start-area image.selected {
-  background: url("../images/c_grade_star_yellow@2x.png") center center no-repeat;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png") center center no-repeat;
   background-size: 30px 30px;
 }
 
@@ -238,6 +238,9 @@
         if (that.score > 0) {
           wx.showToast({
             title: '评价完成'
+          })
+          wx.redirectTo({
+            url: 'myOrder'
           })
         } else {
           wx.showToast({

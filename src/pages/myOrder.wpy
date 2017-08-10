@@ -56,17 +56,17 @@
   }
 
   .charging-time {
-    background: url('../images/c_charge_time_icon@2x.png') left center no-repeat;
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png') left center no-repeat;
     background-size: 10px 10px;
   }
 
   .charging-quality {
-    background: url('../images/c_charge_quantity_icon@2x.png') left center no-repeat;
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_quantity_icon@2x.png') left center no-repeat;
     background-size: 10px 10px;
   }
 
   .charging-electricity {
-    background: url('../images/c_list_price_icon@2x.png') left center no-repeat;
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_price_icon@2x.png') left center no-repeat;
     background-size: 10px 10px;
   }
 }
@@ -111,7 +111,7 @@
   right: 10px;
   bottom: 11px;
   padding-left: 20px;
-  background: url("../images/c_order_list_charging_icon@2x.png") left center no-repeat;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_order_list_charging_icon@2x.png") left center no-repeat;
   background-size: 15px 15px;
   font-size: 15px;
 }
@@ -126,7 +126,7 @@
   right: 10px;
   bottom: 11px;
   padding-left: 20px;
-  background: url("../images/c_no_connection_icon@2x.png") left center no-repeat;
+  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_no_connection_icon@2x.png") left center no-repeat;
   background-size: 15px 15px;
   font-size: 15px;
 }

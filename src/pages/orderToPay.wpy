@@ -46,17 +46,17 @@
       padding-left: 15px;
     }
     .charging-panel-details-time {
-      background: url('../images/c_charge_time_icon@2x.png') left center no-repeat;
+      background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png') left center no-repeat;
       background-size: 14px 14px;
       float: left;
     }
     .charging-panel-details-elect {
-      background: url('../images/c_charge_quantity_icon@2x.png') left center no-repeat;
+      background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_quantity_icon@2x.png') left center no-repeat;
       background-size: 14px 14px;
       float: left;
     }
     .charging-panel-details-del-c {
-      background: url('../images/c_more_co2_icon@2x.png') left center no-repeat;
+      background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_more_co2_icon@2x.png') left center no-repeat;
       background-size: 16px 16px;
       float: left;
     }
@@ -77,21 +77,21 @@
     height: 60px;
     float: right;
     display: block;
-    background: url('../images/c_list_check_box_normal@2x.png') center center no-repeat;
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') center center no-repeat;
     background-size: 30px 30px;
     .selectedItem {
       width: 60px;
       height: 60px;
       float: right;
       display: block;
-      background: url('../images/c_list_check_box_select@2x.png') center center no-repeat;
+      background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') center center no-repeat;
       background-size: 30px 30px;
     }
   }
   .ye {
     height: 60px;
     border-bottom: 1px solid #e5e5e5;
-    background: url('../images/c_pay_charge_card_icon@2x.png') 13px center no-repeat;
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_pay_charge_card_icon@2x.png') 13px center no-repeat;
     background-size: 25px 25px;
     padding-left: 50px;
   }
@@ -183,7 +183,7 @@
 
     data = {
       orderDetail: {
-        img: '../images/c_default_station@2x.png',
+        img: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_station@2x.png',
         siteName: 'aaaa',
         siteAddress: 'bbbbbb',
         siteCode: 'Asdf234',

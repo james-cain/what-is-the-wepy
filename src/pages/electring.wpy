@@ -2,7 +2,7 @@
 #charging-panel-charging {
   width: 100%;
   height: 100%;
-  background: #222 url('../images/c_charge_bg@2x.gif') center top no-repeat;
+  background: #222 url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_bg@2x.gif') center top no-repeat;
   background-size: 360px 340px;
   overflow: hidden;
   overflow-y: auto;
@@ -23,7 +23,7 @@
   position: absolute;
   top: 260px;
   left: 50%;
-  background: url('../images/c_charge_finish_btn_normal@2x.png') center center no-repeat;
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_finish_btn_normal@2x.png') center center no-repeat;
   background-size: 120px 120px;
   line-height: 280px;
   color: #ce4b40;
@@ -39,7 +39,7 @@
   position: absolute;
   right: 10px;
   top: 30px;
-  background: url('../images/c_charging_time_bg@2x.png') center center no-repeat;
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charging_time_bg@2x.png') center center no-repeat;
   background-size: 156px 74px;
   z-index: 5;
   line-height: 74px;
@@ -130,27 +130,27 @@
       <view class="charging-panel-details" style="height: {{panelH}}px">
         <view class="charging-panel-details-panel">
           <view class="charging-panel-details-time" style="margin-left: 25px; width: 95px;">
-            <image src="../images/c_charge_time_icon@2x.png" style="width: 16px; height: 16px;"/>
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png" style="width: 16px; height: 16px;"/>
             时长:<text class="charging-value">0</text>分钟
           </view>
           <view class="charging-panel-details-percent">
-            <image src="../images/c_charge_percent_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_percent_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
             <text class="left charging-value">百分比:0</text>
           </view>
         </view>
         <view class="charging-panel-details-panel">
           <view class="charging-panel-details-elect" style="margin-left: 25px; width: 95px;">
-            <image src="../images/c_charge_quantity_icon@2x.png" style="width: 16px; height: 16px;"/>
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_quantity_icon@2x.png" style="width: 16px; height: 16px;"/>
             电量:<text class="charging-value">0</text>kWh
           </view>
           <view class="charging-panel-details-amount">
-            <image src="../images/c_charge_cost_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_cost_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
             <text class="left charging-value">费用:0元</text>
           </view>
         </view>
         <view class="charging-panel-details-panel charging-panel-details-refresh" @tap="refresh">
           <view>
-            <image src="../images/c_map_refresh.png" style="width: 16px; height: 16px;"/>
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_map_refresh.png" style="width: 16px; height: 16px;"/>
             <text>刷新</text>
           </view>
         </view>
