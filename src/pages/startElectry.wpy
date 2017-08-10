@@ -2,7 +2,7 @@
 #charging-panel {
   width: 100%;
   height: 100%;
-  background: url('../images/c_test_bg@2x.png') left top no-repeat;
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_test_bg@2x.png') left top no-repeat;
   background-size: 100% 400px;
   overflow: hidden;
   overflow-y: auto;
@@ -34,7 +34,7 @@
   height: 120px;
   position: absolute;
   left: 50%;
-  background: url('../images/c_charge_start_btn_normal@2x.png') center center no-repeat;
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_start_btn_normal@2x.png') center center no-repeat;
   background-size: 120px 120px;
   line-height: 280px;
   color: lightseagreen;
@@ -45,7 +45,7 @@
 }
 
 .charging-start-button.clicked {
-  background: url('../images/c_charge_start_btn_pressed@2x.png') center center no-repeat;
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_start_btn_pressed@2x.png') center center no-repeat;
   background-size: 120px 120px;
 }
 
@@ -94,7 +94,7 @@
   float: left;
   position: relative;
   top: -10px;
-  left: 10px;
+  left: 30px;
 }
 
 .charging-elect-amount-panel {
@@ -125,7 +125,7 @@
 .charging-elect-amount-fullof-button {
   width: 25px;
   height: 25px;
-  background: url('../images/c_list_check_box_normal@2x.png') left center no-repeat;
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') left center no-repeat;
   background-size: 25px 25px;
   float: right;
   margin-top: 0px;
@@ -134,7 +134,7 @@
 .charging-elect-amount-fullof-button.clicked {
   width: 25px;
   height: 25px;
-  background: url('../images/c_list_check_box_select@2x.png') left center no-repeat;
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') left center no-repeat;
   background-size: 25px 25px;
   float: right;
 }
@@ -172,12 +172,12 @@
           编号(CID):<text>{{pileDetails.chargePileCode}}</text>
         </view>
         <view class="charging-top-params">
-          <image src="../images/c_filtrate_ac_icon@2x.png" wx:if="{{pileDetails.chargePileType === 1}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0;"></image>
-          <image src="../images/c_filtrate_dc_icon@2x.png" wx:if="{{pileDetails.chargePileType !== 1}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0;"></image>
+          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_ac_icon@2x.png" wx:if="{{pileDetails.chargePileType === 1}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0;"></image>
+          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_dc_icon@2x.png" wx:if="{{pileDetails.chargePileType !== 1}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0;"></image>
           <text class="charging-elect-type">
                {{pileDetails.chargePileType === '1' ? '直流电' : '交流电'}}
           </text>
-          <image src="../images/c_list_price_icon@2x.png" style="height: 16px; width: 16px; float: left; position: relative; top: 5px; left: 25px;"></image>
+          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_price_icon@2x.png" style="height: 16px; width: 16px; float: left; position: relative; top: 5px; left: 25px;"></image>
           <text class="charging-elect-price">
               {{pileDetails.price + '元/kWh'}}
           </text>
@@ -208,6 +208,7 @@
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class Electring extends wepy.page {
     config = {
@@ -222,7 +223,9 @@
       buttonType: 1,
       clear: false,
       record: '',
-      panelH: 0
+      panelH: 0,
+      session: '',
+      pileDetails: ''
     }
 
     computed = {
@@ -244,8 +247,20 @@
         this.$apply()
       },
       charging (e) {
-        wx.redirectTo({
-          url: 'electring'
+        wx.showModal({
+          title: '提示',
+          content: '是否开始充电?',
+          showCancel: true,
+          success: (res) => {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              wx.redirectTo({
+                url: 'electring'
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
         })
       }
     }
@@ -254,8 +269,45 @@
 
     }
 
+    getConfigThreshold () {
+      let that = this
+      let validateParams = {
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'config.list',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: validateParams,
+        url: '/msp-charge/router',
+        success: function (e) {
+          let data = e.data
+          let configThreshold = {}
+          data.data.forEach((e, index, arr) => {
+            configThreshold[e.confKey] = e.confValue
+          })
+          wx.setStorageSync('configThreshold', JSON.stringify(configThreshold))
+          console.log('阈值：')
+          console.log(JSON.parse(wx.getStorageSync('configThreshold')))
+        }
+      })
+    }
+
     onLoad() {
+      let se = CTP().session
+      let configThreshold = wx.getStorageSync('configThreshold')
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.pileDetails = JSON.parse(wx.getStorageSync('pileDetails'))
       this.panelH = wx.getStorageSync('windowH') - 320
+      if (configThreshold === '') {
+        console.log('通过接口调用获取阈值')
+        this.getConfigThreshold()
+      } else {
+        console.log('通过缓存调用获取阈值')
+      }
       this.$apply()
     }
   }

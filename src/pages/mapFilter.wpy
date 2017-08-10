@@ -57,6 +57,8 @@
   .filter-car-name {
     color: #333;
     font-size: 15px;
+    text-overflow: ellipsis;
+    display: block;
   }
 
   .change-car-type {
@@ -108,7 +110,7 @@
 </style>
 <template>
   <view class="homepage">
-    <view id="stake-map-filterList" class="stake-map-filterList" hidden="{{carTypeShow}}">
+    <view id="stake-map-filterList" class="stake-map-filterList">
       <text class="title">
         筛选条件
       </text>
@@ -134,9 +136,9 @@
         选择车型
       </text>
       <view class="filter-car-list">
-        <view class="filter-car-list-my-car-type" style="margin-top: 0;" wx:if="">
-          <image src="" class="filter-car-img"/>
-          <text class="filter-car-name"></text>
+        <view class="filter-car-list-my-car-type" style="margin-top: 0;" wx:if="{{isExistCarItem}}">
+          <image src="{{carItemImg}}" class="filter-car-img"/>
+          <text class="filter-car-name">{{carItemName}}</text>
         </view>
         <view class="change-car-type">
           <view class="change-car-type-name-area" @tap="showCarType">
@@ -151,17 +153,16 @@
         </view>
       </view>
       <view class="btn-group">
-        <view class="btn-card btn-group-cancel">取消</view>
-        <view class="btn-card btn-group-submit left">确定</view>
+        <view class="btn-card btn-group-cancel" @tap="cancel">取消</view>
+        <view class="btn-card btn-group-submit left" @tap="ok({{selectedArr}}, {{selectedCarItem}}, {{myCarItem}})">确定</view>
       </view>
     </view>
-    <carType hidden="{{!carTypeShow}}"></carType>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
-  import carType from '../components/carType'
+  import CTP from '../utils/ajax'
 
   export default class MapFilter extends wepy.page {
     config = {
@@ -169,7 +170,7 @@
     }
 
     components = {
-      carType: carType
+
     }
 
     data = {
@@ -179,11 +180,38 @@
         false,
         false
       ],
-      carTypeShow: false
+      selectedCarItem: '',
+      myCarItem: '',
+      isExistCarItem: false,
+      carItemImg: '',
+      carItemName: '',
+      session: ''
     }
 
     computed = {
-
+      isExistCarItem () {
+        return this.selectedCarItem !== '' || this.myCarItem !== ''
+      },
+      carItemImg () {
+        let that = this
+        if (that.selectedCarItem !== '') {
+          return that.selectedCarItem.vehicleBrandImg
+        } else if (that.myCarItem !== '') {
+          return that.myCarItem.vehicleBrandImg
+        } else {
+          return that.myCarItem.vehicleBrandImg
+        }
+      },
+      carItemName () {
+        let that = this
+        if (that.selectedCarItem !== '') {
+          return that.selectedCarItem.vehicleModel
+        } else if (that.myCarItem !== '') {
+          return that.myCarItem.vehicleModel
+        } else {
+          return that.myCarItem.vehicleModel
+        }
+      }
     }
 
     methods = {
@@ -192,11 +220,50 @@
         this.$apply()
       },
       showCarType (e) {
-        // this.carTypeShow = true
         wx.navigateTo({
           url: 'carTypeBox'
         })
-        this.$apply()
+      },
+      cancel (e) {
+        wx.navigateBack()
+      },
+      ok (selectedArr, selectedCarItem, myCarItem) {
+        // selectedArr 0:直流电 1：交流快充 2：交流慢充 3：有空闲
+        let electType = ''
+        let isFree = 3
+        let chargeRateType = ''
+        let modelCode = ''
+        let mapFilter = {}
+        if (selectedArr[0] && !selectedArr[1] && !selectedArr[2]) {
+          electType = 1
+        }
+        if (!selectedArr[0] && selectedArr[1] && !selectedArr[2]) {
+          electType = 2
+          chargeRateType = 1
+        }
+        if (!selectedArr[0] && !selectedArr[1] && selectedArr[2]) {
+          electType = 2
+          chargeRateType = 2
+        }
+        if (!selectedArr[0] && selectedArr[1] && selectedArr[2]) {
+          electType = 2
+        }
+        if (selectedArr[3]) {
+          isFree = 1
+        }
+        if (myCarItem !== '') {
+          modelCode = myCarItem.vehicleModelCode
+        } else if (selectedCarItem !== '') {
+          modelCode = selectedCarItem.vehicleModelCode
+        }
+        mapFilter.electType = electType
+        mapFilter.isFree = isFree
+        mapFilter.chargeRateType = chargeRateType
+        mapFilter.modelCode = modelCode
+        console.log('已经选择的过滤条件:')
+        console.log(mapFilter)
+        wx.setStorageSync('mapFilter', JSON.stringify(mapFilter))
+        wx.navigateBack()
       }
     }
 
@@ -204,12 +271,67 @@
 
     }
 
+    getMyCarType () {
+      if (CTP().checkLogin()) {
+        let that = this
+        let carTypeParams = {
+          userCode: that.session.user.userId,
+          nonce: 'abc',
+          format: 'json',
+          v: '1.0',
+          method: 'car.list',
+          locale: 'zh_CN',
+          appKey: that.session.appKey,
+          sessionId: that.session.sessionId,
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: carTypeParams,
+          url: '/msp-charge/router',
+          success: function (_r) {
+            if (_r.state === '0') {
+              let carData = _r.data
+              if (carData.length > 0) {
+                wx.setStorageSync('myCarItem', JSON.stringify(carData))
+              }
+            }
+          }
+        })
+      } else {
+        console.log('获取个人车型因为没有登录没有获取成功')
+      }
+    }
+
     onShow() {
       console.log('过滤show。。。')
+      let selectedCarItemBak = wx.getStorageSync('selectedCarItem')
+      let myCarItemBak = wx.getStorageSync('myCarItem')
+      this.selectedCarItem = selectedCarItemBak === '' ? '' : JSON.parse(selectedCarItemBak)
+      this.myCarItem = myCarItemBak === '' ? '' : JSON.parse(myCarItemBak)
+      console.log('获取到的车信息selectedCarItem:')
+      console.log(this.selectedCarItem)
+      console.log('获取到的车信息myCarItem:')
+      console.log(this.myCarItem)
+      this.$apply()
     }
 
     onLoad() {
       console.log('过滤load。。。')
+      let that = this
+      let se = CTP().session
+      let myCarItemBak = wx.getStorageSync('myCarItem')
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      if (myCarItemBak === '') {
+        that.getMyCarType()
+      }
+    }
+
+    onUnload () {
+      let that = this
+      that.selectedArr = [false, false, false, false]
+      that.selectedCarItem = ''
+      wx.setStorageSync('selectedCarItem', '')
+      that.$apply()
     }
   }
 </script>

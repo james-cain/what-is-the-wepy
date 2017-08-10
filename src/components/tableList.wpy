@@ -126,8 +126,6 @@
           that.pileTableListBak[index].distanceBak = (e.distance / 1000).toFixed(2)
           that.pileTableListBak[index].siteNameBak = e.siteName.length > 10 ? e.siteName.slice(0, 10) + '...' : e.siteName
         })
-        console.log('that.pileTableListBak.length:' + that.pileTableListBak.length)
-        console.log(that.pileTableListBak)
         that.$apply()
       }
     }

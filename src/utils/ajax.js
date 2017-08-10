@@ -92,7 +92,6 @@ let CTP = function() {
   }
 
   function checkSession (weChatAccount, fns) {
-    console.log('==============1===============')
     let _paramsLoginAuth = {
       weChatId: weChatAccount.id,
       nonce: 'abc',
@@ -127,12 +126,12 @@ let CTP = function() {
               method: 'home.info',
               locale: 'zh_CN',
               sessionId: e.sessionId,
-              appKey: '00014b81addb04bf',
+              appKey: e.appKey,
               timestamp: new Date().getTime()
             }
             wepy.request({
               url: SERVER_URL + '/msp-charge/router',
-              type: 'POST',
+              method: 'POST',
               dataType: 'json',
               data: homeInfoParams,
               success: function (m) {
@@ -154,6 +153,7 @@ let CTP = function() {
       }
     })
   }
+
   return {
     // 获取微信账号信息
     weChatAccount: weChatAccount,

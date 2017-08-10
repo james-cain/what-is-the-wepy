@@ -86,24 +86,39 @@
       })
       wx.login({
         success: function (res) {
+          let weChatAccount = {}
           if (res.code) {
             console.log('用户登录态code:' + res.code)
+            let _params = {
+              code: res.code
+            }
+            wepy.request({
+              url: 'http://mspshow.szcomtop.com/msp-charge/miniapp/session_key',
+              method: 'GET',
+              dataType: 'json',
+              data: _params,
+              success: function (e) {
+                console.log('获取微信用户openid和sessionkey：')
+                console.log(e)
+                wepy.getUserInfo({
+                  success (res) {
+                    let userInfo = res.userInfo
+                    weChatAccount.nickName = userInfo.nickName
+                    weChatAccount.avatarUrl = userInfo.avatarUrl
+                    weChatAccount.gender = userInfo.gender
+                  }
+                })
+                weChatAccount.id = ''
+                wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
+              },
+              fail: function (e) {
+                console.log('获取微信用户失败：')
+                console.log(e)
+              }
+            })
           } else {
             console.log('获取用户登录态失败！' + res.errMsg)
           }
-        }
-      })
-      wepy.getUserInfo({
-        success (res) {
-          let userInfo = res.userInfo
-          let weChatAccount = {}
-          weChatAccount.nickName = userInfo.nickName
-          weChatAccount.avatarUrl = userInfo.avatarUrl
-          weChatAccount.gender = userInfo.gender
-          weChatAccount.id = ''
-          console.log('weChatAccount:')
-          console.log(weChatAccount)
-          wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
         }
       })
     }

@@ -5,10 +5,9 @@
     padding: 40px 0;
     text-align: center;
     font-size: 14px;
-    visibility: hidden;
 }
 
-.inputScanCode-panel-top text:first-child {
+.inputScanCode-panel-top view:first-child {
     color: #d35454;
     font-size: 17px;
     line-height: 40px;
@@ -90,13 +89,13 @@
 <view class="container">
   <view id="ctp-panel" style="background: #232323; height: {{scanH}}px;">
     <view id="inputScanCode-panel">
-      <view class="inputScanCode-panel-top">
-        <text>无法识别编码</text>
-        <text>请重新校对一下充电桩上的编码</text>
+      <view class="inputScanCode-panel-top" style="visibility: {{errorCode ? 'visible' : 'hidden'}}">
+        <view>无法识别编码</view>
+        <view>请重新校对一下充电桩上的编码</view>
       </view>
       <view class="inputScanCode-panel-center">
-        <view class="inputScanCode-panel-center-p charging-code"><input type="number" id="charging-code-code-input" placeholder="请输入充电桩设备号"/></view>
-        <view class="inputScanCode-panel-center-p submit-btn"><text>确定输入</text></view>
+        <view class="inputScanCode-panel-center-p charging-code"><input type="number" @input="inputCode" id="charging-code-code-input" placeholder="请输入充电桩设备号"/></view>
+        <view class="inputScanCode-panel-center-p submit-btn" @tap="inputScan"><text>确定输入</text></view>
       </view>
       <view class="inputScanCode-panel-bottom">
         <view class="scan-control" style="float: initial;margin: 0 auto;" @tap="scan">扫二维码</view>
@@ -108,6 +107,7 @@
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class InputScanCode extends wepy.page {
     config = {
@@ -119,7 +119,10 @@
     }
 
     data = {
-      scanH: 0
+      scanH: 0,
+      code: '',
+      session: '',
+      errorCode: false
     }
 
     computed = {
@@ -127,63 +130,96 @@
     }
 
     methods = {
+      inputCode (e) {
+        this.code = e.detail.value
+        this.$apply()
+      },
       scan (e) {
         // 扫描二维码
+        let that = this
         wx.scanCode({
           success: (res) => {
-            // that.electryPileParams.device_id = res.result
             console.log('充电桩码：' + res.result)
-            wx.showModal({
-              title: '提示',
-              content: '是否开始充电?',
-              showCancel: true,
-              success: (res) => {
-                if (res.confirm) {
-                  console.log('用户点击确定')
-                  this.scanPile()
-                } else if (res.cancel) {
-                  console.log('用户点击取消')
-                }
-              }
-            })
+            that.getPile(res.result)
           },
           fail: () => {
             wx.showToast({
               title: '扫码失败',
-              icon: 'loading',
-              duration: 2000
+              duration: 1000
             })
-            this.scanPile()
           },
           complete: () => {}
         })
+      },
+      inputScan (e) {
+        let that = this
+        that.errorCode = false
+        wx.showToast({
+          title: '等待验证...',
+          icon: 'loading',
+          duraction: 2000,
+          mask: true
+        })
+        that.getPile(that.code)
       }
     }
 
-    // 扫描二维码返回的事件
-    scanPile () {
+    // 扫描二维码或输入桩编号回调
+    getPile (pileCode) {
       // 检查网络
       // if (checkNetWorkStatus() === false) {
       //   console.log('网络错误')
       // } else {
-        // let that = this
-      wx.redirectTo({
-        url: 'startElectry'
+      let that = this
+      let _params = {
+        chargingPileCode: pileCode,
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'pile.info',
+        locale: 'zh_CN',
+        appKey: that.session === '' ? '' : that.session.appKey,
+        sessionId: that.session === '' ? '' : that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: _params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('输入充电桩编号，返回详情：')
+          console.log(e)
+          let data = e.data
+          if (data.state * 1 === 0) {
+            wx.showToast({
+              title: '验证成功',
+              icon: 'success',
+              duraction: 1000
+            })
+            wx.setStorageSync('pileDetails', JSON.stringify(data.data))
+            console.log('pileDetails:')
+            console.log(data.data)
+            console.log(JSON.parse(wx.getStorageSync('pileDetails')))
+            wx.navigateTo({
+              url: 'startElectry'
+            })
+          } else {
+            wx.showToast({
+              title: '扫码失败',
+              duration: 1000
+            })
+            that.errorCode = true
+            that.$apply()
+          }
+        },
+        fail: function () {
+          wx.showToast({
+            title: '已超时',
+            duraction: 1000
+          })
+        }
       })
-        // wepy.request({
-        //   url: that.ElectryUrl.scan,
-        //   data: that.electryPileParams,
-        //   method: 'POST',
-        //   header: {
-        //     'content-type': 'application/x-www-form-urlencoded'
-        //   }
-        // }).then((res) => {
-        //   wx.navigateTo({
-        //     url: 'electring'
-        //   })
-        // }).catch(() => {
-        //   that.failMessage()
-        // })
+      that.$apply()
       // }
     }
 
@@ -192,7 +228,15 @@
     }
 
     onLoad () {
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.scanH = wx.getStorageSync('windowH')
+      this.$apply()
+    }
+
+    onUnload () {
+      this.code = ''
+      wx.setStorageSync('pileDetails', '')
       this.$apply()
     }
   }
