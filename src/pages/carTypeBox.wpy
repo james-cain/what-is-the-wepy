@@ -90,11 +90,14 @@
       })
     }
 
+    onShow () {
+      this.getCarList()
+    }
+
     onLoad () {
       console.log('更多车型load。。。')
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
-      this.getCarList()
     }
   }
 </script>

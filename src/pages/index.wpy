@@ -362,8 +362,7 @@
             })
           } else {
             wx.navigateTo({
-              url: 'inputScanCode'
-              // url: 'login'
+              url: 'login'
             })
           }
         }
@@ -390,7 +389,6 @@
         let thirdName = that.pileMenuList[2].name
         let _params = {}
         let session = CTP().session
-        console.log(that.pileMenuList)
 
         if (firstName === '直流电') {
           chargePileType = '1'
@@ -625,7 +623,6 @@
       let thirdName = that.pileMenuList[2].name
       let _params = {}
       let session = CTP().session
-      console.log(that.pileMenuList)
 
       if (firstName === '直流电') {
         chargePileType = '1'

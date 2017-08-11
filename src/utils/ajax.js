@@ -62,25 +62,18 @@ let CTP = function() {
       })
       argsStr += _args['appSecret']
 
-      console.log('argsStr:' + argsStr)
-
       signStr = hexSha1(argsStr).toUpperCase()
 
       _def.params.sign = signStr
+      console.log('正在发生请求，参数为：')
+      console.log(_def.params)
 
       wepy.request({
         url: SERVER_URL + _def.url,
         method: 'GET',
         dataType: _def.dataType,
         data: _def.params,
-        // cache: _def.cache,
         success: function (data) {
-          // session过期
-          // if (_def.validsession) {
-          //   if (data.retcode === '301') {
-          //     location.href = '../html/login.html'
-          //   }
-          // }
           _def.success.call(this, data, _def.params)
         },
         fail: _def.fail
@@ -138,14 +131,9 @@ let CTP = function() {
         dataType: 'json',
         data: _paramsLoginAuth,
         success: function (e) {
-          console.log('请求的用户---', e.data)
           let data = e.data
-          if (typeof data.user !== undefined) {
+          if (data.code !== '9') {
             wx.setStorageSync('session', JSON.stringify(data))
-
-            if (wx.getStorageSync('startTimeSession') === null) {
-              wx.setStorageSync('startTimeSession', JSON.stringify(new Date().getTime()))
-            }
             fns.success(data)
             console.log('通过直接获取用户session方式获取用户信息success：')
             console.log(data)
