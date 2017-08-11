@@ -290,9 +290,15 @@
 
     methods = {
       goUserPage (e) {
-        wx.navigateTo({
-          url: 'login'
-        })
+        if (CTP().checkLogin()) {
+          wx.navigateTo({
+            url: 'me'
+          })
+        } else {
+          wx.navigateTo({
+            url: 'login'
+          })
+        }
       },
       switchType (e) {
         let that = this
@@ -340,6 +346,7 @@
           })
         } else if (id === 4) {
           if (CTP().checkLogin()) {
+            console.log('以获取到用户信息，可以进入扫描界面')
             CTP().getHomeInfo(function (m) {
               let data = m.data
               if (data.orderCode !== '' && data.orderState === '2') {
@@ -742,7 +749,7 @@
             success: function (e) {
               if (mapFilter !== '') {
                 console.log('查询地图数据，走选择过滤条件分支')
-                that.getPileList('e', mapFilter)
+                that.getPileList(e, mapFilter)
                 // 清空过滤条件
                 wx.setStorageSync('mapFilter', '')
               } else {
@@ -776,6 +783,9 @@
 
     onUnload () {
       console.log('onUnload')
+      // 清除weChatAccount和session
+      wx.setStorageSync('weChatAccount', '')
+      wx.setStorageSync('session', '')
     }
 
     onPullDownRefresh () {

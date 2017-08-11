@@ -72,7 +72,7 @@
       <text class="app-title">充电桩</text>
     </view>
     <form>
-      <view class="basic account"><input type="text" placeholder="手机/账号" focus="true"/></view>
+      <view class="basic account"><input type="text" @input="accountInput" placeholder="手机/账号" focus="true"/></view>
       <view class="basic pwd mt10"><input type="text" password="true" @input="pwdInput" placeholder="请输入登录密码"/></view>
       <button class="login-btn" style="background-color: {{loginBtnProperty.backcolor}}; color: #ffffff;" type="default" @tap="loginAct" disabled="{{loginBtnProperty.disabled}}" loading="{{loginBtnProperty.loading}}">登录</button>
     </form>
@@ -86,6 +86,8 @@
 <script>
   import wepy from 'wepy'
   // import checkNetWorkStatus from '../utils/CheckNetWork'
+  import CTP from '../utils/ajax'
+  import MD5 from '../utils/MD5'
 
   export default class Login extends wepy.page {
     config = {
@@ -100,15 +102,33 @@
         disabled: true,
         loading: false
       },
-      appImg: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_app_logo160@2x.png'
+      appImg: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_app_logo160@2x.png',
+      account: '',
+      pwd: ''
     }
 
     methods = {
-      // 输入验证码
+      // 输入账号
+      accountInput (e) {
+        let that = this
+        let length = e.detail.value.length
+        that.account = e.detail.value
+        if (length !== 0 && that.pwd.length !== 0) {
+          that.loginBtnProperty.disabled = false
+          that.loginBtnProperty.backcolor = '#2fb9c3'
+        } else {
+          that.loginBtnProperty.disabled = true
+          that.loginBtnProperty.backcolor = '#CCCCCC'
+        }
+        that.$apply()
+      },
+      // 输入密码
       pwdInput (e) {
         let that = this
         let length = e.detail.value.length
-        if (length !== 0) {
+        console.log('md5:' + MD5()(e.detail.value))
+        that.pwd = MD5()(e.detail.value)
+        if (that.account.length !== 0 && length !== 0) {
           that.loginBtnProperty.disabled = false
           that.loginBtnProperty.backcolor = '#2fb9c3'
         } else {
@@ -119,7 +139,54 @@
       },
       // 登录
       loginAct () {
-
+        let that = this
+        wx.showToast({
+          title: '正在登录...',
+          icon: 'loading',
+          duraction: 2000,
+          mask: true
+        })
+        let paramsEvaluation = {
+          account: that.account,
+          phone: that.account,
+          password: that.pwd,
+          chargeMiniAppId: CTP().weChatAccount.id,
+          system: 'XNCD',
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'user.login',
+          locale: 'zh_CN',
+          appKey: '',
+          sessionId: '',
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: paramsEvaluation,
+          url: '/msp-cas/router',
+          success: function (e) {
+            let data = e.data
+            if (data.code !== '9' && data.data !== '') {
+              wx.showToast({
+                title: '登录成功',
+                icon: 'success',
+                duraction: 1000
+              })
+              wx.setStorageSync('session', JSON.stringify(e.data))
+              console.log('登陆信息')
+              console.log(JSON.parse(wx.getStorageSync('session')))
+              wx.redirectTo({
+                url: 'index'
+              })
+            } else {
+              wx.showToast({
+                title: '登录失败:' + data.subErrors[0].message,
+                icon: 'loading',
+                duraction: 1000
+              })
+            }
+          }
+        })
       },
       gotoregister (e) {
         wx.navigateTo({

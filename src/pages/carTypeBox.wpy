@@ -35,8 +35,8 @@
         if (CTP().checkLogin()) {
           let carTypeParams = {
             userId: that.session.user.userId,
-            vehicleModelCode: selectedCarItem.vihicleModelCode,
-            vehicleBrandCode: selectedCarItem.vihicleBrandCode,
+            vehicleModelCode: selectedCarItem.vehicleModelCode,
+            vehicleBrandCode: selectedCarItem.vehicleBrandCode,
 
             nonce: 'abc',
             format: 'json',
@@ -55,13 +55,14 @@
               console.log('carData:')
               console.log(carData)
               wx.setStorageSync('myCarItem', JSON.stringify(selectedCarItem))
+              wx.navigateBack()
             }
           })
         } else {
           console.log('因为没有登录,不能将选择的车辆保存到个人的信息中')
           wx.setStorageSync('selectedCarItem', JSON.stringify(selectedCarItem))
+          wx.navigateBack()
         }
-        wx.navigateBack()
       }
     }
 

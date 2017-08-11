@@ -106,7 +106,7 @@
     <view id="ctp-panel" style="background: #f5f5f5;padding-top: 20px;">
       <view id="ctp-user-bind-form-container">
         <form id="ctp-user-bind-form">
-          <view class="tel"><input type="number" @input="phoneTfInput" placeholder="请输入手机号码" focus="true"/></view>
+          <view class="tel"><input type="number" @input="phoneTfInput" placeholder="请输入11位手机号码" focus="true"/></view>
           <view class="sendCode">
             <input type="number" maxLength="11" @input="codeTfInput" placeholder="请输入验证码" focus="{{codeTfFocus}}"/>
             <button class="getCodeBtn" style="color: {{getCodeBtnProperty.titleColor}}" type="default" @tap="getCodeAct" disabled="{{getCodeBtnProperty.disabled}}">{{getCodeBtnProperty.title}}</button>
@@ -124,6 +124,7 @@
 <script>
   import wepy from 'wepy'
   // import checkNetWorkStatus from '../utils/CheckNetWork'
+  import CTP from '../utils/ajax'
 
   export default class Register extends wepy.page {
     config = {

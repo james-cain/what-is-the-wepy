@@ -184,9 +184,6 @@
               allCarList[count].brandAry.push(e)
             }
           })
-          console.log('new typelIst:')
-          console.log(allCarList)
-          console.log('this.initRefresh:' + this.initRefresh)
           this.allCarList = allCarList
           this.initRefresh = false
           this.$apply()
@@ -213,7 +210,6 @@
 
     methods = {
       switchBrand(brand, selected, e) {
-        console.log('brand:' + brand + ',selected:' + selected)
         if (!selected) {
           this.allCarList.forEach((e, index, arr) => {
             e.selected = e.brand === brand
@@ -232,6 +228,7 @@
               if (vehicleModelCode === elm.vehicleModelCode) {
                 elm.selected = !selected
                 that.selectedCarItem = elm.selected ? elm : {}
+                console.log('选择车型目标', elm)
               } else {
                 elm.selected = false
               }

@@ -7,8 +7,6 @@ let CTP = function() {
 
   let SERVER_URL = 'http://mspshow.szcomtop.com'
 
-  let getHomeInfo = function () {}
-
   function checkLogin () {
     let curSession = wx.getStorageSync('session') === '' ? null : JSON.parse(wx.getStorageSync('session'))
     let bool = true
@@ -19,7 +17,7 @@ let CTP = function() {
         bool = false
       } else if (curSession.user.userId === '') {
         bool = false
-      } else if (curSession.user.weChatId === '') {
+      } else if (curSession.user.chargeMiniAppId === '') {
         bool = false
       }
       if (curSession.user !== 'undefined') {
@@ -91,67 +89,77 @@ let CTP = function() {
     getAjax(args)
   }
 
-  function checkSession (weChatAccount, fns) {
-    let _paramsLoginAuth = {
-      weChatId: weChatAccount.id,
+  function getHomeInfo (success) {
+    let curSession = JSON.parse(wx.getStorageSync('session'))
+    let homeInfoParams = {
+      userCode: curSession.user.userId,
       nonce: 'abc',
       v: '1.0',
       format: 'json',
-      method: 'user.auth',
-      locale: 'zh_CH',
-      appKey: '00014b81addb04bf',
+      method: 'home.info',
+      locale: 'zh_CN',
+      sessionId: curSession.sessionId,
+      appKey: curSession.appKey,
       timestamp: new Date().getTime()
     }
-
     wepy.request({
-      url: SERVER_URL + '/msp-cas/router',
-      type: 'POST',
+      url: SERVER_URL + '/msp-charge/router',
+      method: 'POST',
       dataType: 'json',
-      data: _paramsLoginAuth,
-      success: function (e) {
-        console.log('请求的用户---', e.user)
-        if (typeof e.user !== 'undefined') {
-          wx.setStorageSync('session', JSON.stringify(e))
-
-          if (wx.getStorageSync('startTimeSession') === null) {
-            wx.setStorageSync('startTimeSession', JSON.stringify(new Date().getTime()))
-          }
-
-          getHomeInfo = function (success) {
-            let homeInfoParams = {
-              userCode: e.user.userId,
-              nonce: 'abc',
-              v: '1.0',
-              format: 'json',
-              method: 'home.info',
-              locale: 'zh_CN',
-              sessionId: e.sessionId,
-              appKey: e.appKey,
-              timestamp: new Date().getTime()
-            }
-            wepy.request({
-              url: SERVER_URL + '/msp-charge/router',
-              method: 'POST',
-              dataType: 'json',
-              data: homeInfoParams,
-              success: function (m) {
-                success(m)
-              }
-            })
-          }
-          fns.success(e)
-          console.log('用户信息success：')
-          console.log(e)
-        } else {
-          fns.fail(e)
-          console.log('用户信息fail：')
-          console.log(e)
-        }
-      },
-      fail: function (e) {
-        fns.fail(e)
+      data: homeInfoParams,
+      success: function (m) {
+        success(m)
       }
     })
+  }
+
+  function checkSession (weChatAccount, fns) {
+    if (checkLogin()) {
+      let curSession = JSON.parse(wx.getStorageSync('session'))
+      fns.success(curSession)
+      console.log('通过登陆、注册方式、缓存方式获取用户信息success：')
+      console.log(curSession)
+    } else {
+      let _paramsLoginAuth = {
+        chargeMiniAppId: weChatAccount.id,
+        system: 'XNCD',
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'user.auth',
+        locale: 'zh_CH',
+        appKey: '',
+        timestamp: new Date().getTime()
+      }
+
+      wepy.request({
+        url: SERVER_URL + '/msp-cas/router',
+        type: 'POST',
+        dataType: 'json',
+        data: _paramsLoginAuth,
+        success: function (e) {
+          console.log('请求的用户---', e.data)
+          let data = e.data
+          if (typeof data.user !== undefined) {
+            wx.setStorageSync('session', JSON.stringify(data))
+
+            if (wx.getStorageSync('startTimeSession') === null) {
+              wx.setStorageSync('startTimeSession', JSON.stringify(new Date().getTime()))
+            }
+            fns.success(data)
+            console.log('通过直接获取用户session方式获取用户信息success：')
+            console.log(data)
+          } else {
+            fns.fail(data)
+            console.log('通过直接获取用户session方式获取用户信息fail：')
+            console.log(data)
+          }
+        },
+        fail: function (e) {
+          fns.fail(e)
+        }
+      })
+    }
   }
 
   return {

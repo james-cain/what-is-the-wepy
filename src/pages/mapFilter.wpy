@@ -289,10 +289,18 @@
           params: carTypeParams,
           url: '/msp-charge/router',
           success: function (_r) {
-            if (_r.state === '0') {
-              let carData = _r.data
+            console.log(_r)
+            let data = _r.data
+            if (data.state === 0) {
+              let carData = data.data
+              console.log('获取个人车型信息：')
+              console.log(carData)
               if (carData.length > 0) {
-                wx.setStorageSync('myCarItem', JSON.stringify(carData))
+                wx.setStorageSync('myCarItem', JSON.stringify(carData[0]))
+                that.myCarItem = carData[0]
+                console.log('从数据库中获取到的车信息myCarItem:')
+                console.log(that.myCarItem)
+                that.$apply()
               }
             }
           }
@@ -304,26 +312,26 @@
 
     onShow() {
       console.log('过滤show。。。')
+      let that = this
       let selectedCarItemBak = wx.getStorageSync('selectedCarItem')
       let myCarItemBak = wx.getStorageSync('myCarItem')
       this.selectedCarItem = selectedCarItemBak === '' ? '' : JSON.parse(selectedCarItemBak)
-      this.myCarItem = myCarItemBak === '' ? '' : JSON.parse(myCarItemBak)
-      console.log('获取到的车信息selectedCarItem:')
+      if (myCarItemBak === '') {
+        that.getMyCarType()
+      } else {
+        this.myCarItem = JSON.parse(myCarItemBak)
+        console.log('从缓存中获取到的车信息myCarItem:')
+        console.log(this.myCarItem)
+      }
+      console.log('从缓存中获取到的车信息selectedCarItem:')
       console.log(this.selectedCarItem)
-      console.log('获取到的车信息myCarItem:')
-      console.log(this.myCarItem)
       this.$apply()
     }
 
     onLoad() {
       console.log('过滤load。。。')
-      let that = this
       let se = CTP().session
-      let myCarItemBak = wx.getStorageSync('myCarItem')
       this.session = se === '' || se === null ? '' : JSON.parse(se)
-      if (myCarItemBak === '') {
-        that.getMyCarType()
-      }
     }
 
     onUnload () {

@@ -87,11 +87,21 @@
       wx.login({
         success: function (res) {
           let weChatAccount = {}
+          // 清除weChatAccount和session
+          console.log('每次登陆之前先把weChatAccount和session信息清除。。。')
+          console.log('weChatAccount:', wx.getStorageSync('weChatAccount'))
+          console.log('session:', wx.getStorageSync('session'))
+          wx.setStorageSync('weChatAccount', '')
+          wx.setStorageSync('session', '')
+          console.log('正在清除。。。')
+          console.log('weChatAccount:', wx.getStorageSync('weChatAccount'))
+          console.log('session:', wx.getStorageSync('session'))
+          console.log('清除完成。。。')
           if (res.code) {
-            console.log('用户登录态code:' + res.code)
             let _params = {
               code: res.code
             }
+
             wepy.request({
               url: 'http://mspshow.szcomtop.com/msp-charge/miniapp/session_key',
               method: 'GET',
@@ -108,7 +118,11 @@
                     weChatAccount.gender = userInfo.gender
                   }
                 })
-                weChatAccount.id = ''
+                if (e.data.state === 0) {
+                  weChatAccount.id = e.data.data.openid
+                } else {
+                  weChatAccount.id = ''
+                }
                 wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
               },
               fail: function (e) {

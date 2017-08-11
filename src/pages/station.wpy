@@ -536,7 +536,7 @@
           url: '/msp-charge/router',
           success: function (e) {
             console.log('提交', e)
-            if (e.state === '0') {
+            if (e.data.state === 0) {
               that.isEdit = false
               that.$apply()
               that.getCommentList()
@@ -566,7 +566,7 @@
             sessionId: that.session === '' ? '' : that.session.sessionId,
             timestamp: new Date().getTime()
           }
-          CTP.Ajax({
+          CTP().Ajax({
             params: paramsGood,
             url: '/msp-charge/router',
             success: function (e) {
