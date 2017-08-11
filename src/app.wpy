@@ -29,7 +29,8 @@
         'pages/myCarType',
         'pages/addMoney',
         'pages/account',
-        'pages/mineInfo'
+        'pages/mineInfo',
+        'pages/setPwd'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',

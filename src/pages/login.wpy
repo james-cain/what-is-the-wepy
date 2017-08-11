@@ -87,7 +87,7 @@
   import wepy from 'wepy'
   // import checkNetWorkStatus from '../utils/CheckNetWork'
   import CTP from '../utils/ajax'
-  import MD5 from '../utils/MD5'
+  import MD5 from '../utils/Md5'
 
   export default class Login extends wepy.page {
     config = {
@@ -126,7 +126,6 @@
       pwdInput (e) {
         let that = this
         let length = e.detail.value.length
-        console.log('md5:' + MD5()(e.detail.value))
         that.pwd = MD5()(e.detail.value)
         if (that.account.length !== 0 && length !== 0) {
           that.loginBtnProperty.disabled = false

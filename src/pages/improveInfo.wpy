@@ -77,7 +77,7 @@
 
 <template>
   <view class="doneInfo">
-    <text class="doneInfo-arrow"></text>您已经注册成功,请完善相关资料。<text class="doneInfo-cancel">跳过</text>
+    <text class="doneInfo-arrow"></text>您已经注册成功,请完善相关资料。<text class="doneInfo-cancel" @tap="jump">跳过</text>
   </view>
   <view id="improve-info-form-container">
     <form id="ctp-user-bind-form">
@@ -88,13 +88,14 @@
         <input style="width: 70%;text-indent: 0; float: left;" class="txt" type="text" placeholder="请选择车型" value="{{myCarType.name}}" disabled/>
         <view class="icon"></view>
       </view>
-      <view class="container-item btn" style="height: 65px;"><text>提交</text></view>
+      <view class="container-item btn" style="height: 65px;" @tap="commit"><text>提交</text></view>
     </form>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class ImproveInfo extends wepy.page {
     config = {
@@ -110,7 +111,8 @@
         brandCode: 'bydbrand',
         name: '比亚迪',
         img: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_car_brand_byd@2x.png'
-      }
+      },
+      myCarItem: ''
     }
 
     methods = {
@@ -118,6 +120,14 @@
         wx.navigateTo({
           url: 'carTypeBox'
         })
+      },
+      jump (e) {
+        wx.redirectTo({
+          url: 'index'
+        })
+      },
+      commit (e) {
+
       }
     }
 
@@ -125,8 +135,21 @@
 
     }
 
-    onload () {
+    onShow() {
+      console.log('完善资料show。。。')
+      let myCarItemBak = wx.getStorageSync('myCarItem')
+      if (myCarItemBak !== '') {
+        this.myCarItem = JSON.parse(myCarItemBak)
+        console.log('获取到的车信息myCarItem:')
+        console.log(this.myCarItem)
+      }
+      this.$apply()
+    }
 
+    onLoad() {
+      console.log('完善资料load。。。')
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
     }
   }
 </script>

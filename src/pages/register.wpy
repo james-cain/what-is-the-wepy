@@ -137,7 +137,6 @@
       isTerms: false,
       phoneValue: '',
       codeValue: '',
-      realCodeValue: '',
       getCodeBtnProperty: {
         titleColor: '#B4B4B4',
         disabled: true,
@@ -203,7 +202,7 @@
         let number = 60
         let paramsEvaluation = {
           mobile: that.phoneValue,
-          reason: 'login',
+          reason: 'reg',
           validCode: '',
 
           nonce: 'abc',
@@ -221,8 +220,6 @@
           success: function (e) {
             console.log('获取到的验证码：')
             console.log(e)
-            that.realCodeValue = '888888'
-            that.$apply()
           }
         })
         let time = setInterval(function() {
@@ -266,27 +263,52 @@
       // 注册下一步
       nextAct () {
         let that = this
+        let _params = {
+          mobile: that.phoneValue,
+          validCode: that.codeValue,
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'user.checkvalidcode',
+          locale: 'zh_CN',
+          appKey: '',
+          sessionId: '',
+          timestamp: new Date().getTime()
+        }
         that.codeTfFocus = false
         // if (checkNetWorkStatus() === false) {
         //   console.log('网络错误')
         // } else {
         that.nextBtnProperty.loading = true
-        if (that.realCodeValue !== that.codeValue) {
-          wx.showToast({
-            title: '验证码错误',
-            icon: 'loading',
-            duraction: 2000
-          })
-          that.nextBtnProperty.loading = false
-          that.$apply()
-          return
-        }
-        wx.navigateTo({
-          url: 'improveInfo'
+        CTP().Ajax({
+          params: _params,
+          url: '/msp-cas/router',
+          success: function (result) {
+            console.log('验证码验证：')
+            console.log(result)
+            let register = {}
+            if (result.data.code === '9') {
+              wx.showToast({
+                title: '验证码错误',
+                icon: 'loading',
+                duraction: 2000
+              })
+              that.nextBtnProperty.loading = false
+              that.$apply()
+              return
+            }
+            register.phone = that.phoneValue
+            register.code = that.codeValue
+            wx.setStorageSync('registerPhoneAndCode', JSON.stringify(register))
+            wx.navigateTo({
+              url: 'setPwd'
+            })
+            that.nextBtnProperty.loading = false
+            that.$apply()
+          }
         })
-        that.nextBtnProperty.loading = false
         // }
-        that.$apply()
       },
       okTerms (e) {
         let that = this
