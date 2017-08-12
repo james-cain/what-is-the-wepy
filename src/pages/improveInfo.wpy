@@ -84,8 +84,8 @@
       <view class="container-item nickname"><input class="txt" value="{{weChatAccount.name}}" type="text" placeholder="请输入昵称"/></view>
       <view class="container-item account"><input class="txt" type="text" placeholder="请输入登录账号(只能设置一次)"/></view>
       <view class="container-item car" @tap="selectedCar">
-        <view><image src="{{myCarType.img}}" style="height: 20px; width: 20px;"></image></view>
-        <input style="width: 70%;text-indent: 0; float: left;" class="txt" type="text" placeholder="请选择车型" value="{{myCarType.name}}" disabled/>
+        <view><image src="{{myCarItem.vehicleBrandImg}}" style="height: 20px; width: 20px;"></image></view>
+        <input style="width: 70%;text-indent: 0; float: left;" class="txt" type="text" placeholder="请选择车型" value="{{myCarItem.vehicleModel}}" disabled/>
         <view class="icon"></view>
       </view>
       <view class="container-item btn" style="height: 65px;" @tap="commit"><text>提交</text></view>
@@ -105,12 +105,6 @@
     data = {
       weChatAccount: {
         name: 'jamescain'
-      },
-      myCarType: {
-        modelCode: 'byd',
-        brandCode: 'bydbrand',
-        name: '比亚迪',
-        img: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_car_brand_byd@2x.png'
       },
       myCarItem: ''
     }

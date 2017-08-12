@@ -79,7 +79,7 @@
       rePwd: ''
     }
 
-    methods = {    
+    methods = {
       // 输入新的密码
       pwdInput (e) {
         let that = this
@@ -128,7 +128,7 @@
           timestamp: new Date().getTime()
         }
         that.nextBtnProperty.loading = true
-        if (pwd !== rePwd) {
+        if (that.pwd !== that.rePwd) {
           wx.showToast({
             title: '密码不一致！',
             icon: 'loading',
