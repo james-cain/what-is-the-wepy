@@ -59,9 +59,9 @@
 <template>
   <view class="container">
     <view class="filter-car-list">
-      <view class="filter-car-list-my-car-type" style="margin-top: 0;">
-        <image src="" class="filter-car-img"/>
-        <text class="filter-car-name"></text>
+      <view class="filter-car-list-my-car-type" style="margin-top: 0;" wx:if="{{isShow}}">
+        <image src="{{myCarItem.vehicleBrandImg}}" class="filter-car-img"/>
+        <text class="filter-car-name">{{myCarItem.vehicleModel}}</text>
       </view>
       <view class="change-car-type">
         <view class="change-car-type-name-area" @tap="showCarType">
@@ -81,6 +81,7 @@
 <script>
   import wepy from 'wepy'
   import carType from '../components/carType'
+  import CTP from '../utils/ajax'
 
   export default class MyCarType extends wepy.page {
     config = {
@@ -88,7 +89,9 @@
     }
 
     data = {
-
+      session: '',
+      isShow: false,
+      myCarItem: {}
     }
 
     components = {
@@ -108,8 +111,25 @@
 
     }
 
-    onLoad () {
+    onShow () {
+      console.log('过滤show。。。')
+      let myCarItemBak = wx.getStorageSync('myCarItem')
+      if (myCarItemBak !== '') {
+        this.myCarItem = JSON.parse(myCarItemBak)
+        console.log('从缓存中获取到的车信息myCarItem:')
+        console.log(this.myCarItem)
+      }
+      this.$apply()
+    }
 
+    onLoad () {
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      if (this.session !== '') {
+        this.myCarItem = this.session.user.carType[0]
+        this.isShow = true
+      }
+      this.$apply()
     }
   }
 </script>

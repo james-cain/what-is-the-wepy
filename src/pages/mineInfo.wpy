@@ -1,15 +1,141 @@
 <style lang="less">
+.mineInfo-panel-bottom {
+    padding: 20px 0;
+}
 
+.mineInfo-panel-bottom .bottom-p {
+    height: 45px;
+    line-height: 45px;
+    background: #fff;
+    border-top: 1px solid #e5e5e5;
+    padding: 0 10px;
+}
+
+.mineInfo-panel-bottom .bottom-p:last-child, .mineInfo-panel-bottom .bottom-p.mineInfo-panel-bottom-account, .mineInfo-panel-bottom .bottom-p.mineInfo-panel-bottom-tel {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.mineInfo-panel-bottom .bottom-p text {
+    display: inline-block;
+    height: inherit;
+    width: 20%;
+    font-size: 15px;
+}
+
+.mineInfo-panel-bottom .bottom-p input {
+    width: 70%;
+    border: 0;
+    height: 45px;
+    background: #fff;
+    text-align: right;
+    outline: none;
+    color: #333;
+    float: right;
+    font-size: 15px;
+}
+
+.mineInfo-panel-top {
+    height: 160px;
+    width: 100%;
+    position: relative;
+    background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_test_bg@2x.png") center center no-repeat;
+    background-size: 100% 180px;
+}
+
+.mineInfo-panel-top-bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #000;
+    opacity: .7;
+    z-index: 0;
+}
+
+.mineInfo-panel-top-icon, .mineInfo-panel-top-name, .mineInfo-panel-top-description, .mineInfo-panel-top-tab {
+    position: absolute;
+    z-index: 1;
+}
+
+.mineInfo-panel-top-icon {
+    border: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+}
+
+.mineInfo-panel-top-name {
+    width: 100px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    color: #fff;
+    overflow: hidden;
+    left: 50%;
+    top: 85px;
+    margin-left: -50px;
+    font-size: 21px;
+}
+
+.mineInfo-panel-top-description {
+    width: 80%;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    color: #fff;
+    overflow: hidden;
+    left: 10%;
+    top: 110px;
+}
+
+.mineInfo-panel-bottom .arrow {
+    display: block;
+    width: 15px;
+    height: 45px;
+    margin: 0;
+    float: right;
+    background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_right_gray@2x.png") right 14px no-repeat;
+    background-size: 10px 20px;
+}
 </style>
 
 <template>
   <view class="container">
-
+    <view id="mineInfo-panel" style="background: #f1f5f8; height: {{windowH}}px">
+      <view class="mineInfo-panel-top">
+        <view class="mineInfo-panel-top-bg"></view>
+        <view style="background: #f5f5f5;width: 50px;height: 50px;overflow: hidden;border: 2px solid #fff;border-radius: 27px;left: 50%;top: 20px;position: absolute;margin-left: -27px;">
+          <image class="mineInfo-panel-top-icon" src="{{userInfo.avatarId && userInfo.avatarId !== 'http://mspshow.szcomtop.com/cloudfs/api/fs/view/' ? userInfo.avatarId : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'}}" />
+        </view>
+        <view class="mineInfo-panel-top-name"></view>
+        <view class="mineInfo-panel-top-description"></view>
+      </view>
+      <view class="mineInfo-panel-bottom">
+        <view class="bottom-p mineInfo-panel-bottom-account"><text>账号</text>
+          <input type="text" disabled placeholder="" />
+        </view>
+        <view class="bottom-p mineInfo-panel-bottom-tel"><text>手机号码</text>
+          <input type="tel" disabled placeholder="" />
+        </view>
+        <view class="bottom-p mineInfo-panel-bottom-nick"><view class="arrow"></view><text>昵称</text>
+          <input type="text" disabled placeholder="" />
+        </view>
+        <view class="bottom-p mineInfo-panel-bottom-sex"><view class="arrow"></view><text>性别</text>
+          <input type="text" disabled placeholder="" />
+        </view>
+        <view class="bottom-p mineInfo-panel-bottom-description"><view class="arrow"></view><text>简介</text>
+          <input type="text" disabled placeholder="" />
+        </view>
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class Settings extends wepy.page {
     config = {
@@ -17,7 +143,9 @@
     }
 
     data = {
-
+      windowH: 0,
+      session: '',
+      userInfo: ''
     }
 
     methods = {
@@ -29,7 +157,11 @@
     }
 
     onLoad () {
-      
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.userInfo = this.session.user
+      this.windowH = wx.getStorageSync('windowH')
+      this.$apply()
     }
   }
 </script>

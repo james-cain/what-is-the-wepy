@@ -39,9 +39,7 @@
 <template>
   <view class="container" style="background: #f1f5f8; height: {{windowH}}px">
     <view class="ctp-panel-settings">
-      <view class="settings-p account-security" @tap="goToAccountSecurity"><view class="arrow"></view>账户安全</view>
-      <view class="settings-p comments" @tap="goToComments"><view class="arrow"></view>意见和反馈</view>
-      <view class="settings-p about" @tap="goToAbout"><view class="arrow"></view>关于</view>
+      <view class="settings-p account-security" @tap="goToChangePhone"><view class="arrow"></view>更换手机号码</view>
     </view>
   </view>
 </template>
@@ -49,9 +47,9 @@
 <script>
   import wepy from 'wepy'
 
-  export default class Settings extends wepy.page {
+  export default class AccountSecurity extends wepy.page {
     config = {
-      navigationBarTitleText: '系统设置'
+      navigationBarTitleText: '账户安全'
     }
 
     data = {
@@ -59,19 +57,9 @@
     }
 
     methods = {
-      goToAccountSecurity (e) {
+      goToChangePhone (e) {
         wx.navigateTo({
-          url: 'accountSecurity'
-        })
-      },
-      goToComments (e) {
-        wx.navigateTo({
-          url: 'comments'
-        })
-      },
-      goToAbout (e) {
-        wx.navigateTo({
-          url: 'about'
+          url: 'changePhone'
         })
       }
     }

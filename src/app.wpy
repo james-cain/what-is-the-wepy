@@ -30,7 +30,12 @@
         'pages/addMoney',
         'pages/account',
         'pages/mineInfo',
-        'pages/setPwd'
+        'pages/setPwd',
+        'pages/resetPwd',
+        'pages/accountSecurity',
+        'pages/changePhone',
+        'pages/comments',
+        'pages/about'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',

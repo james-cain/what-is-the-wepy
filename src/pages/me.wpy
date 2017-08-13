@@ -158,14 +158,14 @@
       <view class="mine-panel-top">
         <view class="name-icon" @tap="goToMineInfo">
           <view class="arrow"></view>
-          <view class="user-icon"><image src="{{userInfo.avatarUrl ? userInfo.avatarUrl : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'}}" style="height: 50px; width: 50px;"/></view>
-          <view class="name-info"><view class="name">{{userInfo.nickName ? userInfo.nickName : '无昵称'}}</view><view class="tel">{{'xxx'}}</view></view>
+          <view class="user-icon"><image src="{{userInfo.avatarId && userInfo.avatarId !== 'http://mspshow.szcomtop.com/cloudfs/api/fs/view/'? userInfo.avatarId : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'}}" style="height: 50px; width: 50px;"/></view>
+          <view class="name-info"><view class="name">{{userInfo.nick ? userInfo.nick : '无昵称'}}</view><view class="tel">{{userInfo.phone}}</view></view>
         </view>
       </view>
       <text class="mine-panel-title">账户信息</text>
       <view class="account-info">
         <view class="account-info-top" @tap="goToAccount">
-          <view class="add-action" @tap.stop="goToAddMoney">充值</view><text class="total"><text>{{user.balance}}</text>账户余额</text>
+          <view class="add-action" @tap.stop="goToAddMoney">充值</view><text class="total"><text>{{userInfo.balance}}</text>账户余额</text>
         </view>
         <view class="account-part">
           <view class="account-part-ul">
@@ -182,6 +182,7 @@
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class Me extends wepy.page {
     config = {
@@ -194,13 +195,8 @@
 
     data = {
       userInfo: {},
-      user: {
-        nick: '',
-        phone: '15960192140',
-        balance: 100,
-        avatarId: ''
-      },
-      windowH: 0
+      windowH: 0,
+      session: ''
     }
 
     computed = {
@@ -245,7 +241,9 @@
     }
 
     onLoad() {
-      this.userInfo = wx.getStorageSync('userInfo')
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.userInfo = this.session.user
       this.windowH = wx.getStorageSync('windowH')
       this.$apply()
     }

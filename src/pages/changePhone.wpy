@@ -1,0 +1,468 @@
+<style lang="less">
+.btn {
+  button {
+    display: block;
+    width: 90%;
+    height: 40px;
+    line-height: 40px;
+    outline: none;
+    margin: 30px 5%;
+    background-color: rgb(47, 185, 195);
+    color: #fff;
+    text-align: center;
+    border: 0;
+    border-radius: 3px;
+    font-size: 15px;
+  }
+}
+
+#ctp-user-bind-form {
+  font-size: 15px;
+  .tel, .pwd, .confirmation-pwd {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #e5e5e5;
+    border-width: 1px 0;
+    background: #fff;
+  }
+  .tel {
+    border-bottom: 0px;
+  }
+  .pwd, .confirmation-pwd {
+    display: none;
+  }
+  .tel input, .pwd input, .confirmation-pwd input {
+    width: 100%;
+    text-indent: 10px;
+    height: 50px;
+    border: 0;
+    outline: none;
+    padding: 0px 10px;
+  }
+  .description {
+    line-height: 18px;
+    font-size: 10px;
+    color: #999;
+    padding: 3px 10px;
+  }
+  .sendCode {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #e5e5e5;
+    border-width: 1px 0;
+    background: #fff;
+    margin-bottom: 20px;
+    input {
+      width: 75%;
+      text-indent: 10px;
+      height: 50px;
+      border: 0;
+      outline: none;
+      display: inline-block;
+      padding: 0px 10px;
+      box-sizing: border-box;
+    }
+    .getCodeBtn {
+      display: inline-block;
+      width: 25%;
+      font-size: 13px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      float: right;
+      color: rgb(47, 185, 195);
+      text-decoration: none;
+    }
+  }
+  .pwd {
+    border-bottom: 0;
+  }
+  .btn {
+    height: 40px;
+  }
+  .terms {
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') left center no-repeat;
+    background-size: 22px 22px;
+    margin-left: 10px;
+    padding-left: 22px;
+    font-size: 13px;
+    height: 23px;
+    line-height: 23px;
+    display: inline-block;
+    view {
+      display: inline-block;
+      color: #2fb9c3;
+    }
+  }
+  .terms.selected {
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') left center no-repeat;
+    background-size: 22px 22px;
+  }
+}
+</style>
+
+<template>
+  <view class="homepage">
+    <view id="ctp-panel" style="background: #f5f5f5;padding-top: 20px;">
+      <view id="ctp-user-bind-form-container">
+        <form id="ctp-user-bind-form" wx:if="{{!isNext}}">
+          <view class="tel"><input type="number" value="{{userInfo.phone}}" disabled="true"/></view>
+          <view class="sendCode">
+            <input type="number" @input="codeTfInput" placeholder="请输入验证码" focus="true"/>
+            <button class="getCodeBtn" style="color: {{getCodeBtnProperty.titleColor}}" type="default" @tap="getCodeAct" disabled="{{getCodeBtnProperty.disabled}}">{{getCodeBtnProperty.title}}</button>
+          </view>
+          <view class="btn">
+            <button style="color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="nextAct" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">解除绑定</button>
+          </view>
+        </form>
+
+        <form id="ctp-user-bind-form" wx:if="{{isNext}}">
+          <view class="tel"><input type="number" @input="phoneTfInput" placeholder="请输入11位手机号码" focus="true"/></view>
+          <view class="sendCode">
+            <input type="number" maxLength="11" @input="codeTfInput2" placeholder="请输入验证码" focus="{{codeTfFocus}}"/>
+            <button class="getCodeBtn" style="color: {{getCodeBtnProperty2.titleColor}}" type="default" @tap="getCodeAct2" disabled="{{getCodeBtnProperty2.disabled}}">{{getCodeBtnProperty2.title}}</button>
+          </view>
+          <view class="btn">
+            <button style="color: #ffffff; background-color: {{nextBtnProperty2.backcolor}}" type="default" @tap="nextAct2" disabled="{{nextBtnProperty2.disabled}}" loading="{{nextBtnProperty2.loading}}">确定绑定</button>
+          </view>
+        </form>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  // import checkNetWorkStatus from '../utils/CheckNetWork'
+  import CTP from '../utils/ajax'
+
+  export default class ChangePhone extends wepy.page {
+    config = {
+      navigationBarTitleText: '修改手机号码'
+    }
+
+    components = {}
+
+    data = {
+      phoneValue: '',
+      codeValue: '',
+      phoneValue2: '',
+      codeValue2: '',
+      userInfo: {},
+      getCodeBtnProperty: {
+        titleColor: '#2fb9c3',
+        disabled: false,
+        loading: false,
+        title: '获取验证码'
+      },
+      nextBtnProperty: {
+        backcolor: '#CCCCCC',
+        disabled: true,
+        loading: false
+      },
+      getCodeBtnProperty2: {
+        titleColor: '#B4B4B4',
+        disabled: true,
+        loading: false,
+        title: '获取验证码'
+      },
+      nextBtnProperty2: {
+        backcolor: '#CCCCCC',
+        disabled: true,
+        loading: false
+      },
+      codeTfFocus: false,
+      isNext: false,
+      session: ''
+    }
+
+    methods = {
+      // 输入手机号
+      phoneTfInput (e) {
+        let that = this
+        let length = e.detail.value.length
+        if (length === 11) {
+          that.getCodeBtnProperty2.titleColor = '#2fb9c3'
+          that.getCodeBtnProperty2.disabled = false
+          that.phoneValue2 = e.detail.value
+          if (that.phoneValue2 && that.codeValue2) {
+            that.nextBtnProperty2.disabled = false
+            that.nextBtnProperty2.backcolor = '#2fb9c3'
+          } else {
+            that.nextBtnProperty2.disabled = true
+            that.nextBtnProperty2.backcolor = '#cccccc'
+          }
+        } else {
+          that.getCodeBtnProperty2.titleColor = '#B4B4B4'
+          that.getCodeBtnProperty2.disabled = true
+          that.nextBtnProperty2.disabled = true
+          that.nextBtnProperty2.backcolor = '#cccccc'
+        }
+        that.$apply()
+      },
+      // 获取验证码
+      getCodeAct2 () {
+        // if (checkNetWorkStatus() === false) {
+        //   console.log('网络错误')
+        // } else {
+        let that = this
+        that.getCodeBtnProperty2.loading = true
+        let number = 60
+        let paramsEvaluation = {
+          mobile: that.phoneValue2,
+          reason: 'bind_wechat',
+          validCode: '',
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'user.sendvalidcode',
+          locale: 'zh_CN',
+          appKey: '',
+          sessionId: '',
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: paramsEvaluation,
+          url: '/msp-cas/router',
+          success: function (e) {
+            console.log('获取到的重新绑定验证码：')
+            console.log(e)
+          }
+        })
+        let time = setInterval(function() {
+          number--
+          that.getCodeBtnProperty2.title = number + '秒后重发'
+          that.getCodeBtnProperty2.disabled = true
+          that.$apply()
+          if (number === 0) {
+            that.getCodeBtnProperty2.title = '重新获取'
+            that.getCodeBtnProperty2.disabled = false
+            that.getCodeBtnProperty2.loading = false
+            that.$apply()
+            clearInterval(time)
+          }
+        }, 1000)
+        that.codeTfFocus = true
+        that.$apply()
+        // }
+      },
+      // 获取解绑验证码
+      getCodeAct () {
+        // if (checkNetWorkStatus() === false) {
+        //   console.log('网络错误')
+        // } else {
+        let that = this
+        that.getCodeBtnProperty.loading = true
+        let number = 60
+        let paramsEvaluation = {
+          mobile: that.phoneValue,
+          reason: 'bind_wechat',
+          validCode: '',
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'user.sendvalidcode',
+          locale: 'zh_CN',
+          appKey: '',
+          sessionId: '',
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: paramsEvaluation,
+          url: '/msp-cas/router',
+          success: function (e) {
+            console.log('获取到的验证码：')
+            console.log(e)
+          }
+        })
+        let time = setInterval(function() {
+          number--
+          that.getCodeBtnProperty.title = number + '秒后重发'
+          that.getCodeBtnProperty.disabled = true
+          that.$apply()
+          if (number === 0) {
+            that.getCodeBtnProperty.title = '重新获取'
+            that.getCodeBtnProperty.disabled = false
+            that.getCodeBtnProperty.loading = false
+            that.$apply()
+            clearInterval(time)
+          }
+        }, 1000)
+        that.codeTfFocus = true
+        that.$apply()
+        // }
+      },
+      // 输入解绑验证码
+      codeTfInput (e) {
+        let that = this
+        that.codeValue = e.detail.value
+        if (that.phoneValue && that.codeValue) {
+          that.nextBtnProperty.disabled = false
+          that.nextBtnProperty.backcolor = '#2fb9c3'
+        } else {
+          that.nextBtnProperty.disabled = true
+          that.nextBtnProperty.backcolor = '#cccccc'
+        }
+        that.$apply()
+      },
+      // 输入解绑验证码
+      codeTfInput2 (e) {
+        let that = this
+        that.codeValue2 = e.detail.value
+        if (that.phoneValue2 && that.codeValue2) {
+          that.nextBtnProperty2.disabled = false
+          that.nextBtnProperty2.backcolor = '#2fb9c3'
+        } else {
+          that.nextBtnProperty2.disabled = true
+          that.nextBtnProperty2.backcolor = '#cccccc'
+        }
+        that.$apply()
+      },
+      // 解绑下一步
+      nextAct () {
+        let that = this
+        let _params = {
+          mobile: that.phoneValue,
+          validCode: that.codeValue,
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'user.checkvalidcode',
+          locale: 'zh_CN',
+          appKey: '',
+          sessionId: '',
+          timestamp: new Date().getTime()
+        }
+        that.codeTfFocus = false
+        // if (checkNetWorkStatus() === false) {
+        //   console.log('网络错误')
+        // } else {
+        that.nextBtnProperty.loading = true
+        CTP().Ajax({
+          params: _params,
+          url: '/msp-cas/router',
+          success: function (result) {
+            console.log('验证码验证：')
+            console.log(result)
+            if (result.data.code === '9') {
+              wx.showToast({
+                title: '验证码错误',
+                icon: 'loading',
+                duraction: 2000
+              })
+              that.nextBtnProperty.loading = false
+              that.$apply()
+              return
+            }
+            that.isNext = true
+            that.nextBtnProperty.loading = false
+            that.$apply()
+          }
+        })
+        // }
+      },
+      // 重新绑定下一步
+      nextAct2 () {
+        let that = this
+        let _params = {
+          mobile: that.phoneValue2,
+          validCode: that.codeValue2,
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'user.checkvalidcode',
+          locale: 'zh_CN',
+          appKey: '',
+          sessionId: '',
+          timestamp: new Date().getTime()
+        }
+        that.codeTfFocus = false
+        // if (checkNetWorkStatus() === false) {
+        //   console.log('网络错误')
+        // } else {
+        that.nextBtnProperty2.loading = true
+        CTP().Ajax({
+          params: _params,
+          url: '/msp-cas/router',
+          success: function (result) {
+            console.log('验证码验证：')
+            console.log(result)
+            if (result.data.code === '9') {
+              wx.showToast({
+                title: '验证码错误',
+                icon: 'loading',
+                duraction: 2000
+              })
+              that.nextBtnProperty2.loading = false
+              that.$apply()
+              return
+            }
+            let carTypeParams = {
+              userId: that.userInfo.userId,
+              phone: that.phoneValue2,
+
+              nonce: 'abc',
+              format: 'json',
+              v: '1.0',
+              method: 'user.save',
+              locale: 'zh_CN',
+              appKey: that.session.appKey,
+              sessionId: that.session.sessionId,
+              timestamp: new Date().getTime()
+            }
+            CTP().Ajax({
+              params: carTypeParams,
+              url: '/msp-cas/router',
+              success: function(_r) {
+                console.log('绑定信息：')
+                console.log(_r)
+                if (_r.statusCode === 200) {
+                  wx.showToast({
+                    title: '绑定成功',
+                    icon: 'success',
+                    duraction: 2000
+                  })
+                  that.session.user = _r.data.user
+                  wx.setStorageSync('session', JSON.stringify(this.session))
+                  that.$apply()
+                } else {
+                  wx.showToast({
+                    title: '绑定失败',
+                    icon: 'loading',
+                    duraction: 2000
+                  })
+                }
+                // }
+              }
+            })
+            that.nextBtnProperty2.loading = false
+            that.$apply()
+          }
+        })
+        // }
+      }
+    }
+
+    failMessage () {
+      wx.showToast({
+        title: '连接服务器失败',
+        icon: 'loading',
+        duration: 2000
+      })
+    }
+
+    events = {}
+
+    onLoad () {
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.userInfo = this.session.user
+      this.phoneValue = this.userInfo.phone
+      this.$apply()
+    }
+  }
+</script>

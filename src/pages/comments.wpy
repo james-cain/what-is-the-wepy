@@ -1,0 +1,117 @@
+<style lang="less">
+.comment-container {
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+}
+
+.comment-container textarea {
+  width: 98%;
+  height: 98%;
+  margin: 10px auto;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-width: 1px 0;
+  height: 120px;
+  padding: 1%;
+  outline: none;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.comment-btn {
+  display: block;
+  width: 90%;
+  height: 40px;
+  line-height: 40px;
+  outline: none;
+  margin: 30px 5%;
+  background-color: rgb(47, 185, 195);
+  color: #fff;
+  text-align: center;
+  border: 0;
+  border-radius: 3px;
+  font-size: 15px;
+}
+</style>
+<template>
+  <view class="container" style="background: #f1f5f8; height: {{windowH}}px">
+    <view class="comment-container">
+      <textarea @input="inputVaule"></textarea>
+    </view>
+    <view class="comment-btn" @tap="commit">提交</view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import CTP from '../utils/ajax'
+
+  export default class Comments extends wepy.page {
+    config = {
+      navigationBarTitleText: '意见和反馈'
+    }
+
+    data = {
+      windowH: 0,
+      value: '',
+      session: ''
+    }
+
+    methods = {
+      inputVaule (e) {
+        this.value = e.detail.value
+        this.$apply()
+      },
+      commit (e) {
+        let that = this
+        // wx.showToast({
+        //   title: '提交反馈中...',
+        //   icon: 'loading',
+        //   duraction: 1000
+        // })
+        let commentParams = {
+          userCode: that.session.user.userId,
+          content: that.value,
+          nonce: 'abc',
+          format: 'json',
+          clientId: 'wechat',
+          clientType: 'wechat',
+          feedbackDate: new Date().getTime(),
+          v: '1.0',
+          method: 'feedback.save',
+          locale: 'zh_CN',
+          appKey: that.session.appKey,
+          sessionId: that.session.sessionId,
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: commentParams,
+          url: '/msp-charge/router',
+          type: 'POST',
+          success: function (_r) {
+            setTimeout(function () {
+              if (_r.state === '0') {
+                wx.showToast({
+                  title: '保存成功',
+                  icon: 'success',
+                  duraction: 1000
+                })
+              }
+            }, 1000)
+          }
+        })
+      }
+    }
+
+    events = {
+
+    }
+
+    onLoad () {
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.windowH = wx.getStorageSync('windowH')
+      this.$apply()
+    }
+  }
+</script>
