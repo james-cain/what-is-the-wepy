@@ -1,15 +1,111 @@
 <style lang="less">
+.orderToPay {
+    width: 100%;
+    height: 45px;
+    line-height: 45px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    font-size: 15px;
+    border-width: 1px 0;
+}
+.orderToPay input {
+    background: #fff;
+    width: 100%;
+    height: 100%;
+    text-indent: 10px;
+    outline: none;
+}
+.orderToPay-method {
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  border-width: 1px 0;
+  margin: 20px 0 30px 0;
+  overflow: hidden;
+  &-div {
+    padding: 5px 0;
+  }
+  &-span {
+    width: 60px;
+    height: 60px;
+    float: right;
+    display: block;
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') center center no-repeat;
+    background-size: 30px 30px;
+  }
+  .selectedItem {
+    width: 60px;
+    height: 60px;
+    float: right;
+    display: block;
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') center center no-repeat;
+    background-size: 30px 30px;
+  }
+  .wx {
+    height: 60px;
+    border-bottom: 1px solid #e5e5e5;
+    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_pay_wechat_icon@2x.png') 13px center no-repeat;
+    background-size: 25px 25px;
+    padding-left: 50px;
+  }
+  .orderToPay-method-item-title {
+    font-size: 17px;
+    line-height: 32px;
+    &-i {
+      font-style: normal;
+    }
+  }
+  .orderToPay-method-item-mark {
+    font-size: 13px;
+    color: #ce4b40;
+    line-height: 20px;
+  }
+}
 
+.orderToPay-btn {
+  width: 90%;
+  margin: 0 5%;
+  border-radius: 3px;
+  font-size: 16px;
+  background: lightseagreen;
+  color: #fff;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  &-span {
+    font-size: 20px;
+    padding: 0 10px;
+    font-weight: bold;
+  }
+}
 </style>
 
 <template>
-  <view class="container">
+  <view class="container" style="background: #f1f5f7">
+    <view id="orderToPay-panel">
+      <view class="orderToPay">
+        <input type="number" class="inputPay" placeholder="请输入充值金额" @input="payAmount"/>
+      </view>
+      <view class="orderToPay-method">
+        <view class="orderToPay-method-div wx" @tap="payMethod(1)"> <view class="orderToPay-method-span {{payType === 1 ? 'selectedItem' : ''}}"></view>
+          <view class="orderToPay-method-item-title">
+            微信支付<text class="orderToPay-method-item-title-i"></text>
+          </view>
+          <view class="orderToPay-method-item-mark">
+            推荐安装微信5.0以上版本用户使用
+          </view>
+        </view>
+      </view>
 
+      <view class="orderToPay-btn" @tap="pay">
+        确定支付
+      </view>
+    </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class Settings extends wepy.page {
     config = {
@@ -17,11 +113,130 @@
     }
 
     data = {
-
+      payType: 0,
+      payAmount: 0,
+      session: ''
     }
 
     methods = {
+      payAmount (e) {
+        this.payAmount = e.detail.value
+        this.$apply()
+      },
+      payMethod (id, e) {
+        console.log('选择支付方式')
+        let _id = parseInt(id, 10)
+        if (_id === this.payType) {
+          this.payType = 0
+        } else {
+          this.payType = _id
+        }
+        this.$apply()
+      },
+      pay (e) {
+        let that = this
+        if (that.payType !== 0) {
+          if (!that.payAmount || that.payAmount === '' || that.payAmount === 0) {
+            wx.showToast({
+              title: '请输入充值金额',
+              icon: 'loading',
+              duraction: 1000
+            })
+            return
+          }
+          let _params = {
+            userCode: that.session.user.userId,
+            // 支付金额
+            chargeAmount: that.payAmount,
+            // 1微信支付
+            payType: '1',
+            openId: that.session.user.chargeMiniAppId,
+            tradeType: 'JSAPI',
 
+            nonce: 'abc',
+            v: '1.0',
+            format: 'json',
+            method: 'balance.pay',
+            locale: 'zh_CN',
+            appKey: that.session.appKey,
+            sessionId: that.session.sessionId,
+            timestamp: new Date().getTime()
+          }
+          CTP().Ajax({
+            params: _params,
+            url: '/msp-charge/router',
+            success: function (e) {
+              console.log(e)
+              if (e.state === '0') {
+                let data = e.data
+                wx.requestPayment({
+                  // 时间戳，自1970年以来的秒数
+                  'timeStamp': data.weChatPay.timestamp,
+                  // 随机串
+                  'nonceStr': data.weChatPay.noncestr,
+                  'package': 'prepay_id=' + data.weChatPay.prepayid,
+                  // 微信签名方式：
+                  'signType': 'MD5',
+                  // 微信签名
+                  'paySign': data.weChatPay.wechatpay_sign,
+                  'success': function (res) {
+                    console.log(res.err_msg)
+                    let successParams = {
+                      userCode: that.session.user.userId,
+                      orderCode: data.orderCode,
+                      payType: '1',
+
+                      nonce: 'abc',
+                      v: '1.0',
+                      format: 'json',
+                      method: 'balance.payCallback',
+                      locale: 'zh_CN',
+                      appKey: that.session.appKey,
+                      sessionId: that.session.sessionId,
+                      timestamp: new Date().getTime()
+                    }
+                    CTP().Ajax({
+                      params: successParams,
+                      url: '/msp-charge/router',
+                      type: 'GET',
+                      success: function (e) {
+                        if (e.state === '0') {
+                          wx.showToast({
+                            title: '支付成功！',
+                            icon: 'success',
+                            duraction: 1000
+                          })
+
+                          setTimeout(function () {
+                            wx.navigateBack()
+                          }, 1000)
+                        }
+                      }
+                    })
+                  },
+                  'fail': function (res) {
+                    console.log(res)
+                    wx.showToast({
+                      title: '支付失败！',
+                      icon: 'loading',
+                      duraction: 1000
+                    })
+                  }
+                })
+              }
+            },
+            error: function (e) {
+              console.log(e)
+            }
+          })
+        } else {
+          wx.showToast({
+            title: '请选择充值类型',
+            icon: 'loading',
+            duraction: 1000
+          })
+        }
+      }
     }
 
     events = {
@@ -29,7 +244,8 @@
     }
 
     onLoad () {
-      
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
     }
   }
 </script>

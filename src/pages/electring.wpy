@@ -110,19 +110,35 @@
 }
 
 .charging-panel-details .charging-panel-details-refresh>view {
-  width: 100px;
+  width: 60px;
   height: inherit;
   margin: 0 auto;
   display: block;
   text-align: center;
   padding: 0;
 }
+.refresh-img {
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_map_refresh.png') center center no-repeat;
+  background-size: 16px 16px;
+  width: 16px;
+  height: 16px;
+  margin: 7px 0;
+  float: left;
+}
+.refreshing {
+  -webkit-animation: anticlockwiseRotate 1s;
+}
+@-webkit-keyframes anticlockwiseRotate {
+  to {
+    transform: rotate(360deg)
+  }
+}
 </style>
 <template>
   <view class="homepage">
     <view id="charging-panel-charging"  style="overflow: hidden;">
       <view class="charging-top">
-        <view class="left-time">预计结束:<text></text></view>
+        <view class="left-time">预计结束:<text>{{formatSeconds}}</text></view>
       </view>
       <view class="charging-end-button" @tap="endCharge">
         <text>结束充电</text>
@@ -131,27 +147,28 @@
         <view class="charging-panel-details-panel">
           <view class="charging-panel-details-time" style="margin-left: 25px; width: 95px;">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png" style="width: 16px; height: 16px;"/>
-            时长:<text class="charging-value">0</text>分钟
+            时长:<text class="charging-value">{{chargeInfo.chargeTime}}</text>
           </view>
           <view class="charging-panel-details-percent">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_percent_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
-            <text class="left charging-value">百分比:0</text>
+            <text class="left charging-value">百分比:{{chargeInfo.chargeRate}}</text>
           </view>
         </view>
         <view class="charging-panel-details-panel">
           <view class="charging-panel-details-elect" style="margin-left: 25px; width: 95px;">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_quantity_icon@2x.png" style="width: 16px; height: 16px;"/>
-            电量:<text class="charging-value">0</text>kWh
+            电量:<text class="charging-value">{{chargeInfo.chargeQuantity}}</text>kWh
           </view>
           <view class="charging-panel-details-amount">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_cost_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
-            <text class="left charging-value">费用:0元</text>
+            <text class="left charging-value">费用:{{chargeInfo.chargeElectricity}}元</text>
           </view>
         </view>
         <view class="charging-panel-details-panel charging-panel-details-refresh" @tap="refresh">
           <view>
-            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_map_refresh.png" style="width: 16px; height: 16px;"/>
-            <text>刷新</text>
+            <view class="refresh-img" animation="{{animationData}}"></view>
+            <!-- <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_map_refresh.png" animation="{{animationData}}" class="refreshing" style="width: 16px; height: 16px;"/> -->
+            <text style="float: right;">{{isrefresh : '加载中...' : '刷新'}}</text>
           </view>
         </view>
       </view>
@@ -162,6 +179,7 @@
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class Electring extends wepy.page {
     config = {
@@ -173,11 +191,39 @@
     }
 
     data = {
-      panelH: 0
+      panelH: 0,
+      animationData: {},
+      isrefresh: false,
+      session: '',
+      chargingOrderCode: '',
+      chargeInfo: {}
     }
 
     computed = {
-
+      formatSeconds () {
+        let that = this
+        let chargeTime = that.chargeInfo.chargeRestTime * 1
+        let theTime = parseInt(chargeTime)
+        let theTime1
+        let theTime2
+        let result
+        if (theTime > 60) {
+          theTime1 = parseInt(theTime / 60)
+          theTime = parseInt(theTime % 60)
+          if (theTime1 > 60) {
+            theTime2 = parseInt(theTime1 / 60)
+            theTime1 = parseInt(theTime1 % 60)
+          }
+        }
+        result = parseInt(theTime)
+        if (theTime1 > 0) {
+          result = '' + parseInt(theTime1) + ':' + result + '分钟'
+        }
+        if (theTime2 > 0) {
+          result = '' + parseInt(theTime2) + ':' + result + '时'
+        }
+        return result
+      }
     }
 
     methods = {
@@ -197,12 +243,171 @@
     }
 
     getInfo () {
+      let that = this
+      that.isrefresh = true
+      let params = {
+        userCode: that.session.user.userId,
+        orderCode: that.chargingOrderCode,
 
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'charge.info',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        sessionId: that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('获取充电信息：')
+          console.log(e)
+          let data = e.data
+          if (e.state === 0) {
+            setTimeout(function () {
+              that.chargeInfo = data
+              that.isrefresh = true
+            }, 1000)
+          } else {
+            if (e.state === 2201) {
+              wx.showToast({
+                title: e.message,
+                icon: 'loading',
+                duration: 2000
+              })
+              wx.navigateTo({
+                url: 'orderDetails'
+              })
+            } else if (e.state === 2202) {
+              wx.navigateTo({
+                url: 'orderToPay'
+              })
+            } else if (e.state === 2307) {
+              // 订单异常已挂起
+              wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
+              wx.navigateTo({
+                url: 'myOrderDetails'
+              })
+            } else {
+              wx.showToast({
+                title: e.message,
+                icon: 'loading',
+                duration: 2000
+              })
+            }
+          }
+        }
+      })
     }
 
     startC () {
-      wx.redirectTo({
-        url: 'orderToPay'
+      let that = this
+      let params = {
+        userCode: that.session.user.userId,
+        orderCode: that.chargingOrderCode,
+
+        nonce: 'abc',
+        v: '1.1',
+        format: 'json',
+        method: 'charge.finish',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        sessionId: that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('充电完成：')
+          console.log(e)
+          if (e.state !== 0 && e.state !== 2052) {
+            if (e.state === 2201) {
+              // 订单已结束
+              wx.showToast({
+                title: e.message,
+                icon: 'loading',
+                duration: 2000
+              })
+              wx.navigateTo({
+                url: 'orderDetails'
+              })
+            } else if (e.state === 2051) {
+              wx.showToast({
+                title: e.message,
+                icon: 'loading',
+                duration: 2000
+              })
+              wx.navigateTo({
+                url: 'orderToPay'
+              })
+            } else {
+              wx.showToast({
+                title: e.message,
+                icon: 'loading',
+                duration: 2000
+              })
+            }
+          }
+          if (e.state === 2350) {
+            // 跳到支付页面
+            wx.showToast({
+              title: e.message,
+              icon: 'loading',
+              duration: 2000
+            })
+            wx.navigateTo({
+              url: 'orderToPay'
+            })
+          }
+          if (e.state === 2302) {
+            // 跳到订单详情页面
+            wx.showToast({
+              title: e.message,
+              icon: 'loading',
+              duration: 2000
+            })
+            wx.navigateTo({
+              url: 'orderDetails'
+            })
+          }
+          if (e.state === 2303) {
+            // 跳到支付页面
+            wx.showToast({
+              title: e.message,
+              icon: 'loading',
+              duration: 2000
+            })
+            wx.navigateTo({
+              url: 'orderToPay'
+            })
+          }
+          if (e.state === 0 || e.state === 2052) {
+            // 支付成功跳至订单详情
+            wx.showToast({
+              title: e.message,
+              icon: 'loading',
+              duration: 2000
+            })
+            wx.navigateTo({
+              url: 'orderDetails'
+            })
+          }
+          if (e.state === 2307) {
+            // 订单异常已挂起
+            wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
+            wx.showToast({
+              title: e.message,
+              icon: 'loading',
+              duration: 2000
+            })
+            wx.navigateTo({
+              url: 'myOrderDetails'
+            })
+          }
+        }
       })
     }
 
@@ -210,9 +415,29 @@
 
     }
 
-    onLoad() {
+    onShow () {
+      let animation = wx.createAnimation({
+        duration: 1000,
+        timingFunction: 'ease'
+      })
+      this.animation = animation
+      animation.rotate(180).step()
+      this.setData({
+        animationData: animation.export()
+      })
+    }
+
+    onLoad () {
+      let se = CTP().session
+      let that = this
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.chargingOrderCode = wx.getStorageSync('chargingOrderCode')
+      console.log('正在充电的订单号：' + this.chargingOrderCode)
       this.panelH = wx.getStorageSync('windowH') - 320
       this.$apply()
+      setInterval(function () {
+        that.getInfo()
+      }, 30000)
     }
   }
 </script>

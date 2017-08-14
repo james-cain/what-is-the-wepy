@@ -186,13 +186,13 @@
       <view class="charging-elect-amount-panel" style="height: {{panelH}}px">
         <view class="charging-elect-amount-div">
           <view class="charging-elect-amount-fullof">
-            <text>充满电为止</text>
+            <text>充满电为止</text><text style="font-style: normal;font-size: 12px; color: #999;">(账户余额:{{session.user.balance}}元)</text>
             <text class="defaultChargingText" style="font-style: normal;font-size: 12px; color: #999;"></text>
             <text class="charging-elect-amount-fullof-button {{buttonType === 1 ? 'clicked' : ''}}" @tap="changeType(1)"></text>
           </view>
           <view style="padding: 10px;" class="charging-elect-quota">
             <text style="float: left;">充电</text>
-            <input type="number" value="{{clear ? '' : record}}" placeholder="请输入" class="charging-elect-amount-input" @input="recordInput"/>
+            <input type="number" value="{{clear ? '' : record}}" placeholder="请输入" class="charging-elect-amount-input" @input="recordInput" @blur="recordBlur"/>
             <text style="font-style: normal;font-size: 12px; color: #999;font-style: normal;">元(账户余额须大于10元)</text>
             <text class="charging-elect-amount-fullof-button {{buttonType === 2 ? 'clicked' : ''}}" @tap="changeType(2)"></text>
           </view>
@@ -225,7 +225,9 @@
       record: '',
       panelH: 0,
       session: '',
-      pileDetails: ''
+      pileDetails: '',
+      configThreshold: '',
+      canStart: true
     }
 
     computed = {
@@ -246,22 +248,144 @@
         this.record = e.detail.value
         this.$apply()
       },
+      recordBlur (e) {
+        let that = this
+        let balance = that.session.user.balance
+        let minThreshold = that.configThreshold.minThreshold
+        if (!(that.record * 1 > 0 && that.record * 1 <= balance * 1 - minThreshold * 1)) {
+          wx.showToast({
+            title: '请输入正确的值',
+            icon: 'loading',
+            duration: 2000
+          })
+          that.record = ''
+        } else if (that.record === '' || that.record * 1 === 0) {
+          wx.showToast({
+            title: '输入金额不能为空',
+            icon: 'loading',
+            duration: 2000
+          })
+          that.record = ''
+        } else if (that.record > balance) {
+          wx.showToast({
+            title: '输入金额不能大于余额',
+            icon: 'loading',
+            duration: 2000
+          })
+          that.record = ''
+        }
+      },
       charging (e) {
-        wx.showModal({
-          title: '提示',
-          content: '是否开始充电?',
-          showCancel: true,
-          success: (res) => {
-            if (res.confirm) {
-              console.log('用户点击确定')
-              wx.redirectTo({
-                url: 'electring'
+        let that = this
+        if (that.canStart) {
+          let chargeType
+          let chargingMoney
+          if (that.buttonType === 1) {
+            chargeType = '1'
+            chargingMoney = that.session.user.balance * 1
+          } else if (that.buttonType === 2) {
+            chargeType = '2'
+            chargingMoney = that.record * 1
+            if (!(chargingMoney * 1 > 0 && chargingMoney * 1 <= that.session.user.balance * 1 - that.configThreshold.minThreshold * 1)) {
+              wx.showToast({
+                title: '请输入正确的值',
+                icon: 'loading',
+                duration: 2000
               })
-            } else if (res.cancel) {
-              console.log('用户点击取消')
+              return
+            } else if (chargingMoney === '' || chargingMoney * 1 === 0) {
+              wx.showToast({
+                title: '输入金额不能为空',
+                icon: 'loading',
+                duration: 2000
+              })
+              return
+            } else if (chargingMoney > that.session.user.balance * 1) {
+              wx.showToast({
+                title: '输入金额不能大于余额',
+                icon: 'loading',
+                duration: 2000
+              })
+              return
             }
           }
-        })
+          wx.showModal({
+            title: '充电启动中...',
+            content: '如果长时间未启动成功,请检查充电枪是否连接成功。'
+          })
+          wx.redirectTo({
+            url: 'electring'
+          })
+          let params = {
+            userCode: that.session.user.userId,
+            chargingPileCode: that.pileDetails.chargePileCode + '01',
+            type: chargeType,
+            amount: chargingMoney,
+
+            nonce: 'abc',
+            v: '1.0',
+            format: 'json',
+            method: 'charge.start',
+            locale: 'zh_CN',
+            appKey: that.session.appKey,
+            sessionId: that.session.sessionId,
+            timestamp: new Date().getTime()
+          }
+          CTP().Ajax({
+            params: params,
+            url: '/msp-charge/router',
+            success: function (e) {
+              console.log('启动充电返回值：')
+              console.log(e)
+              let state = e.state
+              if (state === '0') {
+                wx.setStorageSync('chargingOrderCode', e.data.orderCode)
+                wx.redirectTo({
+                  url: 'electring'
+                })
+              } else if (state === '2100') {
+                // 启动充电，有未支付订单
+                wx.showToast({
+                  title: '您订单未支付,请先支付订单后再充电',
+                  icon: 'loading',
+                  duration: 2000
+                })
+              } else if (state === '2102') {
+                // 该用户在当前枪有充电中的订单（重复启动充电的情况）
+                wx.redirectTo({
+                  url: 'electring'
+                })
+              } else {
+                if (e.data.code === '9') {
+                  wx.showToast({
+                    title: e.data.subErrors[0].message,
+                    icon: 'loading',
+                    duration: 2000
+                  })
+                } else {
+                  wx.showToast({
+                    title: e.message,
+                    icon: 'loading',
+                    duration: 2000
+                  })
+                }
+              }
+            },
+            fail: function () {
+              wx.showToast({
+                title: '请求超时',
+                icon: 'loading',
+                duration: 2000
+              })
+            }
+          })
+        } else {
+          wx.showToast({
+            title: '余额小于等于10元，不能启动充电！',
+            icon: 'loading',
+            duration: 2000
+          })
+        }
       }
     }
 
@@ -292,21 +416,54 @@
           wx.setStorageSync('configThreshold', JSON.stringify(configThreshold))
           console.log('阈值：')
           console.log(JSON.parse(wx.getStorageSync('configThreshold')))
+          that.configThreshold = JSON.parse(wx.getStorageSync('configThreshold'))
+          let getConfigFlg = setInterval(function () {
+            console.log('设置的最低阈值为：' + that.configThreshold.promptThreshold)
+            if (typeof that.configThreshold.promptThreshold !== 'undefined') {
+              if (that.session.user.balance <= that.configThreshold.promptThreshold) {
+                wx.showModal({
+                  title: '注意',
+                  content: '当前余额为' + that.session.user.balance + '元，请及时充值'
+                })
+                that.canStart = false
+                that.$apply()
+              }
+              clearInterval(getConfigFlg)
+            }
+          }, 300)
+          that.$apply()
         }
       })
     }
 
     onLoad() {
       let se = CTP().session
-      let configThreshold = wx.getStorageSync('configThreshold')
+      let that = this
+      this.configThreshold = JSON.parse(wx.getStorageSync('configThreshold'))
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.pileDetails = JSON.parse(wx.getStorageSync('pileDetails'))
       this.panelH = wx.getStorageSync('windowH') - 320
-      if (configThreshold === '') {
+      console.log('阈值情况：')
+      console.log(this.configThreshold)
+      if (this.configThreshold === '' || this.configThreshold === undefined) {
         console.log('通过接口调用获取阈值')
         this.getConfigThreshold()
       } else {
         console.log('通过缓存调用获取阈值')
+        let getConfigFlg = setInterval(function () {
+          console.log('设置的最低阈值为：' + that.configThreshold.promptThreshold)
+          if (typeof that.configThreshold.promptThreshold !== 'undefined') {
+            if (that.session.user.balance <= that.configThreshold.promptThreshold) {
+              wx.showModal({
+                title: '注意',
+                content: '当前余额为' + that.session.user.balance + '元，请及时充值'
+              })
+              that.canStart = false
+              that.$apply()
+            }
+            clearInterval(getConfigFlg)
+          }
+        }, 300)
       }
       this.$apply()
     }
