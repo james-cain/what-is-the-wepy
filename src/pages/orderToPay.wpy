@@ -79,7 +79,8 @@
     display: block;
     background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') center center no-repeat;
     background-size: 30px 30px;
-    .selectedItem {
+  }
+  .selectedItem {
       width: 60px;
       height: 60px;
       float: right;
@@ -87,7 +88,6 @@
       background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') center center no-repeat;
       background-size: 30px 30px;
     }
-  }
   .ye {
     height: 60px;
     border-bottom: 1px solid #e5e5e5;
@@ -152,7 +152,7 @@
         </view>
       </view>
       <view class="orderToPay-method">
-        <view class="orderToPay-method-div ye {{payType === 1 ? 'selectedItem' : ''}}" @tap="payMethod(1)"> <view class="orderToPay-method-span"></view>
+        <view class="orderToPay-method-div ye" @tap="payMethod(1)"> <view class="orderToPay-method-span {{payType === 1 ? 'selectedItem' : ''}}"></view>
           <view class="orderToPay-method-item-title">
             余额支付<text class="orderToPay-method-item-title-i"></text>
           </view>
@@ -171,6 +171,7 @@
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class OrderToPay extends wepy.page {
     config = {
@@ -192,7 +193,9 @@
         chargeElectricity: 12,
         chargeQuantity: 12.8
       },
-      payType: 0
+      payType: 0,
+      chargingOrderCode: '',
+      session: ''
     }
 
     computed = {
@@ -217,12 +220,30 @@
       }
     }
 
+    getOrderDetails (chargingOrderCode) {
+      let that = this
+      let params = {
+        orderCode: chargingOrderCode,
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'order.info',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        sessionId: that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+    }
+
     events = {
 
     }
 
     onLoad() {
-
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.chargingOrderCode = wx.getStorageSync('chargingOrderCode')
     }
   }
 </script>
