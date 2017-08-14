@@ -23,7 +23,7 @@
     font-size: 15px;
 }
 
-.mineInfo-panel-bottom .bottom-p input {
+.mineInfo-panel-bottom .bottom-p .info {
     width: 70%;
     border: 0;
     height: 45px;
@@ -114,19 +114,19 @@
       </view>
       <view class="mineInfo-panel-bottom">
         <view class="bottom-p mineInfo-panel-bottom-account"><text>账号</text>
-          <input type="text" disabled placeholder="" />
+          <view class="info">{{userInfo.account}}</view>
         </view>
         <view class="bottom-p mineInfo-panel-bottom-tel"><text>手机号码</text>
-          <input type="tel" disabled placeholder="" />
+          <view class="info">{{userInfo.phone}}</view>
         </view>
-        <view class="bottom-p mineInfo-panel-bottom-nick"><view class="arrow"></view><text>昵称</text>
-          <input type="text" disabled placeholder="" />
+        <view class="bottom-p mineInfo-panel-bottom-nick" @tap="mod('nick')"><view class="arrow"></view><text>昵称</text>
+          <view class="info">{{userInfo.nick}}</view>
         </view>
-        <view class="bottom-p mineInfo-panel-bottom-sex"><view class="arrow"></view><text>性别</text>
-          <input type="text" disabled placeholder="" />
+        <view class="bottom-p mineInfo-panel-bottom-sex" @tap="mod('gender')"><view class="arrow"></view><text>性别</text>
+          <view class="info">{{userInfo.gender === 2 ? '男' : '女'}}</view>
         </view>
-        <view class="bottom-p mineInfo-panel-bottom-description"><view class="arrow"></view><text>简介</text>
-          <input type="text" disabled placeholder="" />
+        <view class="bottom-p mineInfo-panel-bottom-description" @tap="mod('introduction')"><view class="arrow"></view><text>简介</text>
+          <view class="info">{{userInfo.introduction}}</view>
         </view>
       </view>
     </view>
@@ -149,7 +149,11 @@
     }
 
     methods = {
-
+      mod (type, e) {
+        wx.navigateTo({
+          url: 'mineInfoEdit?type=' + type
+        })
+      }
     }
 
     events = {

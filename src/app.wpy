@@ -35,7 +35,8 @@
         'pages/accountSecurity',
         'pages/changePhone',
         'pages/comments',
-        'pages/about'
+        'pages/about',
+        'pages/mineInfoEdit'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',

@@ -1,0 +1,165 @@
+<style lang="less">
+.mineInfo-panel-bottom {
+    padding: 20px 0;
+}
+
+.mineInfo-panel-bottom .bottom-p {
+    height: 45px;
+    line-height: 45px;
+    background: #fff;
+    border-top: 1px solid #e5e5e5;
+    padding: 0 10px;
+}
+
+.mineInfo-panel-bottom .bottom-p:last-child, .mineInfo-panel-bottom .bottom-p.mineInfo-panel-bottom-account, .mineInfo-panel-bottom .bottom-p.mineInfo-panel-bottom-tel {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.mineInfo-panel-bottom .bottom-p input {
+    text-align: left;
+    height: 47px;
+}
+
+.btnEdit {
+    width: 100%;
+    height: auto;
+}
+.btnEdit text {
+    display: block;
+    width: 90%;
+    height: 40px;
+    line-height: 40px;
+    outline: none;
+    margin: 30px 5%;
+    background-color: rgb(47, 185, 195);
+    color: #fff;
+    text-align: center;
+    border: 0;
+    border-radius: 3px;
+    font-size: 15px;
+}
+</style>
+
+<template>
+  <view class="container">
+    <view id="mineInfo-panel" style="background: #f1f5f8; height: {{windowH}}px">
+      <view class="mineInfo-panel-bottom">
+        <view class="bottom-p mineInfo-panel-bottom-account">
+            <input type="text" maxlength="20" class="mineInfo-panel-bottom-account-editInput" style="" @input="inputValue"/>
+        </view>
+        <view class="btnEdit" @tap="mod"><text>确定</text></view>
+        </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import CTP from '../utils/ajax'
+
+  export default class MineInfoEdit extends wepy.page {
+    data = {
+      windowH: 0,
+      session: '',
+      userInfo: '',
+      optionType: '',
+      value: ''
+    }
+
+    methods = {
+      mod () {
+        let that = this
+        let carTypeParams = {
+          userId: that.userInfo.userId,
+
+          nonce: 'abc',
+          format: 'json',
+          v: '1.0',
+          method: 'user.save',
+          locale: 'zh_CN',
+          appKey: that.session.appKey,
+          sessionId: that.session.sessionId,
+          timestamp: new Date().getTime()
+        }
+        if (that.optionType === 'nick') {
+          if (that.value === '') {
+            wx.showToast({
+              title: '昵称不能为空',
+              icon: 'loading',
+              duraction: 1000
+            })
+            return
+          } else if (that.value.length > 20) {
+            wx.showToast({
+              title: '昵称不能超过20位',
+              icon: 'loading',
+              duraction: 1000
+            })
+            return
+          } else {
+            carTypeParams['nick'] = that.value
+          }
+        } else if (that.optionType === 'gender') {
+          carTypeParams['gender'] = that.value === '男' ? '2' : '1'
+        } else {
+          carTypeParams['introduction'] = that.value
+        }
+        CTP().Ajax({
+          params: carTypeParams,
+          url: '/msp-cas/router',
+          success: function (_r) {
+            console.log(_r)
+            if (typeof _r.data.user !== 'undefined') {
+              wx.showToast({
+                title: '信息已保存',
+                icon: 'success',
+                duraction: 1000
+              })
+              that.session.user = _r.data.user
+              wx.setStorageSync('session', JSON.stringify(that.session))
+            } else {
+              wx.showToast({
+                title: '保存失败',
+                icon: 'loading',
+                duraction: 1000
+              })
+            }
+          }
+        })
+      },
+      inputValue (e) {
+        this.value = e.detail.value
+        this.$apply()
+      }
+    }
+
+    events = {
+
+    }
+
+    onLoad (option) {
+      let se = CTP().session
+      let optionType = option.type
+      this.optionType = option.type
+      console.log('optionType:' + optionType)
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.userInfo = this.session.user
+      this.windowH = wx.getStorageSync('windowH')
+      if (optionType === 'nick') {
+        wx.setNavigationBarTitle({
+          title: '修改昵称'
+        })
+      } else if (optionType === 'gender') {
+        wx.setNavigationBarTitle({
+          title: '修改性别'
+        })
+      } else if (optionType === 'introduction') {
+        wx.setNavigationBarTitle({
+          title: '修改简介'
+        })
+      }
+      this.$apply()
+    }
+  }
+</script>

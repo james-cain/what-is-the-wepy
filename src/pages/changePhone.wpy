@@ -427,7 +427,7 @@
                     duraction: 2000
                   })
                   that.session.user = _r.data.user
-                  wx.setStorageSync('session', JSON.stringify(this.session))
+                  wx.setStorageSync('session', JSON.stringify(that.session))
                   that.$apply()
                 } else {
                   wx.showToast({
