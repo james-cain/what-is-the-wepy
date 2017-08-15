@@ -353,12 +353,13 @@
               if (data.data.orderCode !== '' && data.data.orderState === '2') {
                 wx.setStorageSync('chargingOrderCode', data.data.orderCode)
                 wx.navigateTo({
-                  url: 'electring'
+                  // url: 'electring'
+                  url: 'evaluation'
                 })
               } else {
                 wx.navigateTo({
-                  // url: 'inputScanCode'
-                  url: 'evaluation'
+                  url: 'inputScanCode'
+                  // url: 'evaluation'
                 })
               }
             })

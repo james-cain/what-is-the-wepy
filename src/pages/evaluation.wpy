@@ -87,7 +87,7 @@
   overflow: hidden;
 }
 
-.evaluation-phase text {
+.evaluation-phase .evaluation-item view {
   min-width: 60px;
   max-width: 120px;
   overflow: hidden;
@@ -105,11 +105,11 @@
   font-size: 14px;
 }
 
-.evaluation-phase text:nth-child(4n) {
+.evaluation-phase .evaluation-item view:nth-child(4n) {
   float: left;
 }
 
-.evaluation-phase text.selected {
+.evaluation-phase .evaluation-item view.selected {
   background: #d5f1f3;
   color: #2fb9c3;
   border: 1px solid #2fb9c3;
@@ -130,8 +130,10 @@
         </view>
       </view>
       <view class="evaluation-phase">
-        <view class="evaluation-item" wx:for="{{labelList}}" wx:for-item="label" wx:key="labelCode">
-          <text wx:if="{{labelStar[label.score]}}" class="{{'tag_' + label.score}} {{selectedLabel[label.labelCode] ? 'selected' : ''}}" data-labelCode="{{label.labelCode}}" @tap="selectedLabel({{label.labelCode}})">{{label.labelName}}</text>
+        <view class="evaluation-list" wx:for="{{labelList}}" wx:for-item="label" wx:key="score">
+          <view class="evaluation-item" wx:for="{{label.items}}" wx:for-item="lableItem" wx:key="labelCode">
+            <view wx:if="{{labelStar[label.score]}}" class="{{'tag_' + label.score}} {{selectedLabel[lableItem.labelCode] ? 'selected' : ''}}" data-labelCode="{{lableItem.labelCode}}" @tap="selectedLabel({{lableItem.labelCode}})">{{lableItem.labelName}}</view>
+          </view>
         </view>
       </view>
       <view class="evaluation-text">
@@ -177,7 +179,8 @@
       selectedLabel: {},
       score: 0,
       comment: '',
-      labels: []
+      labels: [],
+      chargePayment: {}
     }
 
     computed = {
@@ -244,9 +247,7 @@
           wx.showToast({
             title: '评价完成'
           })
-          wx.redirectTo({
-            url: 'myOrder'
-          })
+          that.submitEvaluation()
         } else {
           wx.showToast({
             title: '请评分！'
@@ -257,6 +258,51 @@
 
     events = {
 
+    }
+
+    submitEvaluation() {
+      let that = this
+      let labelsbak = []
+      labelsbak = this.labels.join(',')
+      var paramsGetMyOrder = {
+        userCode: that.session.user.userId,
+        orderCode: that.chargedPayment.orderCode,
+        siteCode: that.chargedPayment.siteCode,
+        score: that.score,
+        comment: that.comment,
+        labels: labelsbak,
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'station.submitscore',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        sessionId: that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: paramsGetMyOrder,
+        url: '/msp-charge/router',
+        success: function (e) {
+          if (e.state === 0) {
+            console.log('评论确定：')
+            console.log(e)
+            wx.redirectTo({
+              url: 'myOrder'
+            })
+          } else {
+            wx.showToast({
+              title: e.data.message,
+              icon: 'loading',
+              duration: 2000
+            })
+          }
+        },
+        fail: function (e) {
+          console.log(e)
+        }
+      })
     }
 
     getOrderDetails (chargingOrderCode) {
@@ -280,7 +326,37 @@
           console.log('评价中获取充电信息：')
           console.log(e)
           let data = e.data
-          wx.setStorageSync('chargedPayment', JSON.stringify(data))
+          wx.setStorageSync('chargedPayment', JSON.stringify(data.data))
+          that.chargePayment = data.data
+          that.$apply()
+        }
+      })
+    }
+
+    getStationTag() {
+      let that = this
+      let tagParams = {
+        userCode: that.session.user.userId,
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'station.scorelable',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        sessionId: that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: tagParams,
+        url: '/msp-charge/router',
+        type: 'GET',
+        success: function (e) {
+          console.log('获取标签：')
+          console.log(e)
+          let data = e.data.data
+          that.labelList = data
+          that.$apply()
         }
       })
     }
@@ -289,53 +365,11 @@
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       let chargingOrderCode = wx.getStorageSync('chargingOrderCode')
-      this.getOrderDetails(chargingOrderCode)
       let chargePayment = wx.getStorageSync('chargedPayment')
       if (chargePayment === '') {
-        // this.
+        this.getOrderDetails(chargingOrderCode)
       }
-      this.labelList = [
-        {
-          score: 1,
-          labelCode: 1,
-          labelName: '充电慢'
-        },
-        {
-          score: 2,
-          labelCode: 2,
-          labelName: '充电一般'
-        },
-        {
-          score: 3,
-          labelCode: 3,
-          labelName: '充电一般'
-        },
-        {
-          score: 3,
-          labelCode: 4,
-          labelName: '速度较快'
-        },
-        {
-          score: 4,
-          labelCode: 5,
-          labelName: '充电较快'
-        },
-        {
-          score: 4,
-          labelCode: 6,
-          labelName: '环境较好'
-        },
-        {
-          score: 5,
-          labelCode: 7,
-          labelName: '充电快'
-        },
-        {
-          score: 5,
-          labelCode: 8,
-          labelName: '环境很好'
-        }
-      ]
+      this.getStationTag()
       this.$apply()
     }
   }
