@@ -133,7 +133,7 @@
       <view class="orderToPay-station-details">
         <view class="orderToPay-station-details-dl">
           <view class="orderToPay-station-details-dd pic">
-            <image src="{{orderDetail.img}}" style="height: 80px; width: 80px;"/>
+            <image src="{{orderDetail.img === null ? 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_station@2x.png' : orderDetail.img}}" style="height: 80px; width: 80px;"/>
           </view>
           <view class="orderToPay-station-details-dt">{{orderDetail.siteName}}</view>
           <view class="orderToPay-station-details-dd txt">
@@ -172,6 +172,7 @@
 <script>
   import wepy from 'wepy'
   import CTP from '../utils/ajax'
+  import MD5 from '../utils/Md5'
 
   export default class OrderToPay extends wepy.page {
     config = {
@@ -183,16 +184,7 @@
     }
 
     data = {
-      orderDetail: {
-        img: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_station@2x.png',
-        siteName: 'aaaa',
-        siteAddress: 'bbbbbb',
-        siteCode: 'Asdf234',
-        chargeTime: 240,
-        carbonReduction: 15,
-        chargeElectricity: 12,
-        chargeQuantity: 12.8
-      },
+      orderDetail: {},
       payType: 0,
       chargingOrderCode: '',
       session: ''
@@ -214,9 +206,68 @@
         this.$apply()
       },
       pay (e) {
-        wx.redirectTo({
-          url: 'evaluation'
-        })
+        let that = this
+        let userCode = this.session.user.userId
+        let orderCode = this.chargingOrderCode
+        if (that.payType !== 0) {
+          let reqSign = MD5()('ordered=' + orderCode + '&payPassword=&userId=' + userCode)
+          let params = {
+            userCode: userCode,
+            orderCode: orderCode,
+            reqSign: reqSign,
+            payPassword: '',
+
+            nonce: 'abc',
+            v: '1.0',
+            format: 'json',
+            method: 'pay.balance',
+            locale: 'zh_CN',
+            appKey: that.session.appKey,
+            sessionId: that.session.sessionId,
+            timestamp: new Date().getTime()
+          }
+          CTP().Ajax({
+            params: params,
+            url: '/msp-charge/router',
+            success: function (e) {
+              console.log('支付信息：')
+              console.log(e)
+              if (e.data.state === 0) {
+                wx.showToast({
+                  title: '支付成功',
+                  icon: 'success',
+                  duration: 2000
+                })
+                wx.redirectTo({
+                  url: 'evaluation'
+                })
+              } else {
+                wx.showModal({
+                  title: '余额不足',
+                  content: '是否现在前往充值？',
+                  showCancel: true,
+                  success: (res) => {
+                    if (res.confirm) {
+                      wx.redirectTo({
+                        url: 'addMoney'
+                      })
+                    } else if (res.cancel) {
+                      wx.redirectTo({
+                        url: 'myOrderDetail'
+                      })
+                    }
+                  }
+                })
+              }
+            }
+          })
+        } else {
+          wx.showToast({
+            title: '请选择支付方式',
+            icon: 'loading',
+            duration: 2000
+          })
+        }
       }
     }
 
@@ -234,6 +285,18 @@
         sessionId: that.session.sessionId,
         timestamp: new Date().getTime()
       }
+      CTP().Ajax({
+        params: params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('获取充电信息：')
+          console.log(e)
+          let data = e.data
+          that.orderDetail = e.data.data
+          that.$apply()
+          wx.setStorageSync('chargedPayment', JSON.stringify(data))
+        }
+      })
     }
 
     events = {
@@ -244,6 +307,7 @@
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.chargingOrderCode = wx.getStorageSync('chargingOrderCode')
+      this.getOrderDetails(this.chargingOrderCode)
     }
   }
 </script>

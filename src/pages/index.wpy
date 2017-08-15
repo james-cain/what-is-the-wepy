@@ -349,14 +349,16 @@
             console.log('以获取到用户信息，可以进入扫描界面')
             CTP().getHomeInfo(function (m) {
               let data = m.data
-              if (data.orderCode !== '' && data.orderState === '2') {
-                wx.setStorage('chargingOrderCode', data.orderCode)
+              console.log(data)
+              if (data.data.orderCode !== '' && data.data.orderState === '2') {
+                wx.setStorageSync('chargingOrderCode', data.data.orderCode)
                 wx.navigateTo({
-                  url: 'charging'
+                  url: 'electring'
                 })
               } else {
                 wx.navigateTo({
-                  url: 'inputScanCode'
+                  // url: 'inputScanCode'
+                  url: 'evaluation'
                 })
               }
             })

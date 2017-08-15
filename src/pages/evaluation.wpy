@@ -144,6 +144,7 @@
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class Evaluation extends wepy.page {
     config = {
@@ -219,6 +220,10 @@
           this.currentStar = _id
           this.score = _id
         }
+        for (let key in this.selectedLabel) {
+          this.selectedLabel[key] = false
+        }
+        this.labels.length = 0
         this.$apply()
       },
       selectedLabel (labelCode, e) {
@@ -254,7 +259,41 @@
 
     }
 
+    getOrderDetails (chargingOrderCode) {
+      let that = this
+      let params = {
+        orderCode: chargingOrderCode,
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'order.info',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        sessionId: that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('评价中获取充电信息：')
+          console.log(e)
+          let data = e.data
+          wx.setStorageSync('chargedPayment', JSON.stringify(data))
+        }
+      })
+    }
+
     onLoad () {
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      let chargingOrderCode = wx.getStorageSync('chargingOrderCode')
+      this.getOrderDetails(chargingOrderCode)
+      let chargePayment = wx.getStorageSync('chargedPayment')
+      if (chargePayment === '') {
+        // this.
+      }
       this.labelList = [
         {
           score: 1,

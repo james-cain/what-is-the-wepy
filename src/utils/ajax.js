@@ -97,7 +97,7 @@ let CTP = function() {
     }
     wepy.request({
       url: SERVER_URL + '/msp-charge/router',
-      method: 'POST',
+      method: 'GET',
       dataType: 'json',
       data: homeInfoParams,
       success: function (m) {

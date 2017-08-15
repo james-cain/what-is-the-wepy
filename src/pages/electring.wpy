@@ -110,7 +110,7 @@
 }
 
 .charging-panel-details .charging-panel-details-refresh>view {
-  width: 60px;
+  width: 90px;
   height: inherit;
   margin: 0 auto;
   display: block;
@@ -125,54 +125,44 @@
   margin: 7px 0;
   float: left;
 }
-.refreshing {
-  -webkit-animation: anticlockwiseRotate 1s;
-}
-@-webkit-keyframes anticlockwiseRotate {
-  to {
-    transform: rotate(360deg)
-  }
-}
 </style>
 <template>
   <view class="homepage">
     <view id="charging-panel-charging"  style="overflow: hidden;">
       <view class="charging-top">
-        <view class="left-time">预计结束:<text>{{formatSeconds}}</text></view>
+         <view class="left-time">预计结束:<text>{{formatSeconds}}</text></view> 
       </view>
       <view class="charging-end-button" @tap="endCharge">
         <text>结束充电</text>
       </view>
       <view class="charging-panel-details" style="height: {{panelH}}px">
         <view class="charging-panel-details-panel">
-          <view class="charging-panel-details-time" style="margin-left: 25px; width: 95px;">
+          <view class="charging-panel-details-time" style="margin-left: 15px; width: 105px;">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png" style="width: 16px; height: 16px;"/>
-            时长:<text class="charging-value">{{chargeInfo.chargeTime}}</text>
+             时长:<text class="charging-value">{{chargeInfo.chargeTime}}</text> 
           </view>
           <view class="charging-panel-details-percent">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_percent_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
-            <text class="left charging-value">百分比:{{chargeInfo.chargeRate}}</text>
+             <text class="left charging-value">百分比:{{chargeInfo.chargeRate}}</text> 
           </view>
         </view>
         <view class="charging-panel-details-panel">
-          <view class="charging-panel-details-elect" style="margin-left: 25px; width: 95px;">
+          <view class="charging-panel-details-elect" style="margin-left: 15px; width: 105px;">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_quantity_icon@2x.png" style="width: 16px; height: 16px;"/>
-            电量:<text class="charging-value">{{chargeInfo.chargeQuantity}}</text>kWh
+             电量:<text class="charging-value">{{chargeInfo.chargeQuantity}}</text>kWh 
           </view>
           <view class="charging-panel-details-amount">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_cost_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
-            <text class="left charging-value">费用:{{chargeInfo.chargeElectricity}}元</text>
+             <text class="left charging-value">费用:{{chargeInfo.chargeElectricity}}元</text> 
           </view>
         </view>
         <view class="charging-panel-details-panel charging-panel-details-refresh" @tap="refresh">
           <view>
-            <view class="refresh-img" animation="{{animationData}}"></view>
-            <!-- <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_map_refresh.png" animation="{{animationData}}" class="refreshing" style="width: 16px; height: 16px;"/> -->
-            <text style="float: right;">{{isrefresh : '加载中...' : '刷新'}}</text>
+            <view class="refresh-img"></view>
+             <text>{{isrefresh ? '加载中...' : '刷    新'}}</text> 
           </view>
         </view>
       </view>
-      <view class="help-view"></view>
     </view>
   </view>
 </template>
@@ -196,13 +186,14 @@
       isrefresh: false,
       session: '',
       chargingOrderCode: '',
-      chargeInfo: {}
+      chargeInfo: {},
+      getInfoM: ''
     }
 
     computed = {
       formatSeconds () {
         let that = this
-        let chargeTime = that.chargeInfo.chargeRestTime * 1
+        let chargeTime = that.chargeInfo === '' || that.chargeInfo === undefined ? 0 : that.chargeInfo.chargeRestTime * 1
         let theTime = parseInt(chargeTime)
         let theTime1
         let theTime2
@@ -215,12 +206,12 @@
             theTime1 = parseInt(theTime1 % 60)
           }
         }
-        result = parseInt(theTime)
+        result = parseInt(theTime) !== null ? parseInt(theTime) : 0
         if (theTime1 > 0) {
-          result = '' + parseInt(theTime1) + ':' + result + '分钟'
+          result = '' + parseInt(theTime1) + ':' + result
         }
         if (theTime2 > 0) {
-          result = '' + parseInt(theTime2) + ':' + result + '时'
+          result = '' + parseInt(theTime2) + ':' + result
         }
         return result
       }
@@ -238,6 +229,8 @@
         })
       },
       refresh (e) {
+        let that = this
+        that.isrefresh = true
         this.getInfo()
       }
     }
@@ -265,34 +258,34 @@
           console.log('获取充电信息：')
           console.log(e)
           let data = e.data
-          if (e.state === 0) {
-            setTimeout(function () {
-              that.chargeInfo = data
-              that.isrefresh = true
-            }, 1000)
+          if (data.state === 0) {
+            that.chargeInfo = data.data
+            console.log('获取充电信息data：', data.data)
+            that.isrefresh = false
+            that.$apply()
           } else {
-            if (e.state === 2201) {
+            if (data.state === 2201) {
               wx.showToast({
-                title: e.message,
+                title: data.message,
                 icon: 'loading',
                 duration: 2000
               })
-              wx.navigateTo({
-                url: 'orderDetails'
+              wx.redirectTo({
+                url: 'myOrderDetail'
               })
-            } else if (e.state === 2202) {
-              wx.navigateTo({
+            } else if (data.state === 2202) {
+              wx.redirectTo({
                 url: 'orderToPay'
               })
-            } else if (e.state === 2307) {
+            } else if (data.state === 2307) {
               // 订单异常已挂起
               wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
-              wx.navigateTo({
-                url: 'myOrderDetails'
+              wx.redirectTo({
+                url: 'myOrderDetail'
               })
             } else {
               wx.showToast({
-                title: e.message,
+                title: data.message,
                 icon: 'loading',
                 duration: 2000
               })
@@ -323,88 +316,89 @@
         success: function (e) {
           console.log('充电完成：')
           console.log(e)
-          if (e.state !== 0 && e.state !== 2052) {
-            if (e.state === 2201) {
+          let data = e.data
+          if (data.state !== 0 && data.state !== 2052) {
+            if (data.state === 2201) {
               // 订单已结束
               wx.showToast({
-                title: e.message,
+                title: data.message,
                 icon: 'loading',
                 duration: 2000
               })
-              wx.navigateTo({
-                url: 'orderDetails'
+              wx.redirectTo({
+                url: 'evaluation'
               })
-            } else if (e.state === 2051) {
+            } else if (data.state === 2051 || data.state === 2306 || data.state === 1) {
               wx.showToast({
-                title: e.message,
+                title: data.message,
                 icon: 'loading',
-                duration: 2000
+                duration: 1000
               })
-              wx.navigateTo({
+              wx.redirectTo({
                 url: 'orderToPay'
               })
             } else {
               wx.showToast({
-                title: e.message,
+                title: data.message,
                 icon: 'loading',
                 duration: 2000
               })
             }
           }
-          if (e.state === 2350) {
+          if (data.state === 2350) {
             // 跳到支付页面
             wx.showToast({
-              title: e.message,
+              title: data.message,
               icon: 'loading',
               duration: 2000
             })
-            wx.navigateTo({
+            wx.redirectTo({
               url: 'orderToPay'
             })
           }
-          if (e.state === 2302) {
+          if (data.state === 2302) {
             // 跳到订单详情页面
             wx.showToast({
-              title: e.message,
+              title: data.message,
               icon: 'loading',
               duration: 2000
             })
-            wx.navigateTo({
-              url: 'orderDetails'
+            wx.redirectTo({
+              url: 'myOrderDetail'
             })
           }
-          if (e.state === 2303) {
+          if (data.state === 2303) {
             // 跳到支付页面
             wx.showToast({
-              title: e.message,
+              title: data.message,
               icon: 'loading',
               duration: 2000
             })
-            wx.navigateTo({
+            wx.redirectTo({
               url: 'orderToPay'
             })
           }
-          if (e.state === 0 || e.state === 2052) {
+          if (data.state === 0 || data.state === 2052) {
             // 支付成功跳至订单详情
             wx.showToast({
-              title: e.message,
+              title: data.message,
               icon: 'loading',
               duration: 2000
             })
-            wx.navigateTo({
-              url: 'orderDetails'
+            wx.redirectTo({
+              url: 'evaluation'
             })
           }
-          if (e.state === 2307) {
+          if (data.state === 2307) {
             // 订单异常已挂起
             wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
             wx.showToast({
-              title: e.message,
+              title: data.message,
               icon: 'loading',
               duration: 2000
             })
-            wx.navigateTo({
-              url: 'myOrderDetails'
+            wx.redirectTo({
+              url: 'myOrderDetail'
             })
           }
         }
@@ -416,15 +410,7 @@
     }
 
     onShow () {
-      let animation = wx.createAnimation({
-        duration: 1000,
-        timingFunction: 'ease'
-      })
-      this.animation = animation
-      animation.rotate(180).step()
-      this.setData({
-        animationData: animation.export()
-      })
+
     }
 
     onLoad () {
@@ -434,10 +420,15 @@
       this.chargingOrderCode = wx.getStorageSync('chargingOrderCode')
       console.log('正在充电的订单号：' + this.chargingOrderCode)
       this.panelH = wx.getStorageSync('windowH') - 320
-      this.$apply()
-      setInterval(function () {
+      that.getInfo()
+      this.getInfoM = setInterval(function () {
         that.getInfo()
       }, 30000)
+      this.$apply()
+    }
+
+    onUnload () {
+      clearInterval(this.getInfoM)
     }
   }
 </script>

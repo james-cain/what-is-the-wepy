@@ -337,26 +337,26 @@
             success: function (e) {
               console.log('启动充电返回值：')
               console.log(e)
-              let state = e.state
-              if (state === '0') {
-                wx.setStorageSync('chargingOrderCode', e.data.orderCode)
+              let state = e.data.state
+              if (state === 0) {
+                wx.setStorageSync('chargingOrderCode', e.data.data.orderCode)
                 wx.redirectTo({
                   url: 'electring'
                 })
-              } else if (state === '2100') {
+              } else if (state === 2100) {
                 // 启动充电，有未支付订单
                 wx.showToast({
                   title: '您订单未支付,请先支付订单后再充电',
                   icon: 'loading',
                   duration: 2000
                 })
-              } else if (state === '2102') {
+              } else if (state === 2102) {
                 // 该用户在当前枪有充电中的订单（重复启动充电的情况）
                 wx.redirectTo({
                   url: 'electring'
                 })
               } else {
-                if (e.data.code === '9') {
+                if (e.data.code === 9) {
                   wx.showToast({
                     title: e.data.subErrors[0].message,
                     icon: 'loading',
@@ -364,7 +364,7 @@
                   })
                 } else {
                   wx.showToast({
-                    title: e.message,
+                    title: '服务端异常',
                     icon: 'loading',
                     duration: 2000
                   })
