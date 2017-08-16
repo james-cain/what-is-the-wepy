@@ -3,9 +3,7 @@
   width: 100%;
   overflow: hidden;
   overflow-y: auto;
-  background: #f1f5f8;
   .list-tips {
-    display: none;
     .list-tips-title {
       font-size: 17px;
       color: #b7bec8;
@@ -138,16 +136,22 @@
   font-size: 14px;
 }
 
+.noMorePage {
+  height: 50px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 14px;
+}
 </style>
 
 <template>
   <view class="container">
-    <view class="ctp-list-box"  style="height: inherit;background: #f1f5f7; position:relative;overflow: hidden; ">
-      <view class="list-tips">
+    <view class="ctp-list-box"  style="height: inherit; position:relative;overflow: hidden; ">
+      <view class="list-tips" wx:if="{{isShow}}">
         <text class="list-tips-title">无充电订单</text>
         <text>请使用APP进行充电</text>
       </view>
-      <view id="myOrderList" style="overflow:hidden; overflow-y: auto;">
+      <view id="myOrderList" style="overflow:hidden; overflow-y: auto;" wx:if="{{!isShow}}">
         <view class="myOrderList">
           <view wx:for="{{orderList}}" wx:for-item="order" wx:key="orderCode">
             <view class="myOrderList-li" @tap="goToDetailPage({{order.orderState}}, {{index}})" data-orderState="{{order.orderState}}" data-carbonReduction="{{order.carbonReduction}}" data-chargeTime="{{order.chargeTime}}" data-siteName="{{order.siteName}}" data-chargeElectricity="{{order.chargeElectricity}}" data-img="{{order.img}}" data-siteAddress="{{order.siteAddress}}" data-chargeQuantity="{{order.chargeQuantity}}" data-site="{{order.siteCode}}" id="{{order.orderCode}}">
@@ -182,6 +186,7 @@
 
     data = {
       session: '',
+      isShow: false,
       orderClass: [
         '',
         '',
@@ -204,178 +209,7 @@
       isNoMore: false,
       flg: true,
       orderList: [],
-      myOrderList: [
-        {
-          orderCode: 'order1',
-          orderState: '1',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '2',
-          orderStartTime: '2017-08-01 11:11:0000'
-        },
-        {
-          orderCode: 'order2',
-          orderState: '2',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '1',
-          orderStartTime: '2017-08-01 11:11:0000'
-        },
-        {
-          orderCode: 'order3',
-          orderState: '3',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '1',
-          orderStartTime: '2017-08-01 11:11:0000'
-        },
-        {
-          orderCode: 'order4',
-          orderState: '4',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '1',
-          orderStartTime: '2017-08-01 11:11:0000'
-        },
-        {
-          orderCode: 'order5',
-          orderState: '4',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '2',
-          orderStartTime: '2017-08-01 11:11:0000'
-        },
-        {
-          orderCode: 'order6',
-          orderState: '5',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '2',
-          orderStartTime: '2017-08-01 11:11:0000'
-        }
-      ],
-      other: [
-        {
-          orderCode: 'order7',
-          orderState: '1',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '2',
-          orderStartTime: '2017-08-01 11:11:0000'
-        },
-        {
-          orderCode: 'order8',
-          orderState: '2',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '1',
-          orderStartTime: '2017-08-01 11:11:0000'
-        },
-        {
-          orderCode: 'order9',
-          orderState: '3',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '1',
-          orderStartTime: '2017-08-01 11:11:0000'
-        },
-        {
-          orderCode: 'order10',
-          orderState: '4',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '1',
-          orderStartTime: '2017-08-01 11:11:0000'
-        },
-        {
-          orderCode: 'order11',
-          orderState: '4',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '2',
-          orderStartTime: '2017-08-01 11:11:0000'
-        },
-        {
-          orderCode: 'order12',
-          orderState: '5',
-          carbonReduction: 11,
-          chargeTime: 3600,
-          siteName: '海岸城充电站',
-          chargeElectricity: '10',
-          img: '',
-          siteAddress: '景田',
-          chargeQuantity: '2',
-          siteCode: '1',
-          isComment: '2',
-          orderStartTime: '2017-08-01 11:11:0000'
-        }
-      ]
+      myOrderList: []
     }
 
     watched = {
@@ -402,12 +236,6 @@
     }
 
     initMyOrder (type) {
-      // if (this.myOrderList.length < this.pageSize) {
-      //   this.showInfo = '没有更多数据了！'
-      //   this.isNoMore = true
-      // } else {
-      //   this.showInfo = '加载更多'
-      // }
       let that = this
       let params = {
         userCode: that.session.user.userId,
@@ -429,11 +257,10 @@
         success: function (e) {
           console.log('获取订单列表')
           console.log(e)
-          if (type === 'append') {
-            that.other.forEach((e, index, arr) => {
-              that.myOrderList.push(e)
-            })
-            console.log('当前orderlist长度' + this.myOrderList.length)
+          let data = e.data
+          that.myOrderList.length = 0
+          that.myOrderList = data.data
+          if (data.count < that.pageSize) {
             that.isNoMore = true
             that.showInfo = '没有更多数据了！'
           } else {
@@ -501,12 +328,12 @@
       },
       goToDetailPage (orderState, index, e) {
         if (orderState === '2') {
-          wx.setStorageSync('chargingOrderCode', JSON.stringify(this.myOrderList[index]).orderCode)
+          wx.setStorageSync('chargingOrderCode', this.myOrderList[index].orderCode)
           wx.navigateTo({
             url: 'electring'
           })
         } else {
-          wx.setStorageSync('myOrderDetailsCode', JSON.stringify(this.myOrderList[index]).orderCode)
+          wx.setStorageSync('myOrderDetailsCode', this.myOrderList[index].orderCode)
           wx.navigateTo({
             url: 'myOrderDetail'
           })

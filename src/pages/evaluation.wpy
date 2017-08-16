@@ -140,7 +140,7 @@
         <textarea placeholder="请输入本次充电的评价,谢谢。" @input="inputValue"></textarea>
       </view>
       <view class="evaluation-submit" @tap="submitEvaluation">提交评论</view>
-  </view>
+    </view>
   </view>
 </template>
 
@@ -243,11 +243,9 @@
       },
       submitEvaluation (e) {
         let that = this
+        console.log('点击了评论提交')
         if (that.score > 0) {
-          wx.showToast({
-            title: '评价完成'
-          })
-          that.submitEvaluation()
+          that.submitEva()
         } else {
           wx.showToast({
             title: '请评分！'
@@ -260,11 +258,11 @@
 
     }
 
-    submitEvaluation() {
+    submitEva() {
       let that = this
       let labelsbak = []
       labelsbak = this.labels.join(',')
-      var paramsGetMyOrder = {
+      let paramsGetMyOrder = {
         userCode: that.session.user.userId,
         orderCode: that.chargedPayment.orderCode,
         siteCode: that.chargedPayment.siteCode,

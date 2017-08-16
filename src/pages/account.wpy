@@ -68,17 +68,52 @@
 
 .account-details-list-title {
     color: #666;
-    text-indent: 10px;
+    margin-left: 10px;
     height: 30px;
     width: 100%;
     line-height: 30px;
     font-size: 13px;
-    border-bottom: 1px solid #e5e5e5;
     padding-top: 5px;
 }
 
-.list-tips {
-    display: none;
+.account-details-list {
+    padding: 0 10px;
+    height: 45px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.account-details-list view {
+    width: 80%;
+    text-indent: 5px;
+}
+
+.account-details-list-item-name {
+    line-height: 25px;
+    height: 25px;
+    font-size: 15px;
+    color: #333;
+}
+
+.account-details-list-item-date {
+    line-height: 15px;
+    height: 20px;
+    font-size: 11px;
+    color: #ccc;
+}
+
+.account-details-list text {
+    float: right;
+    width: 18%;
+    height: 45px;
+    display: block;
+    text-align: right;
+    line-height: 45px;
+    font-size: 15px;
+    padding-right: 5px;
+}
+
+.light-green-number {
+    color: #46ab6b;
 }
 
 .list-tips-title {
@@ -101,6 +136,20 @@
     top: 80px;
     right: 20px;
 }
+
+.add-more {
+  height: 50px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.noMorePage {
+  height: 50px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 14px;
+}
 </style>
 
 <template>
@@ -113,17 +162,28 @@
             {{balance ? balance : 0.00}}
         </view>
         <view class="charging-top-code" style="border: 0;color: #fff;">
-            我的余额(元) <view href="javascript:void(0);" id="charging-top-code-transfer-btn" @tap="goToTransfer">转账</view>
+            我的余额(元) <view id="charging-top-code-transfer-btn" @tap="goToTransfer">转账</view>
         </view>
       </view>
       <view class="account-details-list-box ctp-list-box">
-        <view class="list-tips">
+        <view class="list-tips" wx:if="{{isShow}}">
           <view class="list-tips-title">无充值记录</view>
           <view>请点击右上角进行充值</view>
         </view>
-        <p class="account-details-list-title">账户明细</p>
-        <ul class="account-details-list">
-        </ul>
+        <text class="account-details-list-title" wx:if="{{!isShow}}">账户明细</text>
+        <view class="account-details-list" wx:for="{{detailList}}" wx:for-item="detail" wx:if="{{!isShow}}">
+          <text class="{{detail.siteName === '充值' ? 'light-green-number' : ''}}">{{detail.chargeAmount}}</text>
+          <view class="account-details-list-item-name">{{detail.siteName}}</view>
+          <view class="account-details-list-item-date">{{detail.createTime}}</view>
+        </view>
+        <view class="add-more" wx:if="{{!isShow}}">
+          <view class="more {{isMore ? 'noMorePage' : ''}}" @tap="more" hidden="{{loading}}">
+            {{isMore * 1 < 20 ? '没有更多数据了！' : '加载更多'}}
+          </view>
+          <view hidden="{{!loading}}">
+            正在加载...
+          </view>
+        </view>
       </view>
     </view>
   </view>
@@ -131,6 +191,7 @@
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class Settings extends wepy.page {
     config = {
@@ -138,14 +199,67 @@
     }
 
     data = {
-      balance: ''
+      session: '',
+      balance: '',
+      pageNo: 1,
+      pageSize: 10,
+      isShow: false,
+      detailList: [],
+      currentList: [],
+      isMore: true,
+      loading: false
     }
 
+    balanceDetailList (type) {
+      let that = this
+      let params = {
+        userCode: that.session.user.userId,
+        pageNo: that.pageNo,
+        pageSize: that.pageSize,
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'balance.detaillist',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        sessionId: that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('账户充值明细：')
+          console.log(e)
+          let data = e.data
+          if (data.state === 0) {
+            that.currentList.length = 0
+            that.currentList = data.data
+            if (data.count < that.pageSize) {
+              that.isMore = false
+            } else {
+              that.isMore = true
+            }
+            that.currentList.forEach((e, index, arr) => {
+              that.detailList.push(e)
+            })
+            that.$apply()
+          }
+        }
+      })
+    }
     methods = {
       goToTransfer (e) {
         wx.navigateTo({
           url: 'transfer'
         })
+      },
+      more (e) {
+        let that = this
+        that.loading = true
+
+        that.$apply()
       }
     }
 
@@ -154,7 +268,11 @@
     }
 
     onLoad () {
-
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.balance = this.session.user.balance
+      this.balanceDetailList()
+      this.$apply()
     }
   }
 </script>

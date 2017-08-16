@@ -110,7 +110,7 @@
             }
 
             wepy.request({
-              url: 'http://mspshow.szcomtop.com/msp-charge/miniapp/session_key',
+              url: 'https://mspshow.szcomtop.com/msp-charge/miniapp/session_key',
               method: 'GET',
               dataType: 'json',
               data: _params,

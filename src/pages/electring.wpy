@@ -137,7 +137,7 @@
       </view>
       <view class="charging-panel-details" style="height: {{panelH}}px">
         <view class="charging-panel-details-panel">
-          <view class="charging-panel-details-time" style="margin-left: 15px; width: 105px;">
+          <view class="charging-panel-details-time" style="margin-left: 15px; width: 140px;">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png" style="width: 16px; height: 16px;"/>
              时长:<text class="charging-value">{{chargeInfo.chargeTime}}</text> 
           </view>
@@ -147,7 +147,7 @@
           </view>
         </view>
         <view class="charging-panel-details-panel">
-          <view class="charging-panel-details-elect" style="margin-left: 15px; width: 105px;">
+          <view class="charging-panel-details-elect" style="margin-left: 15px; width: 140px;">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_quantity_icon@2x.png" style="width: 16px; height: 16px;"/>
              电量:<text class="charging-value">{{chargeInfo.chargeQuantity}}</text>kWh 
           </view>
@@ -328,7 +328,7 @@
               wx.redirectTo({
                 url: 'evaluation'
               })
-            } else if (data.state === 2051 || data.state === 2306 || data.state === 1) {
+            } else if (data.state === 2051 || data.state === 2306) {
               wx.showToast({
                 title: data.message,
                 icon: 'loading',
