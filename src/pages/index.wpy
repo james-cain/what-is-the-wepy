@@ -354,7 +354,7 @@
                 wx.setStorageSync('chargingOrderCode', data.data.orderCode)
                 wx.navigateTo({
                   // url: 'electring'
-                  url: 'evaluation'
+                  url: 'myOrder'
                 })
               } else {
                 wx.navigateTo({

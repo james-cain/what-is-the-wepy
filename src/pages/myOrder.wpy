@@ -169,6 +169,7 @@
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class MyOrder extends wepy.page {
     config = {
@@ -180,6 +181,7 @@
     }
 
     data = {
+      session: '',
       orderClass: [
         '',
         '',
@@ -406,18 +408,67 @@
       // } else {
       //   this.showInfo = '加载更多'
       // }
-      if (type === 'append') {
-        this.other.forEach((e, index, arr) => {
-          this.myOrderList.push(e)
-        })
-        console.log('当前orderlist长度' + this.myOrderList.length)
-        this.isNoMore = true
-        this.showInfo = '没有更多数据了！'
-      } else {
-        this.showInfo = '加载更多'
+      let that = this
+      let params = {
+        userCode: that.session.user.userId,
+        pageNo: that.pageNo,
+        pageSize: that.pageSize,
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'order.list',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        sessionId: that.session.sessionId,
+        timestamp: new Date().getTime()
       }
-      this.$apply()
-      this.myOrderList2OrderList()
+      CTP().Ajax({
+        params: params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('获取订单列表')
+          console.log(e)
+          if (type === 'append') {
+            that.other.forEach((e, index, arr) => {
+              that.myOrderList.push(e)
+            })
+            console.log('当前orderlist长度' + this.myOrderList.length)
+            that.isNoMore = true
+            that.showInfo = '没有更多数据了！'
+          } else {
+            that.showInfo = '加载更多'
+          }
+          that.$apply()
+          that.myOrderList2OrderList()
+        }
+      })
+    }
+
+    getOrderList () {
+      let that = this
+      let params = {
+        userCode: that.session.user.userId,
+        pageNo: that.pageNo,
+        pageSize: that.pageSize,
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'order.list',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        sessionId: that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('获取订单列表')
+          console.log(e)
+        }
+      })
     }
 
     methods = {
@@ -425,7 +476,7 @@
         console.log('当前状态：' + orderState + ',' + isComment + ',' + index)
         if (orderState === '4' && isComment === '1') {
           wx.setStorageSync('chargedPayment', JSON.stringify(this.myOrderList[index]))
-          wx.setStorageSync('evaluationNeedparams', JSON.stringify(this.myOrderList[index]))
+          // wx.setStorageSync('evaluationNeedparams', JSON.stringify(this.myOrderList[index]))
           wx.navigateTo({
             url: 'evaluation'
           })
@@ -450,10 +501,12 @@
       },
       goToDetailPage (orderState, index, e) {
         if (orderState === '2') {
+          wx.setStorageSync('chargingOrderCode', JSON.stringify(this.myOrderList[index]).orderCode)
           wx.navigateTo({
             url: 'electring'
           })
         } else {
+          wx.setStorageSync('myOrderDetailsCode', JSON.stringify(this.myOrderList[index]).orderCode)
           wx.navigateTo({
             url: 'myOrderDetail'
           })
@@ -466,7 +519,10 @@
     }
 
     onLoad() {
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.initMyOrder('')
+      this.$apply()
     }
   }
 </script>

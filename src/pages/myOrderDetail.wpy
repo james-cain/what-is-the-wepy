@@ -182,7 +182,7 @@
         <view class="yezf">(余额支付)</view>
         <view class="payState {{orderStateClass[myOrderDetails.orderState]}}" @tap.stop="goToPay({{myOrderDetails.orderState}})">{{orderStateText[myOrderDetails.orderState]}}</view>
       </view>
-      <view class="myOrderDetails-station" @tap.stop="goToStation({{myOrderDetails.orderCode}})">
+      <view class="myOrderDetails-station" @tap.stop="goToStation({{myOrderDetails.siteCode}})">
         <view class="myOrderDetails-station-arrow"></view>
         <view class="img">
             <image src="{{myOrderDetails.img}}"/>
@@ -208,6 +208,7 @@
 
 <script>
   import wepy from 'wepy'
+  import CTP from '../utils/ajax'
 
   export default class MyOrderDetail extends wepy.page {
     config = {
@@ -219,6 +220,8 @@
     }
 
     data = {
+      session: '',
+      myOrderDetailsCode: '',
       orderStateClass: [
         'notDone',
         'notDone',
@@ -259,10 +262,57 @@
       }
     }
 
+    getOrderDetail () {
+      let that = this
+      let params = {
+        orderCode: that.myOrderDetailsCode,
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'order.info',
+        locale: 'zh_CN',
+        appKey: that.session.appKey,
+        sessionId: that.session.sessionId,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('获取到订单详情信息：')
+          console.log(e)
+        }
+      })
+    }
+
     methods = {
-      goToStation (orderCode, e) {
-        wx.navigateTo({
-          url: 'station'
+      goToStation (siteCode, e) {
+        let that = this
+        let params = {
+          userCode: that.session.user.userId,
+          siteCode: siteCode,
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'station.info',
+          locale: 'zh_CN',
+          appKey: that.session.appKey,
+          sessionId: that.session.sessionId,
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: params,
+          url: '/msp-charge/router',
+          success: function (e) {
+            console.log('在详情页中获取到充电站信息：')
+            console.log(e)
+            wx.setStorageSync('stakeDetails', JSON.stringify(e.data.data))
+            wx.navigateTo({
+              url: 'station'
+            })
+          }
         })
       },
       goToPay (orderState, e) {
@@ -279,7 +329,11 @@
     }
 
     onLoad() {
-
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.myOrderDetailsCode = wx.getStorageSync('myOrderDetailsCode')
+      this.getOrderDetail()
+      this.$apply()
     }
   }
 </script>
