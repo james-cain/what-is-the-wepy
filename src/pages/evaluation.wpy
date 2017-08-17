@@ -287,9 +287,12 @@
           console.log('评论确定：')
           console.log(e)
           if (e.data.state === 0) {
-            wx.redirectTo({
-              url: 'myOrder'
+            wx.showToast({
+              title: '评论成功',
+              icon: 'success',
+              duration: 2000
             })
+            wx.navigateBack()
           } else {
             wx.showToast({
               title: e.data.message,

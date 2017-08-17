@@ -306,7 +306,7 @@
             forget.code = that.codeValue
             wx.setStorageSync('forgetPhoneAndCode', JSON.stringify(forget))
             wx.navigateTo({
-              url: 'setPwd'
+              url: 'resetPwd'
             })
             that.nextBtnProperty.loading = false
             that.$apply()

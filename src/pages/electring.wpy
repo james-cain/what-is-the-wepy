@@ -130,7 +130,7 @@
   <view class="homepage">
     <view id="charging-panel-charging"  style="overflow: hidden;">
       <view class="charging-top">
-         <view class="left-time">预计结束:<text>{{formatSeconds}}</text></view> 
+         <view class="left-time">预计结束:<text>{{formatSeconds}}</text></view>
       </view>
       <view class="charging-end-button" @tap="endCharge">
         <text>结束充电</text>
@@ -139,27 +139,27 @@
         <view class="charging-panel-details-panel">
           <view class="charging-panel-details-time" style="margin-left: 15px; width: 140px;">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png" style="width: 16px; height: 16px;"/>
-             时长:<text class="charging-value">{{chargeInfo.chargeTime}}</text> 
+             时长:<text class="charging-value">{{chargeInfo.chargeTime}}</text>
           </view>
           <view class="charging-panel-details-percent">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_percent_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
-             <text class="left charging-value">百分比:{{chargeInfo.chargeRate}}</text> 
+             <text class="left charging-value">百分比:{{chargeInfo.chargeRate}}</text>
           </view>
         </view>
         <view class="charging-panel-details-panel">
           <view class="charging-panel-details-elect" style="margin-left: 15px; width: 140px;">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_quantity_icon@2x.png" style="width: 16px; height: 16px;"/>
-             电量:<text class="charging-value">{{chargeInfo.chargeQuantity}}</text>kWh 
+             电量:<text class="charging-value">{{chargeInfo.chargeQuantity}}</text>kWh
           </view>
           <view class="charging-panel-details-amount">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_cost_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
-             <text class="left charging-value">费用:{{chargeInfo.chargeElectricity}}元</text> 
+             <text class="left charging-value">费用:{{chargeInfo.chargeElectricity}}元</text>
           </view>
         </view>
         <view class="charging-panel-details-panel charging-panel-details-refresh" @tap="refresh">
           <view>
             <view class="refresh-img"></view>
-             <text>{{isrefresh ? '加载中...' : '刷    新'}}</text> 
+             <text>{{isrefresh ? '加载中...' : '刷    新'}}</text>
           </view>
         </view>
       </view>
@@ -270,16 +270,19 @@
                 icon: 'loading',
                 duration: 2000
               })
+              clearInterval(that.getInfoM)
               wx.redirectTo({
                 url: 'myOrderDetail'
               })
             } else if (data.state === 2202) {
+              clearInterval(that.getInfoM)
               wx.redirectTo({
                 url: 'orderToPay'
               })
             } else if (data.state === 2307) {
               // 订单异常已挂起
               wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
+              clearInterval(that.getInfoM)
               wx.redirectTo({
                 url: 'myOrderDetail'
               })
@@ -325,6 +328,7 @@
                 icon: 'loading',
                 duration: 2000
               })
+              clearInterval(that.getInfoM)
               wx.redirectTo({
                 url: 'evaluation'
               })
@@ -334,6 +338,7 @@
                 icon: 'loading',
                 duration: 1000
               })
+              clearInterval(that.getInfoM)
               wx.redirectTo({
                 url: 'orderToPay'
               })
@@ -352,6 +357,7 @@
               icon: 'loading',
               duration: 2000
             })
+            clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'orderToPay'
             })
@@ -363,6 +369,7 @@
               icon: 'loading',
               duration: 2000
             })
+            clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'myOrderDetail'
             })
@@ -374,6 +381,7 @@
               icon: 'loading',
               duration: 2000
             })
+            clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'orderToPay'
             })
@@ -385,6 +393,7 @@
               icon: 'loading',
               duration: 2000
             })
+            clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'evaluation'
             })
@@ -397,6 +406,7 @@
               icon: 'loading',
               duration: 2000
             })
+            clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'myOrderDetail'
             })

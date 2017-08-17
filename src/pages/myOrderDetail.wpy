@@ -311,7 +311,7 @@
             console.log('在详情页中获取到充电站信息：')
             console.log(e)
             wx.setStorageSync('stakeDetails', JSON.stringify(e.data))
-            wx.navigateTo({
+            wx.redirectTo({
               url: 'station'
             })
           }

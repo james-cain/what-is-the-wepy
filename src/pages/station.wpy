@@ -378,7 +378,7 @@
           </view>
           <view class="ctp-edit-btn">
             <view class="ctp-edit-btn-cancel" @tap="commentCancel">取消</view>
-            <view class="ctp-edit-btn-submit" @tap="commentSubmit">提交</view> 
+            <view class="ctp-edit-btn-submit" @tap="commentSubmit">提交</view>
           </view>
         </view>
       </scroll-view>
@@ -795,6 +795,45 @@
       wx.setNavigationBarTitle({
         title: stakeDetails.siteName
       })
+      this.$apply()
+    }
+
+    onUnload () {
+      this.desSelected = true
+      this.evaSelected = false
+      this.imgUrl = ''
+      this.siteCode = ''
+      this.siteName = ''
+      this.workingTime = ''
+      this.carType = ''
+      this.address = ''
+      this.score = 0
+      this.isPark = ''
+      this.parkingRate = ''
+      this.pilelist.length = 0
+      this.pileIsNotWroking = 0
+      this.detailLat = 0
+      this.detailLng = 0
+      this.carTypeList.length = 0
+      this.chargingPileNum = 0
+      this.makeAppointment = 0
+      this.isForeignOpen = 0
+      this.stationH = 0
+      this.getDis = 0
+      this.distance = 0
+      this.currentPositionLat = 0
+      this.currentPositionLng = 0
+
+      this.isShowCarTypeList = false
+
+      this.evalPageNo = 1
+
+      this.isCommentRecord = false
+      this.commentlist.length = 0
+      this.commentlistLength = 0
+      this.isEdit = false
+      this.editCommentId = ''
+      this.commentContent = ''
       this.$apply()
     }
   }

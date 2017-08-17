@@ -142,12 +142,12 @@
           params: _params,
           url: '/msp-cas/router',
           success: function (e) {
-            console.log('密码信息：')
+            console.log('注册信息：')
             console.log(e)
             let data = e.data
             if (data.code !== '9' && data.data !== '') {
               wx.showToast({
-                title: '密码修改成功',
+                title: '注册成功',
                 icon: 'success',
                 duraction: 1000
               })

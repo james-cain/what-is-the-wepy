@@ -51,7 +51,7 @@
             <input type="text" password="true" @input="rePwdInput" placeholder="重复输入"/>
           </view>
           <view class="btn">
-            <button style="color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="commit" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">注册</button>
+            <button style="color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="commit" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">提交</button>
           </view>
         </form>
       </view>
@@ -111,12 +111,14 @@
       // 提交
       commit () {
         let that = this
+        console.log('进入重置密码提交')
         let forget = JSON.parse(wx.getStorageSync('forgetPhoneAndCode'))
+        console.log(forget)
         let _params = {
           phone: forget.phone,
           validCode: forget.code,
           password: MD5()(that.pwd),
-          confirmPass: MD5()(that.repwd),
+          confirmPass: MD5()(that.rePwd),
           reason: 'find_pay_password',
           chargeMiniAppId: CTP().weChatAccount.id,
           system: 'XNCD',
@@ -145,24 +147,21 @@
           params: _params,
           url: '/msp-cas/router',
           success: function (e) {
-            console.log('注册信息：')
+            console.log('重置密码信息：')
             console.log(e)
             let data = e.data
             if (data.code !== '9' && data.data !== '') {
               wx.showToast({
-                title: '注册成功',
+                title: '密码修改成功',
                 icon: 'success',
                 duraction: 1000
               })
-              wx.setStorageSync('session', JSON.stringify(e.data))
-              console.log('登陆信息')
-              console.log(JSON.parse(wx.getStorageSync('session')))
-              wx.redirectTo({
-                url: 'improveInfo'
+              wx.navigateBack({
+                delta: 2
               })
             } else {
               wx.showToast({
-                title: '注册失败:' + data.subErrors[0].message,
+                title: '密码修改失败:' + data.subErrors[0].message,
                 icon: 'loading',
                 duraction: 1000
               })

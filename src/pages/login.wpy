@@ -174,9 +174,7 @@
               wx.setStorageSync('session', JSON.stringify(e.data))
               console.log('登陆信息')
               console.log(JSON.parse(wx.getStorageSync('session')))
-              wx.redirectTo({
-                url: 'index'
-              })
+              wx.navigateBack()
             } else {
               wx.showToast({
                 title: '登录失败:' + data.subErrors[0].message,

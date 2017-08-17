@@ -81,8 +81,8 @@
   </view>
   <view id="improve-info-form-container">
     <form id="ctp-user-bind-form">
-      <view class="container-item nickname"><input class="txt" value="{{wechat.nickName}}" type="text" placeholder="请输入昵称"/></view>
-      <view class="container-item account"><input class="txt" type="text" placeholder="请输入登录账号(只能设置一次)"/></view>
+      <view class="container-item nickname"><input class="txt" value="{{wechat.nickName}}" @input="nickInput" type="text" placeholder="请输入昵称"/></view>
+      <view class="container-item account"><input class="txt" type="text" @input="accountInput" placeholder="请输入登录账号(只能设置一次)"/></view>
       <view class="container-item car" @tap="selectedCar">
         <view><image src="{{myCarItem.vehicleBrandImg}}" style="height: 20px; width: 20px;"></image></view>
         <input style="width: 70%;text-indent: 0; float: left;" class="txt" type="text" placeholder="请选择车型" value="{{myCarItem.vehicleModel}}" disabled/>
@@ -103,14 +103,21 @@
     }
 
     data = {
-      weChatAccount: {
-        name: 'jamescain'
-      },
       myCarItem: '',
-      wechat: ''
+      wechat: '',
+      nickName: '',
+      accountValue: ''
     }
 
     methods = {
+      nickInput (e) {
+        this.nickName = e.detail.value
+        this.$apply()
+      },
+      accountInput (e) {
+        this.accountValue = e.detail.value
+        this.$apply()
+      },
       selectedCar (e) {
         wx.navigateTo({
           url: 'carTypeBox'
@@ -122,7 +129,7 @@
         })
       },
       commit (e) {
-
+        this.saveInfo()
       }
     }
 
@@ -130,8 +137,47 @@
 
     }
 
-    onShow() {
+    saveInfo () {
+      let that = this
+      if (CTP().checkLogin()) {
+        let params = {
+          userId: that.session.user.userId,
+          nick: that.nickName || that.wechat.nickName,
+          account: that.accountValue,
+
+          nonce: 'abc',
+          format: 'json',
+          v: '1.0',
+          method: 'user.save',
+          locale: 'zh_CN',
+          appKey: that.session.appKey,
+          sessionId: that.session.sessionId,
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: params,
+          url: '/msp-cas/router',
+          success: function (e) {
+            wx.setStorageSync('session', JSON.stringify(e.data))
+            console.log('登陆信息')
+            console.log(JSON.parse(wx.getStorageSync('session')))
+            wx.navigateBack({
+              delta: 3
+            })
+          }
+        })
+      }
+    }
+
+    onShow () {
       console.log('完善资料show。。。')
+      let myCarItemBak = wx.getStorageSync('myCarItem')
+      if (myCarItemBak !== '') {
+        this.myCarItem = JSON.parse(myCarItemBak)
+        console.log('从缓存中获取到的车信息myCarItem:')
+        console.log(this.myCarItem)
+      }
+      this.$apply()
     }
 
     onLoad() {
@@ -139,12 +185,6 @@
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.wechat = CTP().weChatAccount
-      let myCarItemBak = wx.getStorageSync('myCarItem')
-      if (myCarItemBak !== '') {
-        this.myCarItem = JSON.parse(myCarItemBak)
-        console.log('获取到的车信息myCarItem:')
-        console.log(this.myCarItem)
-      }
       this.$apply()
     }
 
