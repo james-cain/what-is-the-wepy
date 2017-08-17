@@ -32,7 +32,7 @@
     line-height: 40px;
     outline: none;
     margin: 30px 5%;
-    background-color: rgb(47, 185, 195);
+    background-color: #24b0d8;
     color: #fff;
     text-align: center;
     border: 0;

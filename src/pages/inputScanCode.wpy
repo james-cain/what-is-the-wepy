@@ -199,7 +199,6 @@
             })
             wx.setStorageSync('pileDetails', JSON.stringify(data.data))
             console.log('pileDetails:')
-            console.log(data.data)
             console.log(JSON.parse(wx.getStorageSync('pileDetails')))
             wx.navigateTo({
               url: 'startElectry'

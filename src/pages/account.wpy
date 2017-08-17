@@ -138,6 +138,7 @@
     position: absolute;
     top: 80px;
     right: 20px;
+    z-index: 20;
 }
 
 .add-more {
@@ -258,6 +259,11 @@
       })
     }
     methods = {
+      goToAddMoney (e) {
+        wx.navigateTo({
+          url: 'addMoney'
+        })
+      },
       goToTransfer (e) {
         wx.navigateTo({
           url: 'transfer'
@@ -276,11 +282,28 @@
 
     }
 
+    onShow () {
+      // this.balanceDetailList()
+      // this.$apply()
+    }
+
     onLoad () {
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.balance = this.session.user.balance
       this.balanceDetailList()
+      this.$apply()
+    }
+
+    onUnload () {
+      this.balance = ''
+      this.pageNo = 1
+      this.pageSize = 10
+      this.isShow = false
+      this.detailList.length = 0
+      this.currentList.length = 0
+      this.isMore = true
+      this.loading = false
       this.$apply()
     }
   }

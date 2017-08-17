@@ -67,6 +67,8 @@
     color: #333;
     font-style: normal;
     padding: 0 5px;
+    display: inline-block;
+    width: 50%;
 }
 .transfer-obj-list-title {
     height: 35px;
@@ -132,7 +134,7 @@
           <view class="list-tips-title">无转账联系人</view>
         </view>
         <view class="transfer-details-list" wx:if="{{!isShow}}">
-          <view class="transfer-detail-item" wx:for="{{detailList}}" wx:for-item="detail" wx:key="userId" @tap="goToSure(index)">
+          <view class="transfer-detail-item" wx:for="{{detailList}}" wx:for-item="detail" wx:key="userId" @tap="goToSure({{index}})">
             <view class="transfer-obj-list-icon">
               <image src="{{detail.img}}"/>
             </view>
@@ -190,7 +192,7 @@
           that.phoneValue = e.detail.value
           if (that.phoneValue) {
             that.nextBtnProperty.disabled = false
-            that.nextBtnProperty.backcolor = '#2fb9c3'
+            that.nextBtnProperty.backcolor = '#24b0d8'
           } else {
             that.nextBtnProperty.disabled = true
             that.nextBtnProperty.backcolor = '#cccccc'
@@ -320,6 +322,16 @@
     onLoad () {
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.$apply()
+    }
+
+    onUnload () {
+      this.pageNo = 1
+      this.detailList.length = 0
+      this.currentList.length = 0
+      this.isShow = false
+      this.isMore = true
+      this.loading = false
       this.$apply()
     }
   }

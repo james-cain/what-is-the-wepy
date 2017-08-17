@@ -364,7 +364,7 @@
                   })
                 } else {
                   wx.showToast({
-                    title: '服务端异常',
+                    title: e.data.message,
                     icon: 'loading',
                     duration: 2000
                   })
@@ -420,7 +420,7 @@
           let getConfigFlg = setInterval(function () {
             console.log('设置的最低阈值为：' + that.configThreshold.promptThreshold)
             if (typeof that.configThreshold.promptThreshold !== 'undefined') {
-              if (that.session.user.balance <= that.configThreshold.promptThreshold) {
+              if (that.session.user.balance * 1 <= that.configThreshold.promptThreshold * 1) {
                 wx.showModal({
                   title: '注意',
                   content: '当前余额为' + that.session.user.balance + '元，请及时充值'
@@ -439,21 +439,22 @@
     onLoad() {
       let se = CTP().session
       let that = this
-      this.configThreshold = JSON.parse(wx.getStorageSync('configThreshold'))
+      let configThreshold = wx.getStorageSync('configThreshold')
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.pileDetails = JSON.parse(wx.getStorageSync('pileDetails'))
       this.panelH = wx.getStorageSync('windowH') - 320
       console.log('阈值情况：')
-      console.log(this.configThreshold)
-      if (this.configThreshold === '' || this.configThreshold === undefined) {
+      console.log(configThreshold)
+      if (configThreshold === '' || configThreshold === undefined) {
         console.log('通过接口调用获取阈值')
         this.getConfigThreshold()
       } else {
         console.log('通过缓存调用获取阈值')
+        this.configThreshold = JSON.parse(configThreshold)
         let getConfigFlg = setInterval(function () {
           console.log('设置的最低阈值为：' + that.configThreshold.promptThreshold)
           if (typeof that.configThreshold.promptThreshold !== 'undefined') {
-            if (that.session.user.balance <= that.configThreshold.promptThreshold) {
+            if (that.session.user.balance * 1 <= that.configThreshold.promptThreshold * 1) {
               wx.showModal({
                 title: '注意',
                 content: '当前余额为' + that.session.user.balance + '元，请及时充值'

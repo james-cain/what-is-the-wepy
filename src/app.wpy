@@ -122,20 +122,33 @@
               success: function (e) {
                 console.log('获取微信用户openid和sessionkey：')
                 console.log(e)
-                wepy.getUserInfo({
-                  success (res) {
-                    let userInfo = res.userInfo
-                    weChatAccount.nickName = userInfo.nickName
-                    weChatAccount.avatarUrl = userInfo.avatarUrl
-                    weChatAccount.gender = userInfo.gender
-                  }
-                })
                 if (e.data.state === 0) {
-                  weChatAccount.id = e.data.data.openid
+                  wepy.getUserInfo({
+                    success (res) {
+                      let userInfo = res.userInfo
+                      weChatAccount.nickName = userInfo.nickName
+                      weChatAccount.avatarUrl = userInfo.avatarUrl
+                      weChatAccount.gender = userInfo.gender
+                      weChatAccount.id = e.data.data.openid
+                      wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
+                      console.log('获取到微信信息：')
+                      console.log(weChatAccount)
+                    }
+                  })
                 } else {
-                  weChatAccount.id = ''
+                  wepy.getUserInfo({
+                    success (res) {
+                      let userInfo = res.userInfo
+                      weChatAccount.nickName = userInfo.nickName
+                      weChatAccount.avatarUrl = userInfo.avatarUrl
+                      weChatAccount.gender = userInfo.gender
+                      weChatAccount.id = ''
+                      wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
+                      console.log('获取到微信信息：')
+                      console.log(weChatAccount)
+                    }
+                  })
                 }
-                wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
               },
               fail: function (e) {
                 console.log('获取微信用户失败：')

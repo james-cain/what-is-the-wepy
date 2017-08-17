@@ -35,7 +35,7 @@
       line-height: 40px;
       .comment-num {
         display: inline-block;
-        width: 24px;
+        width: 30px;
         height: 18px;
         line-height: 22px;
         float: right;
@@ -44,7 +44,7 @@
       }
       .good-num {
         display: inline-block;
-        width: 24px;
+        width: 30px;
         height: 18px;
         line-height: 22px;
         padding-left: 4px;

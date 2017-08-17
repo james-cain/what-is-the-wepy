@@ -361,6 +361,21 @@
     }
 
     onShow () {
+      // let chargingOrderCode = wx.getStorageSync('chargingOrderCode')
+      // let chargedPayment = JSON.parse(wx.getStorageSync('chargedPayment'))
+      // if (chargedPayment === '' || chargedPayment === undefined) {
+      //   this.getOrderDetails(chargingOrderCode)
+      // } else {
+      //   this.chargedPayment = chargedPayment
+      // }
+      // console.log('')
+      // this.getStationTag()
+      // this.$apply()
+    }
+
+    onLoad () {
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
       let chargingOrderCode = wx.getStorageSync('chargingOrderCode')
       let chargedPayment = JSON.parse(wx.getStorageSync('chargedPayment'))
       if (chargedPayment === '' || chargedPayment === undefined) {
@@ -373,9 +388,31 @@
       this.$apply()
     }
 
-    onLoad () {
-      let se = CTP().session
-      this.session = se === '' || se === null ? '' : JSON.parse(se)
+    onUnload () {
+      this.star = [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+      this.currentStar = 0
+      this.labelList = []
+      this.labelStar = [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+      for (let key in this.selectedLabel) {
+        this.selectedLabel[key] = false
+      }
+      this.score = 0
+      this.comment = ''
+      this.labels = []
       this.$apply()
     }
   }

@@ -81,7 +81,7 @@
   </view>
   <view id="improve-info-form-container">
     <form id="ctp-user-bind-form">
-      <view class="container-item nickname"><input class="txt" value="{{weChatAccount.name}}" type="text" placeholder="请输入昵称"/></view>
+      <view class="container-item nickname"><input class="txt" value="{{wechat.nickName}}" type="text" placeholder="请输入昵称"/></view>
       <view class="container-item account"><input class="txt" type="text" placeholder="请输入登录账号(只能设置一次)"/></view>
       <view class="container-item car" @tap="selectedCar">
         <view><image src="{{myCarItem.vehicleBrandImg}}" style="height: 20px; width: 20px;"></image></view>
@@ -106,7 +106,8 @@
       weChatAccount: {
         name: 'jamescain'
       },
-      myCarItem: ''
+      myCarItem: '',
+      wechat: ''
     }
 
     methods = {
@@ -131,6 +132,13 @@
 
     onShow() {
       console.log('完善资料show。。。')
+    }
+
+    onLoad() {
+      console.log('完善资料load。。。')
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.wechat = CTP().weChatAccount
       let myCarItemBak = wx.getStorageSync('myCarItem')
       if (myCarItemBak !== '') {
         this.myCarItem = JSON.parse(myCarItemBak)
@@ -140,10 +148,8 @@
       this.$apply()
     }
 
-    onLoad() {
-      console.log('完善资料load。。。')
-      let se = CTP().session
-      this.session = se === '' || se === null ? '' : JSON.parse(se)
+    onUnload () {
+
     }
   }
 </script>

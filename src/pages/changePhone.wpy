@@ -182,12 +182,12 @@
         let that = this
         let length = e.detail.value.length
         if (length === 11) {
-          that.getCodeBtnProperty2.titleColor = '#2fb9c3'
+          that.getCodeBtnProperty2.titleColor = '#24b0d8'
           that.getCodeBtnProperty2.disabled = false
           that.phoneValue2 = e.detail.value
           if (that.phoneValue2 && that.codeValue2) {
             that.nextBtnProperty2.disabled = false
-            that.nextBtnProperty2.backcolor = '#2fb9c3'
+            that.nextBtnProperty2.backcolor = '#24b0d8'
           } else {
             that.nextBtnProperty2.disabled = true
             that.nextBtnProperty2.backcolor = '#cccccc'
@@ -300,7 +300,7 @@
         that.codeValue = e.detail.value
         if (that.phoneValue && that.codeValue) {
           that.nextBtnProperty.disabled = false
-          that.nextBtnProperty.backcolor = '#2fb9c3'
+          that.nextBtnProperty.backcolor = '#24b0d8'
         } else {
           that.nextBtnProperty.disabled = true
           that.nextBtnProperty.backcolor = '#cccccc'
@@ -313,7 +313,7 @@
         that.codeValue2 = e.detail.value
         if (that.phoneValue2 && that.codeValue2) {
           that.nextBtnProperty2.disabled = false
-          that.nextBtnProperty2.backcolor = '#2fb9c3'
+          that.nextBtnProperty2.backcolor = '#24b0d8'
         } else {
           that.nextBtnProperty2.disabled = true
           that.nextBtnProperty2.backcolor = '#cccccc'

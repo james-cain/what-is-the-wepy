@@ -42,6 +42,9 @@
     height: 100%;
     width: 35px;
   }
+  .search-input {
+    height: 40px;
+  }
   .search-del-area {
     position: relative;
     height: 100%;
@@ -53,7 +56,7 @@
       width: 16px;
       height: 16px;
       left: 11px;
-      top: 5px;
+      top: 11px;
     }
     &-input {
       flex: 1;
@@ -62,7 +65,7 @@
       position:relative;
       width: 16px;
       height: 16px;
-      top: 5px;
+      top: 11px;
       left: 2px;
     }
   }
@@ -740,7 +743,7 @@
           let latitudeFix = that.point.latitude
           let mapControls = that.mapControls
           // 过滤条件
-          let mapFilter = wx.getStorageSync('mapFilter') !== '' ? JSON.parse(wx.getStorageSync('mapFilter')) : {}
+          let mapFilter = wx.getStorageSync('mapFilter') !== '' ? JSON.parse(wx.getStorageSync('mapFilter')) : ''
           that.mapTop = that.menuHeight
           that.controls = mapControls
           that.getPileListParams.longitude = longitudeFix
@@ -748,24 +751,29 @@
           CTP().checkSession(CTP().weChatAccount, {
             // 用户存在
             success: function (e) {
+              console.log('获取到用户信息：')
+              console.log(e)
               if (mapFilter !== '') {
                 console.log('查询地图数据，走选择过滤条件分支')
                 that.getPileList(e, mapFilter)
                 // 清空过滤条件
                 wx.setStorageSync('mapFilter', '')
               } else {
+                console.log('获取到用户信息2：')
                 console.log('查询地图数据，走没有任何条件分支')
-                that.getPileList('e', {})
+                that.getPileList(e, {})
               }
             },
             // 用户不存在
             fail: function (e) {
               if (mapFilter !== '') {
+                console.log('获取到用户信息3：')
                 console.log('查询地图数据，走选择过滤条件分支')
                 that.getPileList('', mapFilter)
                 // 清空过滤条件
                 wx.setStorageSync('mapFilter', '')
               } else {
+                console.log('获取到用户信息4：')
                 console.log('查询地图数据，走没有任何条件分支')
                 that.getPileList('', {})
               }

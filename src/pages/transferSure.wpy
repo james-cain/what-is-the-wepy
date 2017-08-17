@@ -64,7 +64,7 @@
     margin-left: 20px;
 }
 .transfer-amount input {
-  width: 90%;
+  width: 85%;
   height: 80px;
   float:right;
 }
@@ -95,7 +95,6 @@
   margin-bottom: 20px;
   input {
     width: 75%;
-    text-indent: 10px;
     height: 50px;
     border: 0;
     outline: none;
@@ -193,12 +192,12 @@
         <button style="color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="submit" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">确定转账</button>
       </view>
       <view class="transfer-finish" wx:if="{{!isShow}}">
-        <view class="transfer-obj-details-main" style="padding-bottom: 20px;">
+        <view class="transfer-obj-details-main" style="padding-bottom: 20px; padding-top: 10px;">
             <view class="transfer-obj-details-main-icon">
                 <image style="width: 60px; height: 60px;" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_finish_payment_icon@2x.png"/>
             </view>
-            <view class="transfer-obj-details-name" style="font-weight: bold;color: #46b97e;height: 25px; line-height: 25px;">转账成功</view>
-            <view class="transfer-obj-details-tel"><text class="transfer-user-phone" style="font-style: normal;">{{transferUser.phone}}</text>已收到你的转账</view>
+            <view class="transfer-obj-details-name" style="font-weight: bold;color: #46b97e;height: 25px; line-height: 25px;text-align: center;">转账成功</view>
+            <view class="transfer-obj-details-tel" style="text-align: center;"><text class="transfer-user-phone" style="font-style: normal">{{transferUser.phone}}</text>已收到你的转账</view>
         </view>
         <view class="transfer-obj-done-amount">
             <text class="transfer-user-amount">{{amountValue}}</text><text class="transfer-obj-done-amount-i">元</text>
@@ -214,7 +213,6 @@
 <script>
   import wepy from 'wepy'
   import CTP from '../utils/ajax'
-  import MD5 from '../utils/Md5'
   
   export default class TransferSure extends wepy.page {
     config = {
@@ -248,12 +246,12 @@
         let that = this
         let length = e.detail.value.length
         if (length !== 0) {
-          that.getCodeBtnProperty.titleColor = '#2fb9c3'
+          that.getCodeBtnProperty.titleColor = '#24b0d8'
           that.getCodeBtnProperty.disabled = false
           that.amountValue = e.detail.value
           if (that.amountValue && that.codeValue) {
             that.nextBtnProperty.disabled = false
-            that.nextBtnProperty.backcolor = '#2fb9c3'
+            that.nextBtnProperty.backcolor = '#24b0d8'
           } else {
             that.nextBtnProperty.disabled = true
             that.nextBtnProperty.backcolor = '#cccccc'
@@ -281,7 +279,7 @@
         that.getCodeBtnProperty.loading = true
         let number = 60
         let paramsEvaluation = {
-          mobile: that.transferUser.phone,
+          mobile: that.session.user.phone,
           reason: 'transfer',
           validCode: '',
 
@@ -326,7 +324,7 @@
         that.codeValue = e.detail.value
         if (that.amountValue && that.codeValue) {
           that.nextBtnProperty.disabled = false
-          that.nextBtnProperty.backcolor = '#2fb9c3'
+          that.nextBtnProperty.backcolor = '#24b0d8'
         } else {
           that.nextBtnProperty.disabled = true
           that.nextBtnProperty.backcolor = '#cccccc'
@@ -340,7 +338,7 @@
           fromUserId: that.session.user.userId,
           toUserId: that.transferUser.userId,
           transferAmount: that.amountValue,
-          validCode: MD5()(that.codeValue),
+          validCode: that.codeValue,
           remark: that.remarkValue,
 
           nonce: 'abc',
@@ -402,6 +400,27 @@
     onLoad () {
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.$apply()
+    }
+
+    onUnload () {
+      this.isShow = true
+      this.transferUser = ''
+      this.amountValue = ''
+      this.remarkValue = ''
+      this.codeValue = ''
+      this.getCodeBtnProperty = {
+        titleColor: '#B4B4B4',
+        disabled: true,
+        loading: false,
+        title: '获取验证码'
+      }
+      this.nextBtnProperty = {
+        backcolor: '#CCCCCC',
+        disabled: true,
+        loading: false
+      }
+      this.codeTfFocus = false
       this.$apply()
     }
   }
