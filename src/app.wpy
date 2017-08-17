@@ -36,7 +36,10 @@
         'pages/changePhone',
         'pages/comments',
         'pages/about',
-        'pages/mineInfoEdit'
+        'pages/mineInfoEdit',
+        'pages/transfer',
+        'pages/transferDone',
+        'pages/transferSure'
       ],
       'window': {
         'navigationBarBackgroundColor': '#000000',

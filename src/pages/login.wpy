@@ -78,7 +78,7 @@
     </form>
     <view class="goto">
       <view class="register" @tap="gotoregister">注册</view>
-      <view class="forget" @tap="gotoforget">忘记密码</view>
+      <!-- <view class="forget" @tap="gotoforget">忘记密码</view> -->
     </view>
   </view>
 </template>

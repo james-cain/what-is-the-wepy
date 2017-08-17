@@ -185,7 +185,7 @@
       <view class="myOrderDetails-station" @tap.stop="goToStation({{myOrderDetails.siteCode}})">
         <view class="myOrderDetails-station-arrow"></view>
         <view class="img">
-            <image src="{{myOrderDetails.img}}"/>
+            <image src="{{myOrderDetails.img === null ? 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_station@2x.png' : myOrderDetails.img}}"/>
         </view>
         <view class="station-dt">{{myOrderDetails.siteName}}</view>
         <view class="txt">
@@ -282,6 +282,8 @@
         success: function (e) {
           console.log('获取到订单详情信息：')
           console.log(e)
+          that.myOrderDetails = e.data.data
+          that.$apply()
         }
       })
     }
@@ -308,7 +310,7 @@
           success: function (e) {
             console.log('在详情页中获取到充电站信息：')
             console.log(e)
-            wx.setStorageSync('stakeDetails', JSON.stringify(e.data.data))
+            wx.setStorageSync('stakeDetails', JSON.stringify(e.data))
             wx.navigateTo({
               url: 'station'
             })
