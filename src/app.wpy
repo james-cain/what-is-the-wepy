@@ -55,7 +55,8 @@
     }
 
     globalData = {
-      userInfo: null
+      userInfo: null,
+      serverUrl: 'https://mspshow.szcomtop.com'
     }
     // 全局变量对象
     __globalVal = {}
@@ -84,6 +85,7 @@
     }
 
     onLaunch() {
+      let that = this
       wx.getSystemInfo({
         success: (res) => {
           let kScreenW = res.windowWidth / 375
@@ -113,7 +115,7 @@
             }
 
             wepy.request({
-              url: 'https://mspshow.szcomtop.com/msp-charge/miniapp/session_key',
+              url: that.globalData.serverUrl + '/msp-charge/miniapp/session_key',
               method: 'GET',
               dataType: 'json',
               data: _params,

@@ -698,6 +698,7 @@
 
     onLoad () {
       let that = this
+      console.log('全局路由变量：' + this.$parent.globalData.serverUrl)
       let menuHeight = 49 * wx.getStorageSync('kScreenH')
       let mapHeight = wx.getStorageSync('windowH') - menuHeight
       that.markerW = 20 * wx.getStorageSync('kScreenW')

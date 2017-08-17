@@ -1,0 +1,408 @@
+<style lang="less">
+.transfer-obj-details {
+    height: 120px;
+    border-bottom: 1px solid #e5e5e5;
+    text-align: center;
+    padding: 20px 0;
+    background: #fff;
+}
+.transfer-obj-details-main-icon {
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.transfer-obj-details-main-icon image {
+    width: 60px;
+    height: 60px;
+}
+.transfer-obj-details-name {
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    color: #333;
+    font-size: 15px;
+    margin: 0 auto;
+    display: block;
+}
+.transfer-obj-details-tel {
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    font-size: 13px;
+    margin: 0 auto;
+    color: #999;
+    display: block;
+}
+.transfer-obj-details-account {
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 5px 0;
+}
+.transfer-obj-details-account-amount {
+    height: 40px;
+    line-height: 40px;
+    color: #999;
+    font-size: 15px;
+    padding:  0 20px;
+    font-weight: normal;
+}
+.transfer-obj-details-account-amount text {
+    float: right;
+}
+.transfer-obj-details-account-amount text text {
+    color: #39b476;
+}
+.transfer-amount {
+    height: 80px;
+    line-height: 80px;
+    font-size: 40px;
+    color: #333;
+    border-bottom: 1px solid #e5e5e5;
+    margin-left: 20px;
+}
+.transfer-amount input {
+  width: 90%;
+  height: 80px;
+  float:right;
+}
+.transfer-remark {
+    height: 40px;
+    line-height: 40px;
+}
+.transfer-remark input {
+    width: 100%;
+    height: 40px;
+    border: 0;
+    outline: none;
+    font-size: 15px;
+    margin-left: 20px;
+}
+.transfer-validate-code {
+    border-top: 1px solid #e5e5e5;
+    height: 40px;
+    line-height: 40px;
+    font-size: 15px;
+}
+.sendCode {
+  width: 100%;
+  height: 50px;
+  border: 1px solid #e5e5e5;
+  border-width: 1px 0;
+  background: #fff;
+  margin-bottom: 20px;
+  input {
+    width: 75%;
+    text-indent: 10px;
+    height: 50px;
+    border: 0;
+    outline: none;
+    display: inline-block;
+    padding: 0px 20px;
+    box-sizing: border-box;
+  }
+  .getCodeBtn {
+    display: inline-block;
+    width: 25%;
+    font-size: 13px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    float: right;
+    color: rgb(47, 185, 195);
+    text-decoration: none;
+  }
+}
+.transfer-sure-btn button{
+    display: block;
+    width: 90%;
+    height: 40px;
+    line-height: 40px;
+    outline: none;
+    margin: 30px 5%;
+    text-align: center;
+    border: 0;
+    border-radius: 3px;
+    font-size: 15px;
+    text-decoration: none;
+}
+.transfer-done-btn view{
+    display: block;
+    width: 90%;
+    height: 40px;
+    line-height: 40px;
+    outline: none;
+    margin: 30px 5%;
+    background-color: #24b0d8;
+    color: #fff;
+    text-align: center;
+    border: 0;
+    border-radius: 3px;
+    font-size: 15px;
+    text-decoration: none;
+}
+.transfer-obj-done-amount {
+    text-align: center;
+    width: 90%;
+    height: 100px;
+    line-height: 100px;
+    font-size: 35px;
+    color: #333;
+    margin: 0 auto;
+    border-top: 1px solid #e5e5e5;
+}
+.transfer-obj-done-amount .transfer-obj-done-amount-i {
+    font-size: 14px;
+    color: #999;
+    font-style: normal;
+}
+</style>
+
+<template>
+  <view class="homepage">
+    <view id="ctp-panel" style="background: #f5f5f5">
+      <view class="ctp-panel-transfer" wx:if="{{isShow}}">
+        <view class="transfer-obj-details">
+          <view class="transfer-obj-details-main">
+            <view class="transfer-obj-details-main-icon">
+              <image class="transfer-user-avatar" src="{{transferUser.avatarId && transferUser.avatarId !== 'http://mspshow.szcomtop.com/cloudfs/api/fs/view/'? transferUser.avatarId : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'}}"/>
+            </view>
+            <view class="transfer-obj-details-name">{{transferUser.nick === null || transferUser.nick === '' ? transferUser.account : transferUser.nick}}</view>
+            <view class="transfer-obj-details-tel">{{transferUser.phone}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="transfer-obj-details-account" wx:if="{{isShow}}">
+        <view class="transfer-obj-details-account-amount">
+          转账金额<text>(当前余额:<text class="user-balance">{{session.user.balance}}</text>)</text>
+        </view>
+        <view class="transfer-amount">
+          ¥<input class="transfer-amount-input" type="number" @input="amountInput" placeholder="填写转账金额" focus="true"/>
+        </view>
+        <view class="transfer-remark">
+          <input class="transfer-remark-input" type="text" maxlength="20" @input="remarkInput" placeholder="添加备注(20字内)"/>
+        </view>
+        <view class="transfer-validate-code sendCode">
+          <input class="transfer-validate-input" type="number" @input="codeInput" placeholder="填写收到的手机验证码" focus="{{codeTfFocus}}"/>
+          <button class="getCodeBtn" style="color: {{getCodeBtnProperty.titleColor}}" type="default" @tap="getCodeAct" disabled="{{getCodeBtnProperty.disabled}}">{{getCodeBtnProperty.title}}</button>
+        </view>
+      </view>
+      <view class="transfer-sure-btn btn" wx:if="{{isShow}}">
+        <button style="color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="submit" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">确定转账</button>
+      </view>
+      <view class="transfer-finish" wx:if="{{!isShow}}">
+        <view class="transfer-obj-details-main" style="padding-bottom: 20px;">
+            <view class="transfer-obj-details-main-icon">
+                <image style="width: 60px; height: 60px;" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_finish_payment_icon@2x.png"/>
+            </view>
+            <view class="transfer-obj-details-name" style="font-weight: bold;color: #46b97e;height: 25px; line-height: 25px;">转账成功</view>
+            <view class="transfer-obj-details-tel"><text class="transfer-user-phone" style="font-style: normal;">{{transferUser.phone}}</text>已收到你的转账</view>
+        </view>
+        <view class="transfer-obj-done-amount">
+            <text class="transfer-user-amount">{{amountValue}}</text><text class="transfer-obj-done-amount-i">元</text>
+        </view>
+        <view class="transfer-done-btn" @tap="finish">
+            <view class="transfer-done">完成</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import CTP from '../utils/ajax'
+  import MD5 from '../utils/Md5'
+  
+  export default class TransferSure extends wepy.page {
+    config = {
+      navigationBarTitleText: '转账'
+    }
+
+    data = {
+      session: '',
+      isShow: true,
+      transferUser: '',
+      amountValue: '',
+      remarkValue: '',
+      codeValue: '',
+      getCodeBtnProperty: {
+        titleColor: '#B4B4B4',
+        disabled: true,
+        loading: false,
+        title: '获取验证码'
+      },
+      nextBtnProperty: {
+        backcolor: '#CCCCCC',
+        disabled: true,
+        loading: false
+      },
+      codeTfFocus: false
+    }
+
+    methods = {
+      // 输入金额
+      amountInput (e) {
+        let that = this
+        let length = e.detail.value.length
+        if (length !== 0) {
+          that.getCodeBtnProperty.titleColor = '#2fb9c3'
+          that.getCodeBtnProperty.disabled = false
+          that.amountValue = e.detail.value
+          if (that.amountValue && that.codeValue) {
+            that.nextBtnProperty.disabled = false
+            that.nextBtnProperty.backcolor = '#2fb9c3'
+          } else {
+            that.nextBtnProperty.disabled = true
+            that.nextBtnProperty.backcolor = '#cccccc'
+          }
+        } else {
+          that.getCodeBtnProperty.titleColor = '#B4B4B4'
+          that.getCodeBtnProperty.disabled = true
+          that.nextBtnProperty.disabled = true
+          that.nextBtnProperty.backcolor = '#cccccc'
+        }
+        that.$apply()
+      },
+      // 输入备注
+      remarkInput (e) {
+        let that = this
+        that.remarkValue = e.detail.value
+        that.$apply()
+      },
+      // 获取验证码
+      getCodeAct () {
+        // if (checkNetWorkStatus() === false) {
+        //   console.log('网络错误')
+        // } else {
+        let that = this
+        that.getCodeBtnProperty.loading = true
+        let number = 60
+        let paramsEvaluation = {
+          mobile: that.transferUser.phone,
+          reason: 'transfer',
+          validCode: '',
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'user.sendvalidcode',
+          locale: 'zh_CN',
+          appKey: '',
+          sessionId: '',
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: paramsEvaluation,
+          url: '/msp-cas/router',
+          success: function (e) {
+            console.log('获取到的验证码：')
+            console.log(e)
+          }
+        })
+        let time = setInterval(function() {
+          console.log('进入定时器')
+          number--
+          that.getCodeBtnProperty.title = number + '秒后重发'
+          that.getCodeBtnProperty.disabled = true
+          that.$apply()
+          if (number === 0) {
+            that.getCodeBtnProperty.title = '重新获取'
+            that.getCodeBtnProperty.disabled = false
+            that.getCodeBtnProperty.loading = false
+            that.$apply()
+            clearInterval(time)
+          }
+        }, 1000)
+        that.codeTfFocus = true
+        that.$apply()
+        // }
+      },
+      // 输入验证码
+      codeInput (e) {
+        let that = this
+        that.codeValue = e.detail.value
+        if (that.amountValue && that.codeValue) {
+          that.nextBtnProperty.disabled = false
+          that.nextBtnProperty.backcolor = '#2fb9c3'
+        } else {
+          that.nextBtnProperty.disabled = true
+          that.nextBtnProperty.backcolor = '#cccccc'
+        }
+        that.$apply()
+      },
+      // 转账提交
+      submit () {
+        let that = this
+        let _params = {
+          fromUserId: that.session.user.userId,
+          toUserId: that.transferUser.userId,
+          transferAmount: that.amountValue,
+          validCode: MD5()(that.codeValue),
+          remark: that.remarkValue,
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'balance.transfer.submit',
+          locale: 'zh_CN',
+          appKey: that.session.appKey,
+          sessionId: that.session.sessionId,
+          timestamp: new Date().getTime()
+        }
+        that.codeTfFocus = false
+        // if (checkNetWorkStatus() === false) {
+        //   console.log('网络错误')
+        // } else {
+        that.nextBtnProperty.loading = true
+        CTP().Ajax({
+          params: _params,
+          url: '/msp-charge/router',
+          success: function (e) {
+            console.log('转账完成信息：')
+            console.log(e)
+            let data = e.data
+            if (data.state === 0) {
+              that.isShow = false
+            } else if (data.code === 9) {
+              wx.showToast({
+                title: data.subErrors[0].message,
+                icon: 'loading',
+                duraction: 2000
+              })
+            } else {
+              wx.showToast({
+                title: data.message,
+                icon: 'loading',
+                duraction: 2000
+              })
+            }
+            that.nextBtnProperty.loading = false
+            that.$apply()
+          }
+        })
+        // }
+      },
+      finish (e) {
+        wx.navigateBack({
+          delta: 2
+        })
+      }
+    }
+
+    onShow () {
+      this.transferUser = JSON.parse(wx.getStorageSync('transferUser'))
+      console.log('待转账人信息：')
+      console.log(this.transferUser)
+      this.$apply()
+    }
+
+    onLoad () {
+      let se = CTP().session
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.$apply()
+    }
+  }
+</script>

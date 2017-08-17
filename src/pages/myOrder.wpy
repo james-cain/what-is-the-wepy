@@ -9,6 +9,7 @@
       color: #b7bec8;
       height: 40px;
       line-height: 40px;
+      text-align: center;
     }
   }
 }
@@ -258,16 +259,23 @@
           console.log('获取订单列表')
           console.log(e)
           let data = e.data
-          that.myOrderList.length = 0
-          that.myOrderList = data.data
-          if (data.count < that.pageSize) {
-            that.isNoMore = true
-            that.showInfo = '没有更多数据了！'
-          } else {
-            that.showInfo = '加载更多'
+          if (data.state === 0) {
+            if (data.data.length === 0 && that.orderList.length === 0) {
+              that.isShow = true
+            } else {
+              that.isShow = false
+              that.myOrderList.length = 0
+              that.myOrderList = data.data
+              if (data.count < that.pageSize) {
+                that.isNoMore = true
+                that.showInfo = '没有更多数据了！'
+              } else {
+                that.showInfo = '加载更多'
+              }
+              that.myOrderList2OrderList()
+            }
+            that.$apply()
           }
-          that.$apply()
-          that.myOrderList2OrderList()
         }
       })
     }
@@ -345,10 +353,14 @@
 
     }
 
+    onShow () {
+      this.initMyOrder('')
+      this.$apply()
+    }
+
     onLoad() {
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
-      this.initMyOrder('')
       this.$apply()
     }
   }

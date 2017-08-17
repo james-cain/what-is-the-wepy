@@ -68,7 +68,9 @@
 
 .account-details-list-title {
     color: #666;
-    margin-left: 10px;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    text-indent: 10px;
     height: 30px;
     width: 100%;
     line-height: 30px;
@@ -121,6 +123,7 @@
     color: #b7bec8;
     height: 40px;
     line-height: 40px;
+    text-align: center;
 }
 
 .add-account-btn {
@@ -170,8 +173,8 @@
           <view class="list-tips-title">无充值记录</view>
           <view>请点击右上角进行充值</view>
         </view>
-        <text class="account-details-list-title" wx:if="{{!isShow}}">账户明细</text>
-        <view class="account-details-list" wx:for="{{detailList}}" wx:for-item="detail" wx:if="{{!isShow}}">
+        <view class="account-details-list-title" wx:if="{{!isShow}}">账户明细</view>
+        <view class="account-details-list" wx:for="{{detailList}}" wx:for-item="detail" wx:if="{{!isShow}}" wx:key="createTime">
           <text class="{{detail.siteName === '充值' ? 'light-green-number' : ''}}">{{detail.chargeAmount}}</text>
           <view class="account-details-list-item-name">{{detail.siteName}}</view>
           <view class="account-details-list-item-date">{{detail.createTime}}</view>
@@ -234,16 +237,21 @@
           console.log(e)
           let data = e.data
           if (data.state === 0) {
-            that.currentList.length = 0
-            that.currentList = data.data
-            if (data.count < that.pageSize) {
-              that.isMore = false
+            if (data.data.length === 0 && that.detailList.length === 0) {
+              that.isShow = true
             } else {
-              that.isMore = true
+              that.isShow = false
+              that.currentList.length = 0
+              that.currentList = data.data
+              if (data.count < that.pageSize) {
+                that.isMore = false
+              } else {
+                that.isMore = true
+              }
+              that.currentList.forEach((e, index, arr) => {
+                that.detailList.push(e)
+              })
             }
-            that.currentList.forEach((e, index, arr) => {
-              that.detailList.push(e)
-            })
             that.$apply()
           }
         }
@@ -258,7 +266,8 @@
       more (e) {
         let that = this
         that.loading = true
-
+        that.pageNo++
+        that.balanceDetailList('append')
         that.$apply()
       }
     }

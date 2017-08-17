@@ -83,6 +83,7 @@ let CTP = function() {
   }
 
   function getHomeInfo (success) {
+    let that = this
     let curSession = JSON.parse(wx.getStorageSync('session'))
     let homeInfoParams = {
       userCode: curSession.user.userId,
@@ -107,6 +108,7 @@ let CTP = function() {
   }
 
   function checkSession (weChatAccount, fns) {
+    let that = this
     if (checkLogin()) {
       let curSession = JSON.parse(wx.getStorageSync('session'))
       fns.success(curSession)
