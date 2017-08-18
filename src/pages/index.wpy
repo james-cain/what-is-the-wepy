@@ -93,11 +93,7 @@
     color: rgb(47, 185, 195);
 }
 
-.history-list {
-    /*min-height: 30px;*/
-}
-
-.history-list p {
+.history-list view {
     padding-left: 10px;
     height: 30px;
     line-height: 30px;
@@ -115,8 +111,8 @@
          <view class="search-icon-area">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_search_box_icon@2x.png" mode="scaleToFill" class="search-icon"/>
          </view>
-         <input class="search-input" type="text" @focus="changeType" @confirm="search" placeholder="搜索站点" placeholder-style="font-size: 14px; color: #999999;" confirm-type="search"/>
-         <view class="search-del-area">
+         <input class="search-input" type="text" value="{{searchValue}}" @focus="changeType" @confirm="search" placeholder="搜索站点" placeholder-style="font-size: 14px; color: #999999;" confirm-type="search"/>
+         <view class="search-del-area" @tap="delete">
            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/s_text_view_delete_icon.png" mode="scaleToFill" class="search-delete"/>
          </view>
        </view>
@@ -126,8 +122,10 @@
     </view>
     <view class="search-sub-history" wx:if="{{isSearch}}">
       <view class="search-history-title">搜索历史</view>
-      <view class="history-list"></view>
-      <view class="btn-clear-history">清除历史</view>
+      <view class="history-list">
+        <view wx:for="{{searchHistory}}" wx:for-item="searchItem" @tap="hisSearch({{searchItem}})">{{searchItem}}</view>
+      </view>
+      <view class="btn-clear-history" @tap="clear">清除历史</view>
     </view>
     <view style="position: relative; width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px" wx:if="{{isSearch ? false : (switchType === 'map' ? false : true)}}">
       <menu :pileMenuList.sync="pileMenuList" ></menu>
@@ -420,11 +418,25 @@
             that.searchHistory = searchHistory
           }
         }
-        console.log('缸点开搜索界面查询历史记录信息：')
+        console.log('点开搜索界面查询历史记录信息：')
+        console.log(that.searchHistory)
+        this.$apply()
+      },
+      clear (e) {
+        console.log('删除历史记录')
+        let that = this
+        let se = CTP().session
+        if (se !== '') {
+          let session = JSON.parse(se)
+          wx.setStorageSync(session.user.userId + '_searchHistory', '')
+          that.searchHistory = []
+        }
+        console.log('点开搜索界面查询历史记录信息：')
         console.log(that.searchHistory)
         this.$apply()
       },
       search (e) {
+        console.log('通过输入搜索信息查询')
         let that = this
         let se = CTP().session
         this.searchFn(e.detail.value)
@@ -443,9 +455,18 @@
             that.searchHistory = searchHistory
           }
         }
-        that.isSearch = false
         console.log('搜索信息保存到缓存中：')
         console.log(that.searchHistory)
+        that.$apply()
+      },
+      hisSearch (keyWord, e) {
+        this.searchFn(keyWord)
+        console.log('通过历史信息查询')
+      },
+      delete (e) {
+        console.log('删除搜索框中的内容')
+        let that = this
+        that.searchValue = ''
         that.$apply()
       }
     }
@@ -607,6 +628,7 @@
           let data = e.data
           console.log('查询到的站点信息:')
           console.log(data)
+          that.isSearch = false
           // that.pileList = data.data
           // data.data.forEach((e, index, arr) => {
           //   markers.push(that.addMarker(e, index))
@@ -615,7 +637,7 @@
           // console.log('总站点数：' + markers.length)
           // console.log(markers)
           // that.markers = markers
-          // that.$apply()
+          that.$apply()
           wx.hideToast()
         }
       })
@@ -861,8 +883,8 @@
       console.log('全局路由变量：' + this.$parent.globalData.serverUrl)
       let menuHeight = 49 * wx.getStorageSync('kScreenH')
       let mapHeight = wx.getStorageSync('windowH') - menuHeight
-      that.markerW = 20 * wx.getStorageSync('kScreenW')
-      that.markerH = 30 * wx.getStorageSync('kScreenH')
+      that.markerW = 30 * wx.getStorageSync('kScreenW')
+      that.markerH = 45 * wx.getStorageSync('kScreenH')
       wx.setStorageSync('mapH', mapHeight)
       that.completeStatus = false
       wx.getLocation({
