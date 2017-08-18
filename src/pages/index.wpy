@@ -77,7 +77,6 @@
     top: 51px;
     z-index: 5;
     background: #fff;
-    display: none;
 }
 
 .search-history-title, .btn-clear-history {
@@ -116,7 +115,7 @@
          <view class="search-icon-area">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_search_box_icon@2x.png" mode="scaleToFill" class="search-icon"/>
          </view>
-         <input class="search-input" type="text" @input="search" placeholder="搜索站点" placeholder-style="font-size: 14px; color: #999999;" confirm-type="search"/>
+         <input class="search-input" type="text" @focus="changeType" @confirm="search" placeholder="搜索站点" placeholder-style="font-size: 14px; color: #999999;" confirm-type="search"/>
          <view class="search-del-area">
            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/s_text_view_delete_icon.png" mode="scaleToFill" class="search-delete"/>
          </view>
@@ -130,7 +129,7 @@
       <view class="history-list"></view>
       <view class="btn-clear-history">清除历史</view>
     </view>
-    <view style="position: relative; width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px" wx:if="{{!isSearch && switchType === 'map' ? false : true}}">
+    <view style="position: relative; width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px" wx:if="{{isSearch ? false : (switchType === 'map' ? false : true)}}">
       <menu :pileMenuList.sync="pileMenuList" ></menu>
       <tableList :pileTableList.sync="pileTableList"></tableList>
     </view>
@@ -309,7 +308,8 @@
       searchValue: '',
       type: '列表',
       markerH: 0,
-      markerW: 0
+      markerW: 0,
+      searchHistory: []
     }
 
     computed = {
@@ -405,9 +405,48 @@
           }
         }
       },
-      search (e) {
+      changeType (e) {
+        let that = this
+        let se = CTP().session
         this.isSearch = true
+        if (se !== '') {
+          let session = JSON.parse(se)
+          let searchHis = wx.getStorageSync(session.user.userId + '_searchHistory')
+          if (searchHis !== '') {
+            let searchHistory = JSON.parse(searchHis)
+            that.searchHistory = searchHistory
+          } else {
+            let searchHistory = []
+            that.searchHistory = searchHistory
+          }
+        }
+        console.log('缸点开搜索界面查询历史记录信息：')
+        console.log(that.searchHistory)
         this.$apply()
+      },
+      search (e) {
+        let that = this
+        let se = CTP().session
+        this.searchFn(e.detail.value)
+        if (se !== '') {
+          let session = JSON.parse(se)
+          let searchHis = wx.getStorageSync(session.user.userId + '_searchHistory')
+          if (searchHis !== '') {
+            let searchHistory = JSON.parse(searchHis)
+            searchHistory.push(e.detail.value)
+            wx.setStorageSync(session.user.userId + '_searchHistory', JSON.stringify(searchHistory))
+            that.searchHistory = searchHistory
+          } else {
+            let searchHistory = []
+            searchHistory.push(e.detail.value)
+            wx.setStorageSync(session.user.userId + '_searchHistory', JSON.stringify(searchHistory))
+            that.searchHistory = searchHistory
+          }
+        }
+        that.isSearch = false
+        console.log('搜索信息保存到缓存中：')
+        console.log(that.searchHistory)
+        that.$apply()
       }
     }
 
@@ -522,6 +561,64 @@
           }
         })
       }
+    }
+    // 搜索按钮点击
+    searchFn (keyWord) {
+      console.log('搜索地图基站：')
+      wx.showToast({
+        title: '正在搜索',
+        icon: 'loading',
+        duraction: 5000,
+        mask: true
+      })
+      // 检查网络
+      // if (checkNetWorkStatus() === false) {
+      //   console.log('网络错误')
+      // } else {
+      let that = this
+      let session = CTP().session
+      let userCode = session === null || session === '' ? '' : JSON.parse(session).user.userId
+      let appKey = session === null || session === '' ? '' : JSON.parse(session).appKey
+
+      let _params = {
+        userCode: userCode,
+        longitude: that.getPileListParams.longitude,
+        latitude: that.getPileListParams.latitude,
+        keyword: keyWord,
+        chargePileType: '',
+        chargeRateType: '',
+        isFree: '',
+        sortType: '',
+        carType: '',
+        lstSite: '',
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'station.search',
+        locale: 'zh_CN',
+        appKey: appKey,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: _params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          let data = e.data
+          console.log('查询到的站点信息:')
+          console.log(data)
+          // that.pileList = data.data
+          // data.data.forEach((e, index, arr) => {
+          //   markers.push(that.addMarker(e, index))
+          // })
+
+          // console.log('总站点数：' + markers.length)
+          // console.log(markers)
+          // that.markers = markers
+          // that.$apply()
+          wx.hideToast()
+        }
+      })
     }
     // 进入充电详情页前数据获取
     stationData (siteCode, distance) {
