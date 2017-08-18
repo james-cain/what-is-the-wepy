@@ -70,6 +70,41 @@
     }
   }
 
+.search-sub-history {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 51px;
+    z-index: 5;
+    background: #fff;
+    display: none;
+}
+
+.search-history-title, .btn-clear-history {
+    background: #F5F5F5;
+    height: 30px;
+    font-size: 12px;
+    padding-left: 10px;
+    line-height: 30px;
+    color: #999;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.btn-clear-history {
+    color: rgb(47, 185, 195);
+}
+
+.history-list {
+    /*min-height: 30px;*/
+}
+
+.history-list p {
+    padding-left: 10px;
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 15px;
+}
 </style>
 <template>
    <view class="homepage">
@@ -87,14 +122,19 @@
          </view>
        </view>
        <view class="menu-switch" @tap="switchType">
-          {{switchType === 'map' ? '列表' : '地图'}}
+          {{isSearch ? '取消' : (switchType === 'map' ? '列表' : '地图')}}
        </view>
     </view>
-    <view style="position: relative; width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px" wx:if="{{switchType === 'map' ? false : true}}">
+    <view class="search-sub-history" wx:if="{{isSearch}}">
+      <view class="search-history-title">搜索历史</view>
+      <view class="history-list"></view>
+      <view class="btn-clear-history">清除历史</view>
+    </view>
+    <view style="position: relative; width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px" wx:if="{{!isSearch && switchType === 'map' ? false : true}}">
       <menu :pileMenuList.sync="pileMenuList" ></menu>
       <tableList :pileTableList.sync="pileTableList"></tableList>
     </view>
-    <map id="map" longitude="{{point.longitude}}" latitude="{{point.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px"  wx:if="{{switchType === 'map' ? true : false}}"></map>
+    <map id="map" longitude="{{point.longitude}}" latitude="{{point.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px"  wx:if="{{!isSearch && switchType === 'map' ? true : false}}"></map>
    </view>
 </template>
 
@@ -180,6 +220,8 @@
         }
       ],
       pileTableList: [],
+      pileList: [],
+      isSearch: false,
       switchType: 'map',
       // 菜单的高度
       menuHeight: 0,
@@ -193,24 +235,7 @@
         longitude: 0
       },
       // 站桩标志物
-      markers: [
-        // {
-        //   latitude: 22.562405,
-        //   longitude: 114.039072,
-        //   id: 0,
-        //   iconPath: '../images/c_map_stake_leisure@2x.png',
-        //   width: 20,
-        //   height: 30
-        // },
-        // {
-        //   latitude: 22.943099,
-        //   longitude: 114.357868,
-        //   id: 1,
-        //   iconPath: '../images/c_map_station_other_leisure@2x.png',
-        //   width: 20,
-        //   height: 30
-        // }
-      ],
+      markers: [],
       // 当前地图的缩放级别
       mapScale: 16,
       // 地图上不可移动的控件
@@ -253,17 +278,17 @@
           clickable: true
         },
         // 地图中心位置按钮
-        {
-          id: 3,
-          position: {
-            left: 169.5 * wx.getStorageSync('kScreenW'),
-            top: 245.5 * wx.getStorageSync('kScreenH'),
-            width: 35 * wx.getStorageSync('kScreenW'),
-            height: 35 * wx.getStorageSync('kScreenW')
-          },
-          iconPath: '../images/c_map_pin@2x.png',
-          clickable: false
-        },
+        // {
+        //   id: 3,
+        //   position: {
+        //     left: 169.5 * wx.getStorageSync('kScreenW'),
+        //     top: 245.5 * wx.getStorageSync('kScreenH'),
+        //     width: 35 * wx.getStorageSync('kScreenW'),
+        //     height: 35 * wx.getStorageSync('kScreenW')
+        //   },
+        //   iconPath: '../images/c_map_pin@2x.png',
+        //   clickable: false
+        // },
         // 扫描二维码控件按钮
         {
           id: 4,
@@ -305,16 +330,23 @@
       },
       switchType (e) {
         let that = this
-        if (that.switchType === 'map') {
-          that.switchType = 'table'
-          that.initStakeList()
+        if (that.isSearch) {
+          that.isSearch = !that.isSearch
         } else {
-          that.switchType = 'map'
+          if (that.switchType === 'map') {
+            that.switchType = 'table'
+            that.initStakeList()
+          } else {
+            that.switchType = 'map'
+          }
         }
         that.$apply()
       },
       markertap (e) {
-
+        let detail = this.pileList[e.markerId]
+        let distance = (detail.distance * 1 / 1000).toFixed(2)
+        let siteCode = detail.siteCode
+        this.stationData(siteCode, distance)
       },
       regionchange (e) {
         console.log(e)
@@ -372,6 +404,10 @@
             })
           }
         }
+      },
+      search (e) {
+        this.isSearch = true
+        this.$apply()
       }
     }
 
@@ -487,12 +523,42 @@
         })
       }
     }
+    // 进入充电详情页前数据获取
+    stationData (siteCode, distance) {
+      let that = this
+      let session = CTP().session
+      let paramsDetails = {
+        userCode: session === null || session === '' ? '' : JSON.parse(session).user.userId,
+        siteCode: siteCode,
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'station.info',
+        locale: 'zh_CN',
+        appKey: session !== null || session === '' ? session.appKey : '',
+        sessionId: session !== null || session === '' ? session.sessionId : '',
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: paramsDetails,
+        url: '/msp-charge/router',
+        success: function (e) {
+          console.log('站点详情：')
+          console.log(e.data)
+          wx.setStorageSync('stakeDetails', JSON.stringify(e.data))
+          wx.navigateTo({
+            url: 'station?v=' + new Date().getTime() + '&distance=' + distance + '&currentPositionLat=' + that.point.latitude + '&currentPositionLng=' + that.point.longitude
+          })
+        }
+      })
+    }
     // 创建图表对象
-    addMarker (arg) {
+    addMarker (arg, index) {
       let that = this
       let workingState = arg.workingState
       let iconPath
       let marker = {}
+      marker.id = index
       marker.latitude = Number(arg.latitude)
       marker.longitude = Number(arg.longitude)
       // marker.id = arg.siteCode
@@ -587,6 +653,8 @@
           let data = e.data
           console.log('所有站点信息:')
           console.log(data)
+          that.pileList = data.data
+
           // markers.push({
           //   latitude: Number(that.getPileListParams.latitude),
           //   longitude: Number(that.getPileListParams.longitude),
@@ -595,16 +663,8 @@
           //   width: 20 * wx.getStorageSync('kScreenW'),
           //   height: 30 * wx.getStorageSync('kScreenH')
           // })
-          // markers.push({
-          //   latitude: Number(that.getPileListParams.latitude) + 2,
-          //   longitude: Number(that.getPileListParams.longitude) + 2,
-          //   id: 1,
-          //   iconPath: '/images/c_map_station_other_leisure@2x.png',
-          //   width: 20 * wx.getStorageSync('kScreenW'),
-          //   height: 30 * wx.getStorageSync('kScreenH')
-          // })
           data.data.forEach((e, index, arr) => {
-            markers.push(that.addMarker(e))
+            markers.push(that.addMarker(e, index))
           })
 
           console.log('总站点数：' + markers.length)
