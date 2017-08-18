@@ -210,7 +210,7 @@
   import wepy from 'wepy'
   import CTP from '../utils/ajax'
 
-  export default class Electring extends wepy.page {
+  export default class StartElectry extends wepy.page {
     config = {
       navigationBarTitleText: '充电'
     }
@@ -311,71 +311,70 @@
           }
           wx.showModal({
             title: '充电启动中...',
-            content: '如果长时间未启动成功,请检查充电枪是否连接成功。'
-          })
-          wx.redirectTo({
-            url: 'electring'
-          })
-          let params = {
-            userCode: that.session.user.userId,
-            chargingPileCode: that.pileDetails.chargePileCode + '01',
-            type: chargeType,
-            amount: chargingMoney,
+            content: '如果长时间未启动成功,请检查充电枪是否连接成功。',
+            success: (res) => {
+              let params = {
+                userCode: that.session.user.userId,
+                chargingPileCode: that.pileDetails.chargePileCode + '01',
+                type: chargeType,
+                amount: chargingMoney,
 
-            nonce: 'abc',
-            v: '1.0',
-            format: 'json',
-            method: 'charge.start',
-            locale: 'zh_CN',
-            appKey: that.session.appKey,
-            sessionId: that.session.sessionId,
-            timestamp: new Date().getTime()
-          }
-          CTP().Ajax({
-            params: params,
-            url: '/msp-charge/router',
-            success: function (e) {
-              console.log('启动充电返回值：')
-              console.log(e)
-              let state = e.data.state
-              if (state === 0) {
-                wx.setStorageSync('chargingOrderCode', e.data.data.orderCode)
-                wx.redirectTo({
-                  url: 'electring'
-                })
-              } else if (state === 2100) {
-                // 启动充电，有未支付订单
-                wx.showToast({
-                  title: '您订单未支付,请先支付订单后再充电',
-                  icon: 'loading',
-                  duration: 2000
-                })
-              } else if (state === 2102) {
-                // 该用户在当前枪有充电中的订单（重复启动充电的情况）
-                wx.redirectTo({
-                  url: 'electring'
-                })
-              } else {
-                if (e.data.code === 9) {
+                nonce: 'abc',
+                v: '1.0',
+                format: 'json',
+                method: 'charge.start',
+                locale: 'zh_CN',
+                appKey: that.session.appKey,
+                sessionId: that.session.sessionId,
+                timestamp: new Date().getTime()
+              }
+              CTP().Ajax({
+                params: params,
+                url: '/msp-charge/router',
+                success: function (e) {
+                  console.log('启动充电返回值：')
+                  console.log(e)
+                  let state = e.data.state
+                  if (state === 0) {
+                    wx.setStorageSync('chargingOrderCode', e.data.data.orderCode)
+                    wx.redirectTo({
+                      url: 'electring'
+                    })
+                  } else if (state === 2100) {
+                    // 启动充电，有未支付订单
+                    wx.showToast({
+                      title: '您订单未支付,请先支付订单后再充电',
+                      icon: 'loading',
+                      duration: 2000
+                    })
+                  } else if (state === 2102) {
+                    // 该用户在当前枪有充电中的订单（重复启动充电的情况）
+                    wx.redirectTo({
+                      url: 'electring'
+                    })
+                  } else {
+                    if (e.data.code === 9) {
+                      wx.showToast({
+                        title: e.data.subErrors[0].message,
+                        icon: 'loading',
+                        duration: 2000
+                      })
+                    } else {
+                      wx.showToast({
+                        title: e.data.message,
+                        icon: 'loading',
+                        duration: 2000
+                      })
+                    }
+                  }
+                },
+                fail: function () {
                   wx.showToast({
-                    title: e.data.subErrors[0].message,
-                    icon: 'loading',
-                    duration: 2000
-                  })
-                } else {
-                  wx.showToast({
-                    title: e.data.message,
+                    title: '请求超时',
                     icon: 'loading',
                     duration: 2000
                   })
                 }
-              }
-            },
-            fail: function () {
-              wx.showToast({
-                title: '请求超时',
-                icon: 'loading',
-                duration: 2000
               })
             }
           })

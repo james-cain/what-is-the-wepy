@@ -58,31 +58,6 @@
       userInfo: null,
       serverUrl: 'https://mspshow.szcomtop.com'
     }
-    // 全局变量对象
-    __globalVal = {}
-    // 全局bus总线变量
-    __messages = {}
-    // 全局订阅方法
-    subscribe (type, fn) {
-      if (typeof this.__messages[type] === 'undefined') {
-        this.__messages[type] = [fn]
-      } else {
-        this.__messages[type].push(fn)
-      }
-    }
-    // 全局发布方法
-    publish (type, args) {
-      if (!this.__messages[type]) {
-        return
-      }
-      let events = {
-        type: type,
-        args: args || {}
-      }
-      for (let i = 0; i < this.__messages[type].length; i++) {
-        this.__messages[type][i].call(this, events)
-      }
-    }
 
     onLaunch() {
       let that = this
@@ -97,8 +72,11 @@
         }
       })
       wx.login({
-        success: function (res) {
+        success: (res) => {
           let weChatAccount = {}
+          let _params = {
+            code: res.code
+          }
           // 清除weChatAccount和session
           console.log('每次登陆之前先把weChatAccount和session信息清除。。。')
           console.log('weChatAccount:', wx.getStorageSync('weChatAccount'))
@@ -109,68 +87,55 @@
           console.log('weChatAccount:', wx.getStorageSync('weChatAccount'))
           console.log('session:', wx.getStorageSync('session'))
           console.log('清除完成。。。')
-          if (res.code) {
-            let _params = {
-              code: res.code
-            }
-
-            wepy.request({
-              url: that.globalData.serverUrl + '/msp-charge/miniapp/session_key',
-              method: 'GET',
-              dataType: 'json',
-              data: _params,
-              success: function (e) {
-                console.log('获取微信用户openid和sessionkey：')
-                console.log(e)
-                if (e.data.state === 0) {
-                  wepy.getUserInfo({
-                    success (res) {
-                      let userInfo = res.userInfo
-                      weChatAccount.nickName = userInfo.nickName
-                      weChatAccount.avatarUrl = userInfo.avatarUrl
-                      weChatAccount.gender = userInfo.gender
-                      weChatAccount.id = e.data.data.openid
-                      wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
-                      console.log('获取到微信信息：')
-                      console.log(weChatAccount)
-                    }
-                  })
-                } else {
-                  wepy.getUserInfo({
-                    success (res) {
-                      let userInfo = res.userInfo
-                      weChatAccount.nickName = userInfo.nickName
-                      weChatAccount.avatarUrl = userInfo.avatarUrl
-                      weChatAccount.gender = userInfo.gender
-                      weChatAccount.id = ''
-                      wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
-                      console.log('获取到微信信息：')
-                      console.log(weChatAccount)
-                    }
-                  })
-                }
-              },
-              fail: function (e) {
-                console.log('获取微信用户失败：')
-                console.log(e)
-              }
+          if (!res.code) {
+            wx.showToast({
+              title: '获取微信用户数据超时，重新退出登录',
+              icon: 'loading',
+              duraction: 2000
             })
-          } else {
-            console.log('获取用户登录态失败！' + res.errMsg)
+            return
           }
-        }
-      })
-    }
-
-    getUserInfo(cb) {
-      const that = this
-      if (this.globalData.userInfo) {
-        return this.globalData.userInfo
-      }
-      wepy.getUserInfo({
-        success (res) {
-          that.globalData.userInfo = res.userInfo
-          cb && cb(res.userInfo)
+          wepy.request({
+            url: that.globalData.serverUrl + '/msp-charge/miniapp/session_key',
+            method: 'GET',
+            dataType: 'json',
+            data: _params,
+            success: (e) => {
+              console.log('获取微信用户openid和sessionkey：')
+              console.log(e)
+              if (e.data.state === 0) {
+                wepy.getUserInfo({
+                  success (res) {
+                    let userInfo = res.userInfo
+                    weChatAccount.nickName = userInfo.nickName
+                    weChatAccount.avatarUrl = userInfo.avatarUrl
+                    weChatAccount.gender = userInfo.gender
+                    weChatAccount.id = e.data.data.openid
+                    wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
+                    console.log('获取到微信信息：')
+                    console.log(weChatAccount)
+                  }
+                })
+              } else {
+                wepy.getUserInfo({
+                  success (res) {
+                    let userInfo = res.userInfo
+                    weChatAccount.nickName = userInfo.nickName
+                    weChatAccount.avatarUrl = userInfo.avatarUrl
+                    weChatAccount.gender = userInfo.gender
+                    weChatAccount.id = ''
+                    wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
+                    console.log('获取到微信信息：')
+                    console.log(weChatAccount)
+                  }
+                })
+              }
+            },
+            fail: (e) => {
+              console.log('获取微信用户失败：')
+              console.log(e)
+            }
+          })
         }
       })
     }

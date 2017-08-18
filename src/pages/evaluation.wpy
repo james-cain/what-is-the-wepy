@@ -292,7 +292,9 @@
               icon: 'success',
               duration: 2000
             })
-            wx.navigateBack()
+            wx.redirectTo({
+              url: 'myOrder'
+            })
           } else {
             wx.showToast({
               title: e.data.message,
@@ -380,12 +382,12 @@
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       let chargingOrderCode = wx.getStorageSync('chargingOrderCode')
-      let chargedPayment = JSON.parse(wx.getStorageSync('chargedPayment'))
-      if (chargedPayment === '' || chargedPayment === undefined) {
-        this.getOrderDetails(chargingOrderCode)
-      } else {
-        this.chargedPayment = chargedPayment
-      }
+      // let chargedPayment = JSON.parse(wx.getStorageSync('chargedPayment'))
+      // if (chargedPayment === '' || chargedPayment === undefined) {
+      this.getOrderDetails(chargingOrderCode)
+      // } else {
+      //   this.chargedPayment = chargedPayment
+      // }
       console.log('')
       this.getStationTag()
       this.$apply()

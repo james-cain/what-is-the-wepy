@@ -197,14 +197,6 @@
       }
     }
 
-    failMessage () {
-      wx.showToast({
-        title: '连接服务器失败',
-        icon: 'loading',
-        duration: 2000
-      })
-    }
-
     events = {}
 
     onLoad () {}

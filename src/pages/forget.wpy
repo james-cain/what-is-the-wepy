@@ -152,18 +152,6 @@
         disabled: true,
         loading: false
       },
-      // 请求参数
-      getCodeParams: {
-        mobile: ''
-      },
-      registerParams: {
-        mobile: '',
-        code: ''
-      },
-      ElectryUrl: {
-        getcode: '',
-        register: ''
-      },
       codeTfFocus: false
     }
 
@@ -171,11 +159,8 @@
       // 输入手机号
       phoneTfInput (e) {
         let that = this
-        let inputValue = e.detail.value
         let length = e.detail.value.length
         if (length === 11) {
-          that.getCodeParams.mobile = inputValue
-          that.registerParams.mobile = inputValue
           that.getCodeBtnProperty.titleColor = '#2fb9c3'
           that.getCodeBtnProperty.disabled = false
           that.phoneValue = e.detail.value
@@ -187,8 +172,6 @@
             that.nextBtnProperty.backcolor = '#cccccc'
           }
         } else {
-          that.getCodeParams.mobile = ''
-          that.registerParams.mobile = ''
           that.getCodeBtnProperty.titleColor = '#B4B4B4'
           that.getCodeBtnProperty.disabled = true
           that.nextBtnProperty.disabled = true

@@ -63,7 +63,6 @@
     position: absolute;
     left: 0;
     top: 180px;
-    overflow: hidden;
 }
 
 .account-details-list-title {
@@ -157,7 +156,7 @@
 </style>
 
 <template>
-  <view class="container">
+  <view class="homepage">
     <view id="charging-panel">
       <view class="charging-top-mask"></view>
       <view class="charging-top" style="height: 11.25rem; overflow:hidden;">
@@ -169,7 +168,7 @@
             我的余额(元) <view id="charging-top-code-transfer-btn" @tap="goToTransfer">转账</view>
         </view>
       </view>
-      <view class="account-details-list-box ctp-list-box">
+      <scroll-view scroll-y="true" class="account-details-list-box ctp-list-box">
         <view class="list-tips" wx:if="{{isShow}}">
           <view class="list-tips-title">无充值记录</view>
           <view>请点击右上角进行充值</view>
@@ -188,7 +187,7 @@
             正在加载...
           </view>
         </view>
-      </view>
+      </scroll-view>
     </view>
   </view>
 </template>

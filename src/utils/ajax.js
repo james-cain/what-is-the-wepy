@@ -7,7 +7,7 @@ let CTP = function() {
 
   let SERVER_URL = 'https://mspshow.szcomtop.com'
 
-  function checkLogin () {
+  checkLogin () {
     let curSession = wx.getStorageSync('session') === '' ? null : JSON.parse(wx.getStorageSync('session'))
     let bool = true
     if (curSession === null) {
@@ -27,22 +27,26 @@ let CTP = function() {
     return bool
   }
 
-  function extend (o1, o2) {
+  extend (o1, o2) {
     for (let key in o2) {
       o1[key] = o2[key]
     }
     return o1
   }
 
-  function Ajax (args, timeout) {
-    function getAjax (o) {
+  Ajax (args, timeout) {
+    getAjax (o) {
       let _def = {
         dataType: 'json',
         cache: true,
         show: false,
         validSession: true,
         fail: function () {
-          console.log('请求失败')
+          wx.showToast({
+            title: '服务请求失败，网络原因引起',
+            icon: 'loading',
+            duraction: 2000
+          })
         }
       }
       let _args = o.params
@@ -82,8 +86,7 @@ let CTP = function() {
     getAjax(args)
   }
 
-  function getHomeInfo (success) {
-    let that = this
+  getHomeInfo (success) {
     let curSession = JSON.parse(wx.getStorageSync('session'))
     let homeInfoParams = {
       userCode: curSession.user.userId,
@@ -107,8 +110,7 @@ let CTP = function() {
     })
   }
 
-  function checkSession (weChatAccount, fns) {
-    let that = this
+  checkSession (weChatAccount, fns) {
     if (checkLogin()) {
       let curSession = JSON.parse(wx.getStorageSync('session'))
       fns.success(curSession)

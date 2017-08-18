@@ -238,22 +238,7 @@
         '已完成',
         '挂起'
       ],
-      myOrderDetails: {
-        img: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_station@2x.png',
-        orderCode: 'order1',
-        chargePileName: 'xxx充电站',
-        chargePileCode: '752534652',
-        orderState: '1',
-        carbonReduction: 11,
-        chargeTime: 3600,
-        siteName: '海岸城充电站',
-        chargeElectricity: '10',
-        siteAddress: '景田',
-        chargeQuantity: '2',
-        siteCode: '1',
-        isComment: '2',
-        orderStartTime: '2017-08-01 11:11:0000'
-      }
+      myOrderDetails: {}
     }
 
     computed = {
