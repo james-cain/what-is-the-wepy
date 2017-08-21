@@ -159,7 +159,7 @@
   <view class="homepage">
     <view id="charging-panel">
       <view class="charging-top-mask"></view>
-      <view class="charging-top" style="height: 11.25rem; overflow:hidden;">
+      <view class="charging-top" style="height: 180px; overflow:hidden;">
         <view class="add-account-btn" @tap="goToAddMoney">充值</view>
         <view class="charging-top-position">
             {{balance ? balance : 0.00}}
@@ -168,7 +168,7 @@
             我的余额(元) <view id="charging-top-code-transfer-btn" @tap="goToTransfer">转账</view>
         </view>
       </view>
-      <scroll-view scroll-y="true" class="account-details-list-box ctp-list-box">
+      <scroll-view scroll-y="true" style="height: {{accHeight}}px" class="account-details-list-box ctp-list-box">
         <view class="list-tips" wx:if="{{isShow}}">
           <view class="list-tips-title">无充值记录</view>
           <view>请点击右上角进行充值</view>
@@ -210,7 +210,8 @@
       detailList: [],
       currentList: [],
       isMore: true,
-      loading: false
+      loading: false,
+      accHeight: ''
     }
 
     balanceDetailList (type) {
@@ -288,6 +289,8 @@
 
     onLoad () {
       let se = CTP().session
+      let winH = wx.getStorageSync('windowH')
+      this.accHeight = winH - 180
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.balance = this.session.user.balance
       this.balanceDetailList()

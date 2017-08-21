@@ -454,7 +454,9 @@
           if (this.evaSelected === false) {
             this.evaSelected = true
             this.desSelected = false
+            this.evalPageNo = 1
             this.getCommentList()
+            this.$apply()
           }
         }
         this.$apply()
@@ -535,9 +537,12 @@
           params: _params,
           url: '/msp-charge/router',
           success: function (e) {
-            console.log('提交', e)
+            console.log('评论内容变化:')
+            console.log(e)
+
             if (e.data.state === 0) {
               that.isEdit = false
+              that.evalPageNo = 1
               that.$apply()
               that.getCommentList()
             }
@@ -556,7 +561,7 @@
           let paramsGood = {
             userCode: that.session === '' ? '' : that.session.user.userId,
             commentId: commentId,
-            isThumbUp: (isThumbUp * 1) === 1 ? 2 : (isThumbUp * 1),
+            isThumbUp: (isThumbUp * 1) === 1 ? 2 : 1,
             nonce: 'abc',
             v: '1.0',
             format: 'json',
@@ -570,13 +575,18 @@
             params: paramsGood,
             url: '/msp-charge/router',
             success: function (e) {
-              if (e.state === 0) {
+              if (e.data.state === 0) {
                 that.commentlist.forEach((e, index, arr) => {
                   if (e.commentId === commentId) {
-                    e.isThumbUp = (isThumbUp * 1) === 1 ? 2 : (isThumbUp * 1)
+                    e.isThumbUp = (isThumbUp * 1) === 1 ? 2 : 1
+                    e.thumbUpNum = (isThumbUp * 1) === 1 ? e.thumbUpNum + 1 : e.thumbUpNum - 1
                   }
                 })
+                console.log('点赞发生变化：')
+                console.log(that.commentlist)
+                // that.evalPageNo = 1
                 that.$apply()
+                // that.getCommentList()
               }
             }
           })

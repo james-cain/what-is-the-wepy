@@ -175,7 +175,13 @@
         </view>
         <view class="score">
           <view style="display: inline-block; margin: 0 10px 0 5px;">评分:</view>
-          <scoresing class="scores" :scores.sync="comment.score" :isScoreStatic.sync="0"></scoresing>
+          <view class="scores">
+            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png" style="height: 16px; width: 16px;"/>
+            <image src="{{comment.score === 1 ?  'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png' : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png'}}" style="height: 16px; width: 16px;"/>
+            <image src="{{comment.score === 1 || comment.score === 2 ? 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png' : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png'}}" style="height: 16px; width: 16px;"/>
+            <image src="{{comment.score === 3 || comment.score === 4 ? 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png' : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png'}}" style="height: 16px; width: 16px;"/>
+            <image src="{{comment.score === 4 ? 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png' : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png'}}" style="height: 16px; width: 16px;"/>
+          </view>
         </view>
         <view class="labels-p">
           <view class="stations-label labelCode" wx:for="{{comment.labelList}}" wx:for-item="label" wx:key="labelCode">{{label.labelName}}</view>

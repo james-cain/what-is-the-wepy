@@ -172,8 +172,8 @@
       // } else {
       let that = this
       let _params = {
-        // chargingPileCode: pileCode,
-        chargingPileCode: '090048170220001101',
+        chargingPileCode: pileCode,
+        // chargingPileCode: '090048170220001101',
 
         nonce: 'abc',
         v: '1.0',

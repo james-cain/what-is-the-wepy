@@ -131,7 +131,7 @@
       <menu :pileMenuList.sync="pileMenuList" ></menu>
       <tableList :pileTableList.sync="pileTableList"></tableList>
     </view>
-    <map id="map" longitude="{{point.longitude}}" latitude="{{point.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px"  wx:if="{{!isSearch && switchType === 'map' ? true : false}}"></map>
+    <map id="map" longitude="{{getPileListParams.longitude}}" latitude="{{getPileListParams.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px"  wx:if="{{!isSearch && switchType === 'map' ? true : false}}"></map>
    </view>
 </template>
 
@@ -351,15 +351,12 @@
         let that = this
         that.mapCtx.getCenterLocation({
           success: (res) => {
-            // 经纬度保留6位小数
-            // let longitudeFix = res.longitude
-            // let latitudeFix = res.latitude
             if (e.type === 'begin') {
               console.log('位置相同，不执行刷新操作')
             } else {
               console.log('位置变化')
-              // that.getPileListParams.longitude = longitudeFix
-              // that.getPileListParams.latitude = latitudeFix
+              // that.getPileListParams.longitude = res.longitude
+              // that.getPileListParams.latitude = res.latitude
               // that.$apply()
               // that.getPileList()
             }
@@ -371,6 +368,10 @@
         let id = e.controlId
         if (id === 1) {
           // 定位当前位置
+          let point = wx.getStorageSync('locationPoint')
+          this.getPileListParams.longitude = point.longitude
+          this.getPileListParams.latitude = point.latitude
+          this.$apply()
           that.getUserCurrentLocation()
         } else if (id === 2) {
           // 筛选功能
@@ -477,7 +478,7 @@
         wx.showToast({
           title: '正在查询站点',
           icon: 'loading',
-          duraction: 5000,
+          duraction: 1000,
           mask: true
         })
         let that = this
@@ -637,6 +638,18 @@
           // console.log('总站点数：' + markers.length)
           // console.log(markers)
           // that.markers = markers
+          let searchPile = data.data
+          if (!searchPile) {
+            wx.showToast({
+              title: '没有找到站点',
+              icon: 'loading',
+              duration: 2000
+            })
+          } else {
+            that.getPileListParams.longitude = searchPile[0].longitude
+            that.getPileListParams.latitude = searchPile[0].latitude
+          }
+  
           that.$apply()
           wx.hideToast()
         }
@@ -729,7 +742,7 @@
       wx.showToast({
         title: '正在获取用户最新状态',
         icon: 'loading',
-        duraction: 5000,
+        duraction: 1000,
         mask: true
       })
       // 检查网络
@@ -773,15 +786,16 @@
           console.log('所有站点信息:')
           console.log(data)
           that.pileList = data.data
-
-          // markers.push({
-          //   latitude: Number(that.getPileListParams.latitude),
-          //   longitude: Number(that.getPileListParams.longitude),
-          //   id: 0,
-          //   iconPath: '/images/c_map_stake_leisure@2x.png',
-          //   width: 20 * wx.getStorageSync('kScreenW'),
-          //   height: 30 * wx.getStorageSync('kScreenH')
-          // })
+          if (that.pileList.length === 0) {
+            console.log('没有筛选。。。')
+            setTimeout(function () {
+              wx.showToast({
+                title: '没有找到筛选的站点',
+                icon: 'loading',
+                duration: 1000
+              })
+            }, 1000)
+          }
           data.data.forEach((e, index, arr) => {
             markers.push(that.addMarker(e, index))
           })
@@ -861,6 +875,11 @@
             that.pileTableList = data
           } else {
             that.pileTableList = []
+            wx.showToast({
+              title: '没有找到筛选的站点',
+              icon: 'loading',
+              duration: 2000
+            })
           }
           that.pileMenuList.forEach((e, index, arr) => {
             e.selected = false
@@ -896,7 +915,7 @@
             latitude: latitude,
             longitude: longitude
           }
-          // wx.setStorageSync('currentPosition', JSON.stringify(that.point))
+          wx.setStorageSync('locationPoint', JSON.stringify(that.point))
           that.completeStatus = true
           that.$apply()
         }
@@ -918,15 +937,13 @@
         if (that.completeStatus) {
           console.log('定时器停止')
           clearInterval(checkTimer)
-          let longitudeFix = that.point.longitude
-          let latitudeFix = that.point.latitude
           let mapControls = that.mapControls
           // 过滤条件
           let mapFilter = wx.getStorageSync('mapFilter') !== '' ? JSON.parse(wx.getStorageSync('mapFilter')) : ''
           that.mapTop = that.menuHeight
           that.controls = mapControls
-          that.getPileListParams.longitude = longitudeFix
-          that.getPileListParams.latitude = latitudeFix
+          that.getPileListParams.longitude = that.point.longitude
+          that.getPileListParams.latitude = that.point.latitude
           CTP().checkSession(CTP().weChatAccount, {
             // 用户存在
             success: function (e) {
@@ -971,9 +988,8 @@
 
     onUnload () {
       console.log('onUnload')
-      // 清除weChatAccount和session
-      wx.setStorageSync('weChatAccount', '')
-      wx.setStorageSync('session', '')
+      // 清除过滤条件
+      wx.setStorageSync('mapFilter', '')
     }
 
     onPullDownRefresh () {
