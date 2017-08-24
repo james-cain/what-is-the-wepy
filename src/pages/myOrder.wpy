@@ -311,6 +311,7 @@
         console.log('当前状态：' + orderState + ',' + isComment + ',' + index)
         if (orderState === '4' && isComment === '1') {
           wx.setStorageSync('chargedPayment', JSON.stringify(this.myOrderList[index]))
+          wx.setStorageSync('chargingOrderCode', this.myOrderList[index].orderCode)
           // wx.setStorageSync('evaluationNeedparams', JSON.stringify(this.myOrderList[index]))
           wx.navigateTo({
             url: 'evaluation'

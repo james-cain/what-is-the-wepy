@@ -228,6 +228,13 @@
           success: function (e) {
             console.log('获取到的重新绑定验证码：')
             console.log(e)
+            if (e.data.code === '9') {
+              wx.showToast({
+                title: e.data.subErrors[0].message,
+                icon: 'loading',
+                duraction: 2000
+              })
+            }
           }
         })
         let time = setInterval(function() {
@@ -275,6 +282,13 @@
           success: function (e) {
             console.log('获取到的验证码：')
             console.log(e)
+            if (e.data.code === '9') {
+              wx.showToast({
+                title: e.data.subErrors[0].message,
+                icon: 'loading',
+                duraction: 2000
+              })
+            }
           }
         })
         let time = setInterval(function() {

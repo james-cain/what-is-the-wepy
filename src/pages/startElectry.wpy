@@ -81,19 +81,19 @@
   font-size: 14px;
   margin: 0 auto;
   color: #999;
-  width: 200px;
+  width: 220px;
 }
 
 .charging-elect-type {
   float: left;
   position: relative;
-  top: -11px;
+  line-height: 30px;
 }
 
 .charging-elect-price {
   float: left;
   position: relative;
-  top: -10px;
+  line-height: 30px;
   left: 30px;
 }
 
@@ -106,7 +106,7 @@
 }
 
 .charging-elect-amount-div {
-  top: 7.5rem;
+  top: 120px;
   position: absolute;
   border: 1px solid #e5e5e5;
   width: 92%;
@@ -148,6 +148,7 @@
   text-align: left;
   font-size: 12px;
   float: left;
+  margin-left: 5px;
 }
 
 .charging-start-button-mask {
@@ -172,18 +173,18 @@
           编号(CID):<text>{{pileDetails.chargePileCode}}</text>
         </view>
         <view class="charging-top-params">
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_ac_icon@2x.png" wx:if="{{pileDetails.chargePileType === 1}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0;"></image>
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_dc_icon@2x.png" wx:if="{{pileDetails.chargePileType !== 1}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0;"></image>
-          <text class="charging-elect-type">
-               {{pileDetails.chargePileType === '1' ? '直流电' : '交流电'}}
-          </text>
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_price_icon@2x.png" style="height: 16px; width: 16px; float: left; position: relative; top: 5px; left: 25px;"></image>
-          <text class="charging-elect-price">
+          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_ac_icon@2x.png" wx:if="{{pileDetails.chargePileType === '1'}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0; margin: 2px;"></image>
+          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_dc_icon@2x.png" wx:if="{{pileDetails.chargePileType !== '1'}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0; margin: 2px;"></image>
+          <view class="charging-elect-type">
+               {{pileDetails.chargePileType === '2' ? '直流电' : '交流电'}}
+          </view>
+          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_price_icon@2x.png" style="height: 16px; width: 16px; float: left; position: relative; left: 25px; margin: 7px 0;"></image>
+          <view class="charging-elect-price">
               {{pileDetails.price + '元/kWh'}}
-          </text>
+          </view>
         </view>
       </view>
-      <view class="charging-elect-amount-panel" style="height: {{panelH}}px">
+      <scroll-view scroll-y class="charging-elect-amount-panel" style="height: {{panelH}}px">
         <view class="charging-elect-amount-div">
           <view class="charging-elect-amount-fullof">
             <text>充满电为止</text><text style="font-style: normal;font-size: 12px; color: #999;">(账户余额:{{session.user.balance}}元)</text>
@@ -197,7 +198,7 @@
             <text class="charging-elect-amount-fullof-button {{buttonType === 2 ? 'clicked' : ''}}" @tap="changeType(2)"></text>
           </view>
         </view>
-      </view>
+      </scroll-view>
       <view id="charging-start-button" class="charging-start-button" @tap="charging">
         <text>启动充电</text>
       </view>
@@ -309,72 +310,72 @@
               return
             }
           }
-          wx.showModal({
-            title: '充电启动中...',
-            content: '如果长时间未启动成功,请检查充电枪是否连接成功。',
-            success: (res) => {
-              let params = {
-                userCode: that.session.user.userId,
-                chargingPileCode: that.pileDetails.chargePileCode + '01',
-                type: chargeType,
-                amount: chargingMoney,
+          wx.showLoading({
+            title: '充电启动中,如果长时间未启动成功,请检查充电枪是否连接成功。',
+            mask: true
+          })
+          let params = {
+            userCode: that.session.user.userId,
+            chargingPileCode: that.pileDetails.chargePileCode + '01',
+            type: chargeType,
+            amount: chargingMoney,
 
-                nonce: 'abc',
-                v: '1.0',
-                format: 'json',
-                method: 'charge.start',
-                locale: 'zh_CN',
-                appKey: that.session.appKey,
-                sessionId: that.session.sessionId,
-                timestamp: new Date().getTime()
-              }
-              CTP().Ajax({
-                params: params,
-                url: '/msp-charge/router',
-                success: function (e) {
-                  console.log('启动充电返回值：')
-                  console.log(e)
-                  let state = e.data.state
-                  if (state === 0) {
-                    wx.setStorageSync('chargingOrderCode', e.data.data.orderCode)
-                    wx.redirectTo({
-                      url: 'electring'
-                    })
-                  } else if (state === 2100) {
-                    // 启动充电，有未支付订单
-                    wx.showToast({
-                      title: '您订单未支付,请先支付订单后再充电',
-                      icon: 'loading',
-                      duration: 2000
-                    })
-                  } else if (state === 2102) {
-                    // 该用户在当前枪有充电中的订单（重复启动充电的情况）
-                    wx.redirectTo({
-                      url: 'electring'
-                    })
-                  } else {
-                    if (e.data.code === 9) {
-                      wx.showToast({
-                        title: e.data.subErrors[0].message,
-                        icon: 'loading',
-                        duration: 2000
-                      })
-                    } else {
-                      wx.showToast({
-                        title: e.data.message,
-                        icon: 'loading',
-                        duration: 2000
-                      })
-                    }
-                  }
-                },
-                fail: function () {
+            nonce: 'abc',
+            v: '1.0',
+            format: 'json',
+            method: 'charge.start',
+            locale: 'zh_CN',
+            appKey: that.session.appKey,
+            sessionId: that.session.sessionId,
+            timestamp: new Date().getTime()
+          }
+          CTP().Ajax({
+            params: params,
+            url: '/msp-charge/router',
+            success: function (e) {
+              wx.hideLoading()
+              console.log('启动充电返回值：')
+              console.log(e)
+              let state = e.data.state
+              if (state === 0) {
+                wx.setStorageSync('chargingOrderCode', e.data.data.orderCode)
+                wx.redirectTo({
+                  url: 'electring'
+                })
+              } else if (state === 2100) {
+                // 启动充电，有未支付订单
+                wx.showToast({
+                  title: '您订单未支付,请先支付订单后再充电',
+                  icon: 'loading',
+                  duration: 2000
+                })
+              } else if (state === 2102) {
+                // 该用户在当前枪有充电中的订单（重复启动充电的情况）
+                wx.redirectTo({
+                  url: 'electring'
+                })
+              } else {
+                if (e.data.code === 9) {
                   wx.showToast({
-                    title: '请求超时',
+                    title: e.data.subErrors[0].message,
+                    icon: 'loading',
+                    duration: 2000
+                  })
+                } else {
+                  wx.showToast({
+                    title: e.data.message,
                     icon: 'loading',
                     duration: 2000
                   })
                 }
+              }
+            },
+            fail: function () {
+              wx.hideLoading()
+              wx.showToast({
+                title: '请求超时',
+                icon: 'loading',
+                duration: 2000
               })
             }
           })

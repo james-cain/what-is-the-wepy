@@ -326,13 +326,13 @@
         </view>
         <view class="station-details-top-bottom">
           <view class="work-time-container">
-            <view class="work-time" wx:if="{{workingTime !== '' && workingTime !== undefined}}">
+            <view class="work-time" wx:if="{{isForeignOpen !== 0}}">
               {{workingTimeOnWork}}
             </view>
-            <view class="work-time" wx:if="{{workingTime !== '' && workingTime !== undefined}}">
+            <view class="work-time" wx:if="{{isForeignOpen !== 0}}">
               {{worlingTimeOnHoliday}}
             </view>
-            <view style="color: orange; line-height: 30px; font-size: 14px;" wx:if="{{workingTime === '' || workingTime === undefined}}">
+            <view style="color: orange; line-height: 30px; font-size: 14px;" wx:if="{{isForeignOpen === 0}}">
               本站点暂不对外开放
             </view>
           </view>
@@ -774,7 +774,8 @@
       this.workingTime = stakeDetails.workingTime
       this.carType = stakeDetails.carType
       this.address = stakeDetails.address
-      this.score = (parseInt(stakeDetails.score)) + (stakeDetails.score - parseInt(stakeDetails.score) > 0 ? 0.5 : 0)
+      // this.score = (parseInt(stakeDetails.score)) + (stakeDetails.score - parseInt(stakeDetails.score) > 0 ? 0.5 : 0)
+      this.score = stakeDetails.score
       this.isPark = stakeDetails.isPark * 1
       this.isCollect = stakeDetails.isCollect
       this.parkingRate = stakeDetails.parkingRate
@@ -790,13 +791,20 @@
       this.distance = option.distance
       this.currentPositionLat = option.currentPositionLat * 1
       this.currentPositionLng = option.currentPositionLng * 1
+      console.log('计算距离：' + this.getDistance({
+        lng: this.currentPositionLng,
+        lat: this.currentPositionLat
+      }, {
+        lng: this.detailLng,
+        lat: this.detailLat
+      }))
       this.getDis = this.distance || (this.getDistance({
         lng: this.currentPositionLng,
         lat: this.currentPositionLat
       }, {
         lng: this.detailLng,
         lat: this.detailLat
-      }) / 1000 / 1000).toFixed(2)
+      }) / 1000).toFixed(2)
       this.pilelist.forEach((e, index, arr) => {
         if (e.workingState === '1') {
           this.pileIsNotWroking++

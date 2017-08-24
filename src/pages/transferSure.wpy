@@ -364,6 +364,7 @@
             let data = e.data
             if (data.state === 0) {
               that.isShow = false
+              that.updateUserSession()
             } else if (data.code === 9) {
               wx.showToast({
                 title: data.subErrors[0].message,
@@ -388,6 +389,40 @@
           delta: 2
         })
       }
+    }
+
+    updateUserSession () {
+      let weChatAccount = CTP().weChatAccount
+      let _paramsLoginAuth = {
+        chargeMiniAppId: weChatAccount.id,
+        system: 'XNCD',
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'user.auth',
+        locale: 'zh_CH',
+        appKey: '',
+        timestamp: new Date().getTime()
+      }
+
+      wepy.request({
+        url: this.$parent.globalData.serverUrl + '/msp-cas/router',
+        type: 'POST',
+        dataType: 'json',
+        data: _paramsLoginAuth,
+        success: function (e) {
+          let data = e.data
+          if (data.code !== '9') {
+            wx.setStorageSync('session', JSON.stringify(data))
+            console.log('success：支付完成修改用户session：')
+            console.log(data)
+          } else {
+            console.log('fail：支付完成修改用户session：')
+            console.log(data)
+          }
+        },
+        fail: function (e) {}
+      })
     }
 
     onShow () {

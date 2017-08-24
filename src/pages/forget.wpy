@@ -207,6 +207,13 @@
           success: function (e) {
             console.log('获取到的验证码：')
             console.log(e)
+            if (e.data.code === '9') {
+              wx.showToast({
+                title: e.data.subErrors[0].message,
+                icon: 'loading',
+                duraction: 2000
+              })
+            }
           }
         })
         let time = setInterval(function() {
@@ -230,14 +237,7 @@
       // 输入验证码
       codeTfInput (e) {
         let that = this
-        let inputValue = e.detail.value
         that.codeValue = e.detail.value
-        let length = e.detail.value.length
-        if (length !== 0) {
-          that.registerParams.code = inputValue
-        } else {
-          that.registerParams.code = ''
-        }
         if (that.phoneValue && that.codeValue) {
           that.nextBtnProperty.disabled = false
           that.nextBtnProperty.backcolor = '#2fb9c3'

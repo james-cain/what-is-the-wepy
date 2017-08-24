@@ -180,7 +180,7 @@
         <view class="top-bg-img"></view>
         <view class="payMount">订单金额:<text>￥<text class="payMount-count">{{myOrderDetails.chargeElectricity === null ? 0: myOrderDetails.chargeElectricity}}</text></text></view>
         <view class="yezf">(余额支付)</view>
-        <view class="payState {{orderStateClass[myOrderDetails.orderState]}}" @tap.stop="goToPay({{myOrderDetails.orderState}})">{{orderStateText[myOrderDetails.orderState]}}</view>
+        <view class="payState {{orderStateClass[myOrderDetails.orderState]}}" @tap.stop="goTo({{myOrderDetails}})">{{myOrderDetails.orderState === '4' && myOrderDetails.isComment === '1' ? '评论' : orderStateText[myOrderDetails.orderState]}}</view>
       </view>
       <view class="myOrderDetails-station" @tap.stop="goToStation({{myOrderDetails.siteCode}})">
         <view class="myOrderDetails-station-arrow"></view>
@@ -276,6 +276,7 @@
     methods = {
       goToStation (siteCode, e) {
         let that = this
+        let point = JSON.parse(wx.getStorageSync('locationPoint'))
         let params = {
           userCode: that.session.user.userId,
           siteCode: siteCode,
@@ -297,15 +298,22 @@
             console.log(e)
             wx.setStorageSync('stakeDetails', JSON.stringify(e.data))
             wx.redirectTo({
-              url: 'station'
+              url: 'station?currentPositionLat=' + point.latitude + '&currentPositionLng=' + point.longitude
             })
           }
         })
       },
-      goToPay (orderState, e) {
-        if (orderState * 1 < 4) {
+      goTo (orderDetail, e) {
+        console.log('从订单页进入付款或评价页')
+        console.log(orderDetail)
+        if (orderDetail.orderState * 1 < 4) {
           wx.navigateTo({
             url: 'orderToPay'
+          })
+        } else if (orderDetail.orderState === '4' && orderDetail.isComment === '1') {
+          wx.setStorageSync('chargingOrderCode', orderDetail.orderCode)
+          wx.navigateTo({
+            url: 'evaluation'
           })
         }
       }

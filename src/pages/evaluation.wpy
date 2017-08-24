@@ -7,7 +7,7 @@
 }
 
 .evaluation-panel-top {
-  height: 180px;
+  height: 100px;
   background: #fff;
 }
 
@@ -53,7 +53,8 @@
 
 .evaluation-text {
   background: #f1f5f8;
-  height: 500px;
+  height: 230px;
+  margin-bottom: 45px;
 }
 
 .evaluation-text textarea {

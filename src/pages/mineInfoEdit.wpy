@@ -46,7 +46,7 @@
     <view id="mineInfo-panel" style="background: #f1f5f8; height: {{windowH}}px">
       <view class="mineInfo-panel-bottom">
         <view class="bottom-p mineInfo-panel-bottom-account">
-            <input type="text" maxlength="20" class="mineInfo-panel-bottom-account-editInput" style="" @input="inputValue"/>
+            <input type="text" maxlength="20" class="mineInfo-panel-bottom-account-editInput" style="" @input="inputValue" value="{{value}}"/>
         </view>
         <view class="btnEdit" @tap="mod"><text>确定</text></view>
         </view>
@@ -146,6 +146,7 @@
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.userInfo = this.session.user
       this.windowH = wx.getStorageSync('windowH')
+      this.value = option.typeName
       if (optionType === 'nick') {
         wx.setNavigationBarTitle({
           title: '修改昵称'

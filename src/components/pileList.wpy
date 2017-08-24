@@ -115,8 +115,8 @@
       <view style="display: inline-block;">
         {{pileItem.chargePileName}}
       </view>
-      <view style="display: inline-block;" class="{{pileItem.ratedPower * 1 < 7 ? 'chargetype-m' : 'chargetype-k'}}">
-        [{{pileItem.chargePileType === 2 ? '交流' : '直流'}}{{pileItem.ratedPower * 1 < 7 ? '慢充' : '快充'}}/{{pileItem.ratedPower}}kW]
+      <view style="display: inline-block;" class="{{pileItem.ratedPower <= 7 ? 'chargetype-m' : 'chargetype-k'}}">
+        [{{pileItem.chargePileType === '1' ? '交流' : '直流'}}{{pileItem.ratedPower <= 7 ? '慢充' : '快充'}}/{{pileItem.ratedPower}}kW]
       </view>
     </view>
     <view class="code">编号(CID)：{{pileItem.chargePileCode}}</view>

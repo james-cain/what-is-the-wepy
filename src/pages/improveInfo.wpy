@@ -158,9 +158,17 @@
           params: params,
           url: '/msp-cas/router',
           success: function (e) {
-            wx.setStorageSync('session', JSON.stringify(e.data))
-            console.log('登陆信息')
-            console.log(JSON.parse(wx.getStorageSync('session')))
+            if (e.data.code === '1') {
+              wx.showToast({
+                title: e.data.subErrors[0].message,
+                icon: 'loading',
+                duraction: 1000
+              })
+            } else {
+              wx.setStorageSync('session', JSON.stringify(e.data))
+              console.log('登陆信息')
+              console.log(JSON.parse(wx.getStorageSync('session')))
+            }
             wx.navigateBack({
               delta: 3
             })

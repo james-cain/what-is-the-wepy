@@ -52,7 +52,7 @@
 .charging-panel-details {
   background: #fff;
   width: 100%;
-  padding-top: 150px;
+  padding-top: 120px;
   position: absolute;
   top: 320px;
   left: 0;
@@ -135,7 +135,7 @@
       <view class="charging-end-button" @tap="endCharge">
         <text>结束充电</text>
       </view>
-      <view class="charging-panel-details" style="height: {{panelH}}px">
+      <scroll-view scroll-y class="charging-panel-details" style="height: {{panelH}}px">
         <view class="charging-panel-details-panel">
           <view class="charging-panel-details-time" style="margin-left: 15px; width: 140px;">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png" style="width: 16px; height: 16px;"/>
@@ -162,7 +162,7 @@
              <text>{{isrefresh ? '加载中...' : '刷    新'}}</text>
           </view>
         </view>
-      </view>
+      </scroll-view>
     </view>
   </view>
 </template>
@@ -186,7 +186,7 @@
       isrefresh: false,
       session: '',
       chargingOrderCode: '',
-      chargeInfo: {},
+      chargeInfo: '',
       getInfoM: ''
     }
 
@@ -207,6 +207,7 @@
           }
         }
         result = parseInt(theTime) !== null ? parseInt(theTime) : 0
+        console.log('正在充电预计结束时间：' + result)
         if (theTime1 > 0) {
           result = '' + parseInt(theTime1) + ':' + result
         }
@@ -224,6 +225,10 @@
           content: '您确认结束充电吗?',
           showCancel: true,
           success: (res) => {
+            wx.showLoading({
+              title: '正在结束充电',
+              mask: true
+            })
             this.startC()
           }
         })
@@ -237,6 +242,10 @@
 
     getInfo () {
       let that = this
+      wx.showLoading({
+        title: '',
+        mask: true
+      })
       that.isrefresh = true
       let params = {
         userCode: that.session.user.userId,
@@ -257,6 +266,7 @@
         success: function (e) {
           console.log('获取充电信息：')
           console.log(e)
+          wx.hideLoading()
           let data = e.data
           if (data.state === 0) {
             that.chargeInfo = data.data
@@ -271,6 +281,7 @@
                 duration: 2000
               })
               wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
+              that.updateUserSession()
               clearInterval(that.getInfoM)
               wx.redirectTo({
                 url: 'myOrderDetail'
@@ -318,6 +329,7 @@
         params: params,
         url: '/msp-charge/router',
         success: function (e) {
+          wx.hideLoading()
           console.log('充电完成：')
           console.log(e)
           let data = e.data
@@ -330,8 +342,10 @@
                 duration: 2000
               })
               clearInterval(that.getInfoM)
+              wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
+              that.updateUserSession()
               wx.redirectTo({
-                url: 'evaluation'
+                url: 'myOrderDetail'
               })
             } else if (data.state === 2051 || data.state === 2306) {
               wx.showToast({
@@ -396,8 +410,10 @@
               duration: 2000
             })
             clearInterval(that.getInfoM)
+            wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
+            that.updateUserSession()
             wx.redirectTo({
-              url: 'evaluation'
+              url: 'myOrderDetail'
             })
           }
           if (data.state === 2307) {
@@ -414,6 +430,40 @@
             })
           }
         }
+      })
+    }
+
+    updateUserSession () {
+      let weChatAccount = CTP().weChatAccount
+      let _paramsLoginAuth = {
+        chargeMiniAppId: weChatAccount.id,
+        system: 'XNCD',
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'user.auth',
+        locale: 'zh_CH',
+        appKey: '',
+        timestamp: new Date().getTime()
+      }
+
+      wepy.request({
+        url: this.$parent.globalData.serverUrl + '/msp-cas/router',
+        type: 'POST',
+        dataType: 'json',
+        data: _paramsLoginAuth,
+        success: function (e) {
+          let data = e.data
+          if (data.code !== '9') {
+            wx.setStorageSync('session', JSON.stringify(data))
+            console.log('success：支付完成修改用户session：')
+            console.log(data)
+          } else {
+            console.log('fail：支付完成修改用户session：')
+            console.log(data)
+          }
+        },
+        fail: function (e) {}
       })
     }
 
