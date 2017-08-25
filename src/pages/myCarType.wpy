@@ -29,6 +29,11 @@
 .filter-car-name {
   color: #333;
   font-size: 15px;
+  width: 100%;
+  display: inline-block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .change-car-type {

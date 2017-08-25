@@ -171,7 +171,7 @@
       <scroll-view scroll-y="true" style="height: {{accHeight}}px" class="account-details-list-box ctp-list-box">
         <view class="list-tips" wx:if="{{isShow}}">
           <view class="list-tips-title">无充值记录</view>
-          <view>请点击右上角进行充值</view>
+          <view class="list-tips-title">请点击右上角进行充值</view>
         </view>
         <view class="account-details-list-title" wx:if="{{!isShow}}">账户明细</view>
         <view class="account-details-list" wx:for="{{detailList}}" wx:for-item="detail" wx:if="{{!isShow}}" wx:key="createTime">
@@ -181,7 +181,7 @@
         </view>
         <view class="add-more" wx:if="{{!isShow}}">
           <view class="more {{isMore ? 'noMorePage' : ''}}" @tap="more" hidden="{{loading}}">
-            {{isMore * 1 < 20 ? '没有更多数据了！' : '加载更多'}}
+            {{!isMore ? '没有更多数据了！' : '加载更多'}}
           </view>
           <view hidden="{{!loading}}">
             正在加载...
@@ -237,6 +237,7 @@
           console.log('账户充值明细：')
           console.log(e)
           let data = e.data
+          that.loading = false
           if (data.state === 0) {
             if (data.data.length === 0 && that.detailList.length === 0) {
               that.isShow = true
@@ -244,7 +245,7 @@
               that.isShow = false
               that.currentList.length = 0
               that.currentList = data.data
-              if (data.count < that.pageSize) {
+              if (data.data.length < that.pageSize) {
                 that.isMore = false
               } else {
                 that.isMore = true
@@ -271,10 +272,12 @@
       },
       more (e) {
         let that = this
-        that.loading = true
-        that.pageNo++
-        that.balanceDetailList('append')
-        that.$apply()
+        if (that.isMore) {
+          that.loading = true
+          that.pageNo++
+          that.balanceDetailList('append')
+          that.$apply()
+        }
       }
     }
 
@@ -283,8 +286,18 @@
     }
 
     onShow () {
-      // this.balanceDetailList()
-      // this.$apply()
+      let se = CTP().session
+      this.pageNo = 1
+      this.pageSize = 10
+      this.isShow = false
+      this.detailList.length = 0
+      this.currentList.length = 0
+      this.isMore = true
+      this.loading = false
+      this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.balance = this.session.user.balance
+      this.balanceDetailList()
+      this.$apply()
     }
 
     onLoad () {

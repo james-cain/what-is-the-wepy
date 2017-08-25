@@ -64,7 +64,7 @@
     margin-left: 20px;
 }
 .transfer-amount input {
-  width: 85%;
+  width: 90%;
   height: 80px;
   float:right;
 }
@@ -168,7 +168,7 @@
             <view class="transfer-obj-details-main-icon">
               <image class="transfer-user-avatar" src="{{transferUser.avatarId && transferUser.avatarId !== 'http://mspshow.szcomtop.com/cloudfs/api/fs/view/'? transferUser.avatarId : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'}}"/>
             </view>
-            <view class="transfer-obj-details-name">{{transferUser.nick === null || transferUser.nick === '' ? transferUser.account : transferUser.nick}}</view>
+            <view class="transfer-obj-details-name">{{transferUser.nick !== null && transferUser.nick !== '' ? transferUser.nick : (transferUser.account !== null && transferUser.account !== '' ? transferUser.account : transferUser.phone)}}</view>
             <view class="transfer-obj-details-tel">{{transferUser.phone}}</view>
           </view>
         </view>
@@ -298,6 +298,13 @@
           success: function (e) {
             console.log('获取到的验证码：')
             console.log(e)
+            if (e.data.code === '9') {
+              wx.showToast({
+                title: e.data.subErrors[0].message,
+                icon: 'loading',
+                duraction: 2000
+              })
+            }
           }
         })
         let time = setInterval(function() {

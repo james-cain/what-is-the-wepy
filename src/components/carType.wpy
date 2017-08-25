@@ -103,6 +103,13 @@
     left: 0;
     bottom: 0;
   }
+  .right-type-details-card-name {
+    width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+  }
 }
 </style>
 
@@ -124,7 +131,7 @@
         <view class="right-type-details-list" hidden="{{!car.selected}}">
           <view wx:for="{{car.brandAry}}" wx:for-item="carbrand" wx:key="vehicleModelCode">
             <view class="right-type-details-card" @tap="switchCar({{car.brand}}, {{carbrand.vehicleBrandCode}}, {{carbrand.vehicleModelCode}}, {{carbrand.selected}})">
-              {{carbrand.vehicleModel}}
+              <text class="right-type-details-card-name">{{carbrand.vehicleModel}}</text>
               <image class="right-type-details-img" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_tick_ok@2x.png" wx:if="{{carbrand.selected}}"></image>
             </view>
           </view>
@@ -239,6 +246,14 @@
       },
       selectedCar (e) {
         let that = this
+        if (JSON.stringify(that.selectedCarItem) === '{}') {
+          wx.showToast({
+            title: '没有选择车型',
+            icon: 'loading',
+            duraction: 1000
+          })
+          return
+        }
         that.$emit('selectedCar', that.selectedCarItem)
       }
     }

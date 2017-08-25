@@ -90,7 +90,7 @@
           type: 'POST',
           success: function (_r) {
             setTimeout(function () {
-              if (_r.state === '0') {
+              if (_r.data.state === 0) {
                 wx.showToast({
                   title: '保存成功',
                   icon: 'success',

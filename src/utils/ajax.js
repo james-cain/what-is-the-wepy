@@ -79,6 +79,7 @@ let CTP = function() {
         dataType: _def.dataType,
         data: _def.params,
         success: function (data) {
+          wx.hideLoading()
           _def.success.call(this, data, _def.params)
         },
         fail: _def.fail

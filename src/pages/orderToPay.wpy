@@ -338,11 +338,16 @@
 
     }
 
+    onShow () {
+      this.chargingOrderCode = wx.getStorageSync('chargingOrderCode')
+      this.getOrderDetails(this.chargingOrderCode)
+      this.$apply()
+    }
+
     onLoad() {
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
-      this.chargingOrderCode = wx.getStorageSync('chargingOrderCode')
-      this.getOrderDetails(this.chargingOrderCode)
+      this.$apply()
     }
   }
 </script>

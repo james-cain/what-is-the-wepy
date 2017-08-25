@@ -171,6 +171,14 @@
 .orderDetails-menu .menu-p text {
     padding-left: 8px;
 }
+
+.comment-btn {
+  height: 45px;
+  width: 322px;
+  margin-top: 25px;
+  color: #ffffff;
+  background-color: #2fb9c3;
+}
 </style>
 
 <template>
@@ -180,7 +188,7 @@
         <view class="top-bg-img"></view>
         <view class="payMount">订单金额:<text>￥<text class="payMount-count">{{myOrderDetails.chargeElectricity === null ? 0: myOrderDetails.chargeElectricity}}</text></text></view>
         <view class="yezf">(余额支付)</view>
-        <view class="payState {{orderStateClass[myOrderDetails.orderState]}}" @tap.stop="goTo({{myOrderDetails}})">{{myOrderDetails.orderState === '4' && myOrderDetails.isComment === '1' ? '评论' : orderStateText[myOrderDetails.orderState]}}</view>
+        <view class="payState {{orderStateClass[myOrderDetails.orderState]}}" @tap.stop="goTo({{myOrderDetails}})">{{orderStateText[myOrderDetails.orderState]}}</view>
       </view>
       <view class="myOrderDetails-station" @tap.stop="goToStation({{myOrderDetails.siteCode}})">
         <view class="myOrderDetails-station-arrow"></view>
@@ -202,6 +210,7 @@
         <view class="menu-p order-start-time">开始时间:<text>{{myOrderDetails.orderStartTime}}</text></view>
         <view class="menu-p order-end-time">结束时间:<text>{{myOrderDetails.orderEndTime == null ? '': myOrderDetails.orderEndTime}}</text></view>
       </view>
+      <button class="comment-btn" style="color: #ffffff; background-color: #2fb9c3;" type="default" @tap="commentAct({{myOrderDetails}})" wx:if="{{myOrderDetails.orderState === '4' && myOrderDetails.isComment === '1'}}">评价</button>
     </view>
   </view>
 </template>
@@ -310,7 +319,10 @@
           wx.navigateTo({
             url: 'orderToPay'
           })
-        } else if (orderDetail.orderState === '4' && orderDetail.isComment === '1') {
+        }
+      },
+      commentAct (orderDetail, e) {
+        if (orderDetail.orderState === '4' && orderDetail.isComment === '1') {
           wx.setStorageSync('chargingOrderCode', orderDetail.orderCode)
           wx.navigateTo({
             url: 'evaluation'

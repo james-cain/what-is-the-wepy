@@ -115,6 +115,7 @@
   line-height: 25px;
   color: #666;
   border-radius: 3px;
+  margin-bottom: 5px;
 }
 
 .charging-elect-amount-fullof {
@@ -173,10 +174,10 @@
           编号(CID):<text>{{pileDetails.chargePileCode}}</text>
         </view>
         <view class="charging-top-params">
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_ac_icon@2x.png" wx:if="{{pileDetails.chargePileType === '1'}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0; margin: 2px;"></image>
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_dc_icon@2x.png" wx:if="{{pileDetails.chargePileType !== '1'}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0; margin: 2px;"></image>
+          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_ac_icon@2x.png" wx:if="{{pileDetails.chargePileType !== '1'}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0; margin: 2px;"></image>
+          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_dc_icon@2x.png" wx:if="{{pileDetails.chargePileType === '1'}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0; margin: 2px;"></image>
           <view class="charging-elect-type">
-               {{pileDetails.chargePileType === '2' ? '直流电' : '交流电'}}
+               {{pileDetails.chargePileType === '1' ? '直流电' : '交流电'}}
           </view>
           <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_price_icon@2x.png" style="height: 16px; width: 16px; float: left; position: relative; left: 25px; margin: 7px 0;"></image>
           <view class="charging-elect-price">

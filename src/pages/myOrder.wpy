@@ -146,11 +146,12 @@
 </style>
 
 <template>
-  <view class="container">
-    <view class="ctp-list-box"  style="height: inherit; position:relative;overflow: hidden; ">
+  <view class="container" style="background: #f1f5f8; height: {{windowH}}px">
+    <scroll-view scroll-y="true" class="ctp-list-box"  style="height: inherit; position:relative;">
       <view class="list-tips" wx:if="{{isShow}}">
-        <text class="list-tips-title">无充电订单</text>
-        <text>请使用APP进行充电</text>
+        <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_nodata_order_list@2x.png" mode="scaleToFill" style="width: 155px; height: 106px; display: block; margin: 0 auto;"/>
+        <view class="list-tips-title">无充电订单</view>
+        <view class="list-tips-title">请进行充电</view>
       </view>
       <view id="myOrderList" style="overflow:hidden; overflow-y: auto;" wx:if="{{!isShow}}">
         <view class="myOrderList">
@@ -168,7 +169,7 @@
         </view>
         <view class="add-more" @tap="more">{{showInfo}}</view>
       </view>
-    </view>
+    </scroll-view>
   </view>
 </template>
 
@@ -210,7 +211,8 @@
       isNoMore: false,
       flg: true,
       orderList: [],
-      myOrderList: []
+      myOrderList: [],
+      windowH: 0
     }
 
     watched = {
@@ -238,6 +240,10 @@
 
     initMyOrder (type) {
       let that = this
+      wx.showLoading({
+        title: '正在加载',
+        mask: true
+      })
       let params = {
         userCode: that.session.user.userId,
         pageNo: that.pageNo,
@@ -256,6 +262,7 @@
         params: params,
         url: '/msp-charge/router',
         success: function (e) {
+          wx.hideLoading()
           console.log('获取订单列表')
           console.log(e)
           let data = e.data
@@ -275,6 +282,12 @@
               that.myOrderList2OrderList()
             }
             that.$apply()
+          } else {
+            wx.showToast({
+              title: e.data.subErrors[0].message,
+              icon: 'loading',
+              duraction: 1000
+            })
           }
         }
       })
@@ -282,6 +295,10 @@
 
     getOrderList () {
       let that = this
+      wx.showLoading({
+        title: '正在加载',
+        mask: true
+      })
       let params = {
         userCode: that.session.user.userId,
         pageNo: that.pageNo,
@@ -308,6 +325,10 @@
 
     methods = {
       goToOtherPage (orderState, isComment, index) {
+        wx.showLoading({
+          title: '正在加载',
+          mask: true
+        })
         console.log('当前状态：' + orderState + ',' + isComment + ',' + index)
         if (orderState === '4' && isComment === '1') {
           wx.setStorageSync('chargedPayment', JSON.stringify(this.myOrderList[index]))
@@ -316,11 +337,14 @@
           wx.navigateTo({
             url: 'evaluation'
           })
+          wx.hideLoading()
         } else if (orderState === '3' && isComment === '1') {
           wx.setStorageSync('chargedPayment', JSON.stringify(this.myOrderList[index]))
+          wx.setStorageSync('chargingOrderCode', this.myOrderList[index].orderCode)
           wx.navigateTo({
             url: 'orderToPay'
           })
+          wx.hideLoading()
         }
       },
       more (e) {
@@ -336,16 +360,22 @@
         }
       },
       goToDetailPage (orderState, index, e) {
+        wx.showLoading({
+          title: '正在加载',
+          mask: true
+        })
         if (orderState === '2') {
           wx.setStorageSync('chargingOrderCode', this.myOrderList[index].orderCode)
           wx.navigateTo({
             url: 'electring'
           })
+          wx.hideLoading()
         } else {
           wx.setStorageSync('myOrderDetailsCode', this.myOrderList[index].orderCode)
           wx.navigateTo({
             url: 'myOrderDetail'
           })
+          wx.hideLoading()
         }
       }
     }
@@ -361,6 +391,7 @@
 
     onLoad() {
       let se = CTP().session
+      this.windowH = wx.getStorageSync('windowH')
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.$apply()
     }

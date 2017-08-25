@@ -57,6 +57,7 @@
   top: 320px;
   left: 0;
   z-index: 3;
+  margin-bottom: 5px;
 }
 
 .charging-panel-details .charging-panel-details-panel {
@@ -139,11 +140,11 @@
         <view class="charging-panel-details-panel">
           <view class="charging-panel-details-time" style="margin-left: 15px; width: 140px;">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png" style="width: 16px; height: 16px;"/>
-             时长:<text class="charging-value">{{chargeInfo.chargeTime}}</text>
+             时长:<text class="charging-value">{{chargeInfo.chargeTime}}分钟</text>
           </view>
           <view class="charging-panel-details-percent">
             <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_percent_icon@2x.png" style="width: 16px;height: 16px;margin: 7px; float: left;margin-left: 10px;" />
-             <text class="left charging-value">百分比:{{chargeInfo.chargeRate}}</text>
+             <text class="left charging-value">百分比:{{chargeInfo.chargeRate}}%</text>
           </view>
         </view>
         <view class="charging-panel-details-panel">
@@ -268,10 +269,11 @@
           console.log(e)
           wx.hideLoading()
           let data = e.data
+          that.isrefresh = false
           if (data.state === 0) {
             that.chargeInfo = data.data
+            that.chargeInfo.chargeQuantity = (that.chargeInfo.chargeQuantity).substring(0, (that.chargeInfo.chargeQuantity).indexOf('.') + 3)
             console.log('获取充电信息data：', data.data)
-            that.isrefresh = false
             that.$apply()
           } else {
             if (data.state === 2201) {
@@ -287,6 +289,7 @@
                 url: 'myOrderDetail'
               })
             } else if (data.state === 2202) {
+              wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
               clearInterval(that.getInfoM)
               wx.redirectTo({
                 url: 'orderToPay'
@@ -353,6 +356,7 @@
                 icon: 'loading',
                 duration: 1000
               })
+              wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
               clearInterval(that.getInfoM)
               wx.redirectTo({
                 url: 'orderToPay'
@@ -372,6 +376,7 @@
               icon: 'loading',
               duration: 2000
             })
+            wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
             clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'orderToPay'
@@ -397,6 +402,7 @@
               icon: 'loading',
               duration: 2000
             })
+            wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
             clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'orderToPay'

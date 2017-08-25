@@ -33,6 +33,9 @@
     color: #333;
     float: right;
     font-size: 15px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .mineInfo-panel-top {
@@ -120,13 +123,13 @@
           <view class="info">{{userInfo.phone}}</view>
         </view>
         <view class="bottom-p mineInfo-panel-bottom-nick" @tap="mod('nick', {{userInfo.nick}})"><view class="arrow"></view><text>昵称</text>
-          <view class="info">{{userInfo.nick}}</view>
+          <text class="info">{{userInfo.nick}}</text>
         </view>
         <view class="bottom-p mineInfo-panel-bottom-sex" @tap="mod('gender', {{userInfo.gender === 2 ? '男' : '女'}})"><view class="arrow"></view><text>性别</text>
           <view class="info">{{userInfo.gender === 2 ? '男' : '女'}}</view>
         </view>
         <view class="bottom-p mineInfo-panel-bottom-description" @tap="mod('introduction', {{userInfo.introduction}})"><view class="arrow"></view><text>简介</text>
-          <view class="info">{{userInfo.introduction}}</view>
+          <text class="info">{{userInfo.introduction}}</text>
         </view>
       </view>
     </view>
@@ -160,10 +163,14 @@
 
     }
 
-    onLoad () {
+    onShow () {
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.userInfo = this.session.user
+      this.$apply()
+    }
+
+    onLoad () {
       this.windowH = wx.getStorageSync('windowH')
       this.$apply()
     }

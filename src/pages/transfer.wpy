@@ -68,7 +68,7 @@
     font-style: normal;
     padding: 0 5px;
     display: inline-block;
-    width: 50%;
+    width: 40%;
 }
 .transfer-obj-list-title {
     height: 35px;
@@ -125,7 +125,7 @@
         </view>
         <text class="transfer-tips">钱将实时转入对方账户，无法退款</text>
         <view class="transfer-btn">
-          <button style="background-color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="next" diabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">下一步</button>
+          <button style="background-color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="next" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">下一步</button>
         </view>
       </view>
       <view class="transfer-obj-list-title">最近</view>
@@ -138,12 +138,13 @@
             <view class="transfer-obj-list-icon">
               <image src="{{detail.img}}"/>
             </view>
-            <view class="transfer-detail-item-i">{{detail.nick === null || detail.nick === '' ? detail.nick : detail.account}}</view>{{detail.phone}}
+            <view class="transfer-detail-item-i">{{detail.nick !== null && detail.nick !== '' ? detail.nick : (detail.account !== null && detail.account !== '' ? detail.account : detail.phone)}}</view>
+            <view style="width: 30%; display: inline-block;">{{detail.phone}}</view>
           </view>
         </view>
         <view class="add-more" wx:if="{{!isShow}}">
           <view class="more {{isMore ? 'noMorePage' : ''}}" @tap="more" hidden="{{loading}}">
-            {{isMore * 1 < 20 ? '没有更多数据了！' : '加载更多'}}
+            {{!isMore ? '没有更多数据了！' : '加载更多'}}
           </view>
           <view hidden="{{!loading}}">
             正在加载...
@@ -238,7 +239,7 @@
               })
             } else {
               wx.showToast({
-                title: data.data.message,
+                title: data.message,
                 icon: 'loading',
                 duraction: 2000
               })
@@ -259,10 +260,12 @@
       },
       more (e) {
         let that = this
-        that.loading = true
-        that.pageNo++
-        that.transferUser('append')
-        that.$apply()
+        if (that.isMore) {
+          that.loading = true
+          that.pageNo++
+          that.transferUser('append')
+          that.$apply()
+        }
       }
     }
 
@@ -289,6 +292,7 @@
           console.log('转账联系人：')
           console.log(e)
           let data = e.data
+          that.loading = false
           if (data.state === 0) {
             if (data.data.length === 0 && that.detailList.length === 0) {
               that.isShow = true
@@ -296,7 +300,7 @@
               that.isShow = false
               that.currentList.length = 0
               that.currentList = data.data
-              if (data.count < that.pageSize) {
+              if (data.data.length < that.pageSize) {
                 that.isMore = false
               } else {
                 that.isMore = true
@@ -315,6 +319,12 @@
     events = {}
 
     onShow () {
+      this.pageNo = 1
+      this.detailList.length = 0
+      this.currentList.length = 0
+      this.isShow = false
+      this.isMore = true
+      this.loading = false
       this.transferUser()
       this.$apply()
     }
@@ -329,6 +339,9 @@
       this.pageNo = 1
       this.detailList.length = 0
       this.currentList.length = 0
+      this.nextBtnProperty.backcolor = '#CCCCCC'
+      this.nextBtnProperty.disabled = true
+      this.nextBtnProperty.loading = false
       this.isShow = false
       this.isMore = true
       this.loading = false

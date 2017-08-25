@@ -120,13 +120,13 @@
           {{isSearch ? '取消' : (switchType === 'map' ? '列表' : '地图')}}
        </view>
     </view>
-    <view class="search-sub-history" wx:if="{{isSearch}}">
+    <scroll-view class="search-sub-history" scroll-y="true" style="height: {{mapHeight}}px;" wx:if="{{isSearch}}">
       <view class="search-history-title">搜索历史</view>
       <view class="history-list">
         <view wx:for="{{searchHistory}}" wx:for-item="searchItem" @tap="hisSearch({{searchItem}})">{{searchItem}}</view>
       </view>
       <view class="btn-clear-history" @tap="clear">清除历史</view>
-    </view>
+    </scroll-view>
     <view style="position: relative; width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px" wx:if="{{isSearch ? false : (switchType === 'map' ? false : true)}}">
       <menu :pileMenuList.sync="pileMenuList" ></menu>
       <tableList :pileTableList.sync="pileTableList"></tableList>
@@ -333,8 +333,10 @@
         } else {
           if (that.switchType === 'map') {
             that.switchType = 'table'
+            that.searchValue = ''
             that.initStakeList()
           } else {
+            that.searchValue = ''
             that.switchType = 'map'
           }
         }
@@ -590,7 +592,7 @@
       wx.showToast({
         title: '正在搜索',
         icon: 'loading',
-        duraction: 5000,
+        duraction: 1000,
         mask: true
       })
       // 检查网络
@@ -639,15 +641,17 @@
           // console.log(markers)
           // that.markers = markers
           let searchPile = data.data
-          if (!searchPile) {
-            wx.showToast({
-              title: '没有找到站点',
-              icon: 'loading',
-              duration: 2000
-            })
-          } else {
+          if (searchPile && searchPile.length !== 0) {
             that.getPileListParams.longitude = searchPile[0].longitude
             that.getPileListParams.latitude = searchPile[0].latitude
+          } else {
+            setTimeout(function () {
+              wx.showToast({
+                title: '没有找到站点',
+                icon: 'loading',
+                duration: 2000
+              })
+            }, 1000)
           }
   
           that.$apply()
@@ -932,6 +936,7 @@
 
     onShow () {
       let that = this
+      that.searchValue = ''
       let checkTimer = setInterval(function () {
         console.log('定时器执行')
         if (that.completeStatus) {

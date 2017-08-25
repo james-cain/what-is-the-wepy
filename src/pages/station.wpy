@@ -556,6 +556,10 @@
 
     events = {
       thumbUp (commentId, isThumbUp) {
+        wx.showLoading({
+          title: '正在加载',
+          mask: true
+        })
         if (CTP().checkLogin()) {
           let that = this
           let paramsGood = {
@@ -575,6 +579,7 @@
             params: paramsGood,
             url: '/msp-charge/router',
             success: function (e) {
+              wx.hideLoading()
               if (e.data.state === 0) {
                 that.commentlist.forEach((e, index, arr) => {
                   if (e.commentId === commentId) {

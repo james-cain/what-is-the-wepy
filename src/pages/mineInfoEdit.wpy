@@ -101,6 +101,14 @@
             carTypeParams['nick'] = that.value
           }
         } else if (that.optionType === 'gender') {
+          if (that.value !== '男' && that.value !== '女') {
+            wx.showToast({
+              title: '性别输入不正确',
+              icon: 'loading',
+              duraction: 1000
+            })
+            return
+          }
           carTypeParams['gender'] = that.value === '男' ? '2' : '1'
         } else {
           carTypeParams['introduction'] = that.value
@@ -117,6 +125,7 @@
                 duraction: 1000
               })
               that.session.user = _r.data.user
+              wx.navigateBack()
               wx.setStorageSync('session', JSON.stringify(that.session))
             } else {
               wx.showToast({
