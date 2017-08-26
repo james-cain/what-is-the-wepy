@@ -296,6 +296,7 @@
             wx.redirectTo({
               url: 'myOrder'
             })
+            wx.navigateBack()
           } else {
             wx.showToast({
               title: e.data.message,

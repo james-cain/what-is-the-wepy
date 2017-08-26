@@ -53,7 +53,7 @@
     background: #fff;
     margin-bottom: 20px;
     input {
-      width: 75%;
+      width: 70%;
       text-indent: 10px;
       height: 50px;
       border: 0;
@@ -64,7 +64,7 @@
     }
     .getCodeBtn {
       display: inline-block;
-      width: 25%;
+      width: 30%;
       font-size: 13px;
       height: 50px;
       line-height: 50px;

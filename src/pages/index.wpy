@@ -311,7 +311,144 @@
     }
 
     computed = {
-
+      pileMenuList () {
+        if (CTP().checkLogin()) {
+          console.log('选择条件计算属性1。。。')
+          return [
+            {
+              id: 0,
+              name: '全部站点',
+              selected: false,
+              list: [
+                {
+                  childId: 0,
+                  name: '全部电站',
+                  selected: true
+                },
+                {
+                  childId: 1,
+                  name: '空闲中',
+                  selected: false
+                },
+                {
+                  childId: 2,
+                  name: '直流电',
+                  selected: false
+                },
+                {
+                  childId: 3,
+                  name: '交流快充',
+                  selected: false
+                },
+                {
+                  childId: 4,
+                  name: '交流慢充',
+                  selected: false
+                }
+              ]
+            },
+            {
+              id: 1,
+              name: '距离最近',
+              selected: false,
+              list: [
+                {
+                  childId: 0,
+                  name: '距离最近',
+                  selected: true
+                },
+                {
+                  childId: 1,
+                  name: '好评优先',
+                  selected: false
+                }
+              ]
+            },
+            {
+              id: 2,
+              name: '不限车型',
+              selected: false,
+              list: [
+                {
+                  childId: 0,
+                  name: '不限车型',
+                  selected: true
+                },
+                {
+                  childId: 1,
+                  name: '我的车型',
+                  selected: false
+                }
+              ]
+            }
+          ]
+        } else {
+          console.log('选择条件计算属性2。。。')
+          return [
+            {
+              id: 0,
+              name: '全部站点',
+              selected: false,
+              list: [
+                {
+                  childId: 0,
+                  name: '全部电站',
+                  selected: true
+                },
+                {
+                  childId: 1,
+                  name: '空闲中',
+                  selected: false
+                },
+                {
+                  childId: 2,
+                  name: '直流电',
+                  selected: false
+                },
+                {
+                  childId: 3,
+                  name: '交流快充',
+                  selected: false
+                },
+                {
+                  childId: 4,
+                  name: '交流慢充',
+                  selected: false
+                }
+              ]
+            },
+            {
+              id: 1,
+              name: '距离最近',
+              selected: false,
+              list: [
+                {
+                  childId: 0,
+                  name: '距离最近',
+                  selected: true
+                },
+                {
+                  childId: 1,
+                  name: '好评优先',
+                  selected: false
+                }
+              ]
+            },
+            {
+              id: 2,
+              name: '不限车型',
+              selected: false,
+              list: [
+                {
+                  childId: 0,
+                  name: '不限车型',
+                  selected: true
+                }
+              ]
+            }
+          ]
+        }
+      }
     }
 
     methods = {
@@ -333,10 +470,14 @@
         } else {
           if (that.switchType === 'map') {
             that.switchType = 'table'
-            that.searchValue = ''
+            that.setData({
+              searchValue: ''
+            })
             that.initStakeList()
           } else {
-            that.searchValue = ''
+            that.setData({
+              searchValue: ''
+            })
             that.switchType = 'map'
           }
         }
@@ -346,6 +487,10 @@
         let detail = this.pileList[e.markerId]
         let distance = (detail.distance * 1 / 1000).toFixed(2)
         let siteCode = detail.siteCode
+        wx.showLoading({
+          title: '正在加载',
+          mask: true
+        })
         this.stationData(siteCode, distance)
       },
       regionchange (e) {
@@ -469,7 +614,10 @@
       delete (e) {
         console.log('删除搜索框中的内容')
         let that = this
-        that.searchValue = ''
+        // that.searchValue = ''
+        that.setData({
+          searchValue: ''
+        })
         that.$apply()
       }
     }
@@ -578,6 +726,7 @@
           success: function (e) {
             console.log('站点详情：')
             console.log(e.data)
+            wx.hideLoading()
             wx.setStorageSync('stakeDetails', JSON.stringify(e.data))
             wx.navigateTo({
               url: 'station?v=' + new Date().getTime() + '&distance=' + distance + '&currentPositionLat=' + that.point.latitude + '&currentPositionLng=' + that.point.longitude
@@ -632,6 +781,7 @@
           console.log('查询到的站点信息:')
           console.log(data)
           that.isSearch = false
+          that.switchType = 'map'
           // that.pileList = data.data
           // data.data.forEach((e, index, arr) => {
           //   markers.push(that.addMarker(e, index))
@@ -653,7 +803,7 @@
               })
             }, 1000)
           }
-  
+
           that.$apply()
           wx.hideToast()
         }
@@ -681,6 +831,7 @@
         success: function (e) {
           console.log('站点详情：')
           console.log(e.data)
+          wx.hideLoading()
           wx.setStorageSync('stakeDetails', JSON.stringify(e.data))
           wx.navigateTo({
             url: 'station?v=' + new Date().getTime() + '&distance=' + distance + '&currentPositionLat=' + that.point.latitude + '&currentPositionLng=' + that.point.longitude
@@ -757,7 +908,7 @@
       let userCode = o === '' ? o : o.user.userId
       let appKey = o === '' ? o : o.appKey
       let markers = []
-      let chargePileType = condition.electType !== '' && condition.electType !== undefined ? condition.electType : ''
+      let chargePileType = condition.chargePileType !== '' && condition.chargePileType !== undefined ? condition.chargePileType : ''
       let chargeRateType = condition.chargeRateType !== '' && condition.chargeRateType !== undefined ? condition.chargeRateType : ''
       let isFree = condition.isFree !== '' && condition.isFree !== undefined ? condition.isFree : ''
       let carType = condition.modelCode !== '' && condition.modelCode !== undefined ? condition.modelCode : ''
@@ -936,7 +1087,9 @@
 
     onShow () {
       let that = this
-      that.searchValue = ''
+      that.setData({
+        searchValue: ''
+      })
       let checkTimer = setInterval(function () {
         console.log('定时器执行')
         if (that.completeStatus) {

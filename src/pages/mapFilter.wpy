@@ -42,7 +42,12 @@
 
   .filter-elect-list .selected {
     background-color: rgb(234, 248, 249);
-    border: 1px solid rgb(47, 185, 195)
+    border: 1px solid rgb(47, 185, 195);
+  }
+
+  .filter-car-list .selected {
+    background-color: rgb(234, 248, 249);
+    border: 1px solid rgb(47, 185, 195);
   }
 
   .filter-elect-img,
@@ -139,7 +144,7 @@
         选择车型
       </text>
       <view class="filter-car-list">
-        <view class="filter-car-list-my-car-type" style="margin-top: 0;" wx:if="{{isExistCarItem}}">
+        <view class="filter-car-list-my-car-type {{selectedCar ? 'selected' : ''}}" style="margin-top: 0;" wx:if="{{isExistCarItem}}" @tap="selectedCar">
           <image src="{{carItemImg}}" class="filter-car-img"/>
           <text class="filter-car-name">{{carItemName}}</text>
         </view>
@@ -157,7 +162,7 @@
       </view>
       <view class="btn-group">
         <view class="btn-card btn-group-cancel" @tap="cancel">取消</view>
-        <view class="btn-card btn-group-submit left" @tap="ok({{selectedArr}}, {{selectedCarItem}}, {{myCarItem}})">确定</view>
+        <view class="btn-card btn-group-submit left" @tap="ok({{selectedArr}}, {{selectedCar}}, {{selectedCarItem}}, {{myCarItem}})">确定</view>
       </view>
     </view>
   </view>
@@ -183,6 +188,7 @@
         false,
         false
       ],
+      selectedCar: false,
       selectedCarItem: '',
       myCarItem: '',
       isExistCarItem: false,
@@ -218,6 +224,10 @@
     }
 
     methods = {
+      selectedCar (e) {
+        this.selectedCar = !this.selectedCar
+        this.$apply()
+      },
       selectedCard (id, e) {
         this.selectedArr[id] = !this.selectedArr[id]
         this.$apply()
@@ -230,7 +240,7 @@
       cancel (e) {
         wx.navigateBack()
       },
-      ok (selectedArr, selectedCarItem, myCarItem) {
+      ok (selectedArr, selectedCar, selectedCarItem, myCarItem) {
         // selectedArr 0:直流电 1：交流快充 2：交流慢充 3：有空闲
         let electType = ''
         let isFree = 3
@@ -238,28 +248,30 @@
         let modelCode = ''
         let mapFilter = {}
         if (selectedArr[0] && !selectedArr[1] && !selectedArr[2]) {
-          electType = 1
+          electType = '1'
         }
         if (!selectedArr[0] && selectedArr[1] && !selectedArr[2]) {
-          electType = 2
-          chargeRateType = 1
+          electType = '2'
+          chargeRateType = '1'
         }
         if (!selectedArr[0] && !selectedArr[1] && selectedArr[2]) {
-          electType = 2
-          chargeRateType = 2
+          electType = '2'
+          chargeRateType = '2'
         }
         if (!selectedArr[0] && selectedArr[1] && selectedArr[2]) {
-          electType = 2
+          electType = '2'
         }
         if (selectedArr[3]) {
           isFree = 1
         }
-        if (myCarItem !== '') {
-          modelCode = myCarItem.vehicleModelCode
-        } else if (selectedCarItem !== '') {
-          modelCode = selectedCarItem.vehicleModelCode
+        if (selectedCar) {
+          if (myCarItem !== '') {
+            modelCode = myCarItem.vehicleModelCode
+          } else if (selectedCarItem !== '') {
+            modelCode = selectedCarItem.vehicleModelCode
+          }
         }
-        mapFilter.electType = electType
+        mapFilter.chargePileType = electType
         mapFilter.isFree = isFree
         mapFilter.chargeRateType = chargeRateType
         mapFilter.modelCode = modelCode
@@ -339,9 +351,10 @@
 
     onUnload () {
       let that = this
-      that.selectedArr = [false, false, false, false]
-      that.selectedCarItem = ''
-      wx.setStorageSync('selectedCarItem', '')
+      // that.selectedCar = false
+      // that.selectedArr = [false, false, false, false]
+      // that.selectedCarItem = ''
+      // wx.setStorageSync('selectedCarItem', '')
       that.$apply()
     }
   }

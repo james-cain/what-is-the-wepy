@@ -31,38 +31,38 @@
       selectedCar (selectedCarItem) {
         console.log('选中的车型：')
         console.log(selectedCarItem)
-        let that = this
-        if (CTP().checkLogin()) {
-          let carTypeParams = {
-            userId: that.session.user.userId,
-            vehicleModelCode: selectedCarItem.vehicleModelCode,
-            vehicleBrandCode: selectedCarItem.vehicleBrandCode,
+        // let that = this
+        // if (CTP().checkLogin()) {
+        //   let carTypeParams = {
+        //     userId: that.session.user.userId,
+        //     vehicleModelCode: selectedCarItem.vehicleModelCode,
+        //     vehicleBrandCode: selectedCarItem.vehicleBrandCode,
 
-            nonce: 'abc',
-            format: 'json',
-            v: '1.0',
-            method: 'user.save',
-            locale: 'zh_CN',
-            appKey: that.session.appKey,
-            sessionId: that.session.sessionId,
-            timestamp: new Date().getTime()
-          }
-          CTP().Ajax({
-            params: carTypeParams,
-            url: '/msp-cas/router',
-            success: function (_r) {
-              var carData = _r.data
-              console.log('carData:')
-              console.log(carData)
-              wx.setStorageSync('myCarItem', JSON.stringify(selectedCarItem))
-              wx.navigateBack()
-            }
-          })
-        } else {
-          console.log('因为没有登录,不能将选择的车辆保存到个人的信息中')
-          wx.setStorageSync('selectedCarItem', JSON.stringify(selectedCarItem))
-          wx.navigateBack()
-        }
+        //     nonce: 'abc',
+        //     format: 'json',
+        //     v: '1.0',
+        //     method: 'user.save',
+        //     locale: 'zh_CN',
+        //     appKey: that.session.appKey,
+        //     sessionId: that.session.sessionId,
+        //     timestamp: new Date().getTime()
+        //   }
+        //   CTP().Ajax({
+        //     params: carTypeParams,
+        //     url: '/msp-cas/router',
+        //     success: function (_r) {
+        //       var carData = _r.data
+        //       console.log('carData:')
+        //       console.log(carData)
+        //       wx.setStorageSync('myCarItem', JSON.stringify(selectedCarItem))
+        //       wx.navigateBack()
+        //     }
+        //   })
+        // } else {
+        console.log('因为没有登录,不能将选择的车辆保存到个人的信息中')
+        wx.setStorageSync('selectedCarItem', JSON.stringify(selectedCarItem))
+        wx.navigateBack()
+        // }
       }
     }
 

@@ -94,7 +94,7 @@
   background: #fff;
   margin-bottom: 20px;
   input {
-    width: 75%;
+    width: 70%;
     height: 50px;
     border: 0;
     outline: none;
@@ -104,7 +104,7 @@
   }
   .getCodeBtn {
     display: inline-block;
-    width: 25%;
+    width: 30%;
     font-size: 13px;
     height: 50px;
     line-height: 50px;
@@ -184,7 +184,7 @@
           <input class="transfer-remark-input" type="text" maxlength="20" @input="remarkInput" placeholder="添加备注(20字内)"/>
         </view>
         <view class="transfer-validate-code sendCode">
-          <input class="transfer-validate-input" type="number" @input="codeInput" placeholder="填写收到的手机验证码" focus="{{codeTfFocus}}"/>
+          <input class="transfer-validate-input" type="number" @input="codeInput" placeholder="手机验证码" focus="{{codeTfFocus}}"/>
           <button class="getCodeBtn" style="color: {{getCodeBtnProperty.titleColor}}" type="default" @tap="getCodeAct" disabled="{{getCodeBtnProperty.disabled}}">{{getCodeBtnProperty.title}}</button>
         </view>
       </view>
@@ -213,7 +213,7 @@
 <script>
   import wepy from 'wepy'
   import CTP from '../utils/ajax'
-  
+
   export default class TransferSure extends wepy.page {
     config = {
       navigationBarTitleText: '转账'

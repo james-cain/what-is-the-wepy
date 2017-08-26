@@ -53,7 +53,8 @@
   &-name {
     position: relative;
     display: inline-block;
-    width: 175px;
+    width: 165px;
+    white-space: nowrap;
   }
   &-img {
     position: relative;
@@ -69,10 +70,18 @@
     color: #a7a7a7;
   }
 }
+
+.pile-table-address {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  display: inline-block;
+}
 </style>
 
 <template>
-  <scroll-view scroll-y style="height: {{tableH}}px">
+  <scroll-view scroll-y style="height: {{tableH}}px" scroll-top="{{scrollTop}}">
     <view class="table-card" wx:for="{{pileTableListBak}}" wx:for-item="pileTable" wx:key="siteCode">
       <view style="display: flex;" @tap="gotostation({{pileTable.siteCode}}, {{pileTable.distanceBak}})">
         <view class="table-card-left">
@@ -108,7 +117,8 @@
 
     props = {
       pileTableList: {},
-      tableHeight: Number
+      tableHeight: Number,
+      scrollTop: 0
     }
 
     computed = {
@@ -119,6 +129,9 @@
 
     watch = {
       pileTableList (list) {
+        this.setData({
+          scrollTop: 0
+        })
         let that = this
         that.pileTableListBak.length = 0
         list.forEach((e, index, arr) => {
@@ -140,6 +153,10 @@
 
     methods = {
       gotostation (siteCode, distanceBak, e) {
+        wx.showLoading({
+          title: '正在加载',
+          mask: true
+        })
         this.$emit('stationData', siteCode, distanceBak)
       }
     }
