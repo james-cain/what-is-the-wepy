@@ -113,7 +113,7 @@
     }
 
     data = {
-      payType: 0,
+      payType: 1,
       payAmount: 0,
       session: ''
     }

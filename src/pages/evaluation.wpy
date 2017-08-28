@@ -53,7 +53,7 @@
 
 .evaluation-text {
   background: #f1f5f8;
-  height: 230px;
+  height: 200px;
   margin-bottom: 45px;
 }
 
@@ -292,9 +292,6 @@
               title: '评论成功',
               icon: 'success',
               duration: 2000
-            })
-            wx.redirectTo({
-              url: 'myOrder'
             })
             wx.navigateBack()
           } else {

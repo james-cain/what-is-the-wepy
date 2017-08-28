@@ -129,8 +129,9 @@
     </scroll-view>
     <view style="position: relative; width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px" wx:if="{{isSearch ? false : (switchType === 'map' ? false : true)}}">
       <menu :pileMenuList.sync="pileMenuList" ></menu>
-      <tableList :pileTableList.sync="pileTableList"></tableList>
+      <tableList :pileTableList.sync="pileTableList" :isLogin.sync="islogin"></tableList>
     </view>
+    <!-- <image src="../images/c_map_bubble2_normal@2x.png" style="position: absolute; left: 129.5px; top: 210.5px; width: 120px; height: 35px"/> -->
     <map id="map" longitude="{{getPileListParams.longitude}}" latitude="{{getPileListParams.latitude}}" markers="{{markers}}" scale="{{mapScale}}" show-location @regionchange="regionchange" controls="{{controls}}" @markertap="markertap" @controltap="controltap" style="width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px"  wx:if="{{!isSearch && switchType === 'map' ? true : false}}"></map>
    </view>
 </template>
@@ -212,12 +213,18 @@
               childId: 0,
               name: '不限车型',
               selected: true
+            },
+            {
+              childId: 1,
+              name: '我的车型',
+              selected: false
             }
           ]
         }
       ],
       pileTableList: [],
       pileList: [],
+      pileRecList: [],
       isSearch: false,
       switchType: 'map',
       // 菜单的高度
@@ -275,17 +282,28 @@
           clickable: true
         },
         // 地图中心位置按钮
-        // {
-        //   id: 3,
-        //   position: {
-        //     left: 169.5 * wx.getStorageSync('kScreenW'),
-        //     top: 245.5 * wx.getStorageSync('kScreenH'),
-        //     width: 35 * wx.getStorageSync('kScreenW'),
-        //     height: 35 * wx.getStorageSync('kScreenW')
-        //   },
-        //   iconPath: '../images/c_map_pin@2x.png',
-        //   clickable: false
-        // },
+        {
+          id: 3,
+          position: {
+            left: 169.5 * wx.getStorageSync('kScreenW'),
+            top: 245.5 * wx.getStorageSync('kScreenH'),
+            width: 35 * wx.getStorageSync('kScreenW'),
+            height: 35 * wx.getStorageSync('kScreenW')
+          },
+          iconPath: '../images/c_map_pin@2x.png',
+          clickable: false
+        },
+        {
+          id: 5,
+          position: {
+            left: 129.5 * wx.getStorageSync('kScreenW'),
+            top: 210.5 * wx.getStorageSync('kScreenH'),
+            width: 120 * wx.getStorageSync('kScreenW'),
+            height: 35 * wx.getStorageSync('kScreenW')
+          },
+          iconPath: '../images/c_map_bubble2_normal@2x.png',
+          clickable: true
+        },
         // 扫描二维码控件按钮
         {
           id: 4,
@@ -307,151 +325,105 @@
       type: '列表',
       markerH: 0,
       markerW: 0,
-      searchHistory: []
+      searchHistory: [],
+      islogin: false
     }
 
+    watch = {
+
+    }
     computed = {
       pileMenuList () {
-        if (CTP().checkLogin()) {
-          console.log('选择条件计算属性1。。。')
-          return [
-            {
-              id: 0,
-              name: '全部站点',
-              selected: false,
-              list: [
-                {
-                  childId: 0,
-                  name: '全部电站',
-                  selected: true
-                },
-                {
-                  childId: 1,
-                  name: '空闲中',
-                  selected: false
-                },
-                {
-                  childId: 2,
-                  name: '直流电',
-                  selected: false
-                },
-                {
-                  childId: 3,
-                  name: '交流快充',
-                  selected: false
-                },
-                {
-                  childId: 4,
-                  name: '交流慢充',
-                  selected: false
-                }
-              ]
-            },
-            {
-              id: 1,
-              name: '距离最近',
-              selected: false,
-              list: [
-                {
-                  childId: 0,
-                  name: '距离最近',
-                  selected: true
-                },
-                {
-                  childId: 1,
-                  name: '好评优先',
-                  selected: false
-                }
-              ]
-            },
-            {
-              id: 2,
-              name: '不限车型',
-              selected: false,
-              list: [
-                {
-                  childId: 0,
-                  name: '不限车型',
-                  selected: true
-                },
-                {
-                  childId: 1,
-                  name: '我的车型',
-                  selected: false
-                }
-              ]
+        if (!this.islogin) {
+          this.pileMenuList[2].list.forEach((e, index, arr) => {
+            if (e.name === '我的车型') {
+              console.log('删除次数')
+              arr.pop()
             }
-          ]
+          })
+          console.log('用户没有登陆，不能显示我的车型')
+          console.log(this.pileMenuList)
+          return this.pileMenuList
         } else {
-          console.log('选择条件计算属性2。。。')
-          return [
-            {
-              id: 0,
-              name: '全部站点',
-              selected: false,
-              list: [
-                {
-                  childId: 0,
-                  name: '全部电站',
-                  selected: true
-                },
-                {
-                  childId: 1,
-                  name: '空闲中',
-                  selected: false
-                },
-                {
-                  childId: 2,
-                  name: '直流电',
-                  selected: false
-                },
-                {
-                  childId: 3,
-                  name: '交流快充',
-                  selected: false
-                },
-                {
-                  childId: 4,
-                  name: '交流慢充',
-                  selected: false
-                }
-              ]
-            },
-            {
-              id: 1,
-              name: '距离最近',
-              selected: false,
-              list: [
-                {
-                  childId: 0,
-                  name: '距离最近',
-                  selected: true
-                },
-                {
-                  childId: 1,
-                  name: '好评优先',
-                  selected: false
-                }
-              ]
-            },
-            {
-              id: 2,
-              name: '不限车型',
-              selected: false,
-              list: [
-                {
-                  childId: 0,
-                  name: '不限车型',
-                  selected: true
-                }
-              ]
+          let item = {
+            childId: 1,
+            name: '我的车型',
+            selected: false
+          }
+          let flag
+          this.pileMenuList[2].list.forEach((e, index, arr) => {
+            if (e.name === '我的车型') {
+              flag = true
             }
-          ]
+          })
+          if (!flag) {
+            this.pileMenuList[2].list.push(item)
+          }
+          console.log('用户登陆成功，显示我的车型')
+          console.log(this.pileMenuList)
+          return this.pileMenuList
         }
       }
     }
 
     methods = {
+      getRecPileList (o, condition) {
+        console.log('获取推荐站点信息。。。')
+        console.log('获取map站点信息condition：')
+        console.log(condition)
+        // 检查网络
+        // if (checkNetWorkStatus() === false) {
+        //   console.log('网络错误')
+        // } else {
+        let that = this
+        let userCode = o === '' ? o : o.user.userId
+        let appKey = o === '' ? o : o.appKey
+        let chargePileType = condition.chargePileType !== '' && condition.chargePileType !== undefined ? condition.chargePileType : ''
+        let chargeRateType = condition.chargeRateType !== '' && condition.chargeRateType !== undefined ? condition.chargeRateType : ''
+        let isFree = condition.isFree !== '' && condition.isFree !== undefined ? condition.isFree : ''
+        let carType = condition.modelCode !== '' && condition.modelCode !== undefined ? condition.modelCode : ''
+
+        let _params = {
+          userCode: userCode,
+          longitude: that.getPileListParams.longitude,
+          latitude: that.getPileListParams.latitude,
+          keyword: '',
+          chargePileType: chargePileType,
+          chargeRateType: chargeRateType,
+          isFree: isFree,
+          sortType: '',
+          carType: carType,
+          lstSite: '',
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'station.searchRecommend',
+          locale: 'zh_CN',
+          appKey: appKey,
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: _params,
+          url: '/msp-charge/router',
+          success: function (e) {
+            let data = e.data
+            console.log('所有推荐站点信息:')
+            console.log(data)
+            if (data.code === '9') {
+              wx.showToast({
+                title: data.subErrors[0].message,
+                icon: 'loading',
+                duration: 1000
+              })
+              return
+            }
+            that.pileRecList = data.data
+            that.$apply()
+            wx.hideToast()
+          }
+        })
+      },
       goUserPage (e) {
         if (CTP().checkLogin()) {
           wx.navigateTo({
@@ -470,14 +442,14 @@
         } else {
           if (that.switchType === 'map') {
             that.switchType = 'table'
-            that.setData({
-              searchValue: ''
-            })
+            // that.setData({
+            //   searchValue: ''
+            // })
             that.initStakeList()
           } else {
-            that.setData({
-              searchValue: ''
-            })
+            // that.setData({
+            //   searchValue: ''
+            // })
             that.switchType = 'map'
           }
         }
@@ -587,18 +559,27 @@
         console.log('通过输入搜索信息查询')
         let that = this
         let se = CTP().session
+        let flag
         this.searchFn(e.detail.value)
+        wx.setStorageSync('keyWord', e.detail.value)
         if (se !== '') {
           let session = JSON.parse(se)
           let searchHis = wx.getStorageSync(session.user.userId + '_searchHistory')
           if (searchHis !== '') {
             let searchHistory = JSON.parse(searchHis)
-            searchHistory.push(e.detail.value)
+            searchHistory.forEach((elm, index, arr) => {
+              if (elm === e.detail.value) {
+                flag = true
+              }
+            })
+            if (!flag) {
+              searchHistory.unshift(e.detail.value)
+            }
             wx.setStorageSync(session.user.userId + '_searchHistory', JSON.stringify(searchHistory))
             that.searchHistory = searchHistory
           } else {
             let searchHistory = []
-            searchHistory.push(e.detail.value)
+            searchHistory.unshift(e.detail.value)
             wx.setStorageSync(session.user.userId + '_searchHistory', JSON.stringify(searchHistory))
             that.searchHistory = searchHistory
           }
@@ -618,6 +599,7 @@
         that.setData({
           searchValue: ''
         })
+        wx.setStorageSync('keyWord', '')
         that.$apply()
       }
     }
@@ -642,6 +624,7 @@
         let thirdName = that.pileMenuList[2].name
         let _params = {}
         let session = CTP().session
+        let keyWord = wx.getStorageSync('keyWord')
 
         if (firstName === '直流电') {
           chargePileType = '1'
@@ -661,13 +644,16 @@
         }
         if (thirdName === '不限车型') {
           carType = ''
+        } else if (thirdName === '我的车型') {
+          carType = JSON.parse(session).user.carType[0].vehicleModelCode
+          console.log('查询我的车型')
         }
 
         _params = {
           userCode: session === null || session === '' ? '' : JSON.parse(session).user.userId,
           longitude: that.point.longitude,
           latitude: that.point.latitude,
-          keyword: '',
+          keyword: keyWord,
           chargePileType: chargePileType,
           chargeRateType: chargeRateType,
           isFree: isFree,
@@ -752,17 +738,22 @@
       let session = CTP().session
       let userCode = session === null || session === '' ? '' : JSON.parse(session).user.userId
       let appKey = session === null || session === '' ? '' : JSON.parse(session).appKey
+      let mapFilter = wx.getStorageSync('mapFilter') !== '' ? JSON.parse(wx.getStorageSync('mapFilter')) : ''
+      let chargePileType = mapFilter.chargePileType !== '' && mapFilter.chargePileType !== undefined ? mapFilter.chargePileType : ''
+      let chargeRateType = mapFilter.chargeRateType !== '' && mapFilter.chargeRateType !== undefined ? mapFilter.chargeRateType : ''
+      let isFree = mapFilter.isFree !== '' && mapFilter.isFree !== undefined ? mapFilter.isFree : ''
+      let carType = mapFilter.modelCode !== '' && mapFilter.modelCode !== undefined ? mapFilter.modelCode : ''
 
       let _params = {
         userCode: userCode,
         longitude: that.getPileListParams.longitude,
         latitude: that.getPileListParams.latitude,
         keyword: keyWord,
-        chargePileType: '',
-        chargeRateType: '',
-        isFree: '',
+        chargePileType: chargePileType,
+        chargeRateType: chargeRateType,
+        isFree: isFree,
         sortType: '',
-        carType: '',
+        carType: carType,
         lstSite: '',
 
         nonce: 'abc',
@@ -778,6 +769,7 @@
         url: '/msp-charge/router',
         success: function (e) {
           let data = e.data
+          let markers = []
           console.log('查询到的站点信息:')
           console.log(data)
           that.isSearch = false
@@ -791,10 +783,19 @@
           // console.log(markers)
           // that.markers = markers
           let searchPile = data.data
+          console.log(searchPile)
           if (searchPile && searchPile.length !== 0) {
             that.getPileListParams.longitude = searchPile[0].longitude
             that.getPileListParams.latitude = searchPile[0].latitude
+            searchPile.forEach((e, index, arr) => {
+              markers.push(that.addMarker(e, index))
+            })
+
+            console.log('搜索总站点数：' + markers.length)
+            console.log(markers)
+            that.markers = markers
           } else {
+            that.markers = []
             setTimeout(function () {
               wx.showToast({
                 title: '没有找到站点',
@@ -890,8 +891,66 @@
     getUserCurrentLocation () {
       this.mapCtx.moveToLocation()
     }
+
+    getRecPileList (o, condition) {
+      console.log('获取推荐站点信息。。。')
+      console.log('获取map站点信息condition：')
+      console.log(condition)
+      // 检查网络
+      // if (checkNetWorkStatus() === false) {
+      //   console.log('网络错误')
+      // } else {
+      let that = this
+      let userCode = o === '' ? o : o.user.userId
+      let appKey = o === '' ? o : o.appKey
+      let chargePileType = condition.chargePileType !== '' && condition.chargePileType !== undefined ? condition.chargePileType : ''
+      let chargeRateType = condition.chargeRateType !== '' && condition.chargeRateType !== undefined ? condition.chargeRateType : ''
+      let isFree = condition.isFree !== '' && condition.isFree !== undefined ? condition.isFree : ''
+      let carType = condition.modelCode !== '' && condition.modelCode !== undefined ? condition.modelCode : ''
+
+      let _params = {
+        userCode: userCode,
+        longitude: that.getPileListParams.longitude,
+        latitude: that.getPileListParams.latitude,
+        keyword: '',
+        chargePileType: chargePileType,
+        chargeRateType: chargeRateType,
+        isFree: isFree,
+        sortType: '',
+        carType: carType,
+        lstSite: '',
+
+        nonce: 'abc',
+        v: '1.0',
+        format: 'json',
+        method: 'station.searchRecommend',
+        locale: 'zh_CN',
+        appKey: appKey,
+        timestamp: new Date().getTime()
+      }
+      CTP().Ajax({
+        params: _params,
+        url: '/msp-charge/router',
+        success: function (e) {
+          let data = e.data
+          console.log('所有推荐站点信息:')
+          console.log(data)
+          if (data.code === '9') {
+            wx.showToast({
+              title: data.subErrors[0].message,
+              icon: 'loading',
+              duration: 1000
+            })
+            return
+          }
+          that.pileRecList = data.data
+          that.$apply()
+          wx.hideToast()
+        }
+      })
+    }
     // 获取桩的集合
-    getPileList (o, condition) {
+    getPileList (o, condition, keyWord) {
       console.log('获取map站点信息condition：')
       console.log(condition)
       wx.showToast({
@@ -917,7 +976,7 @@
         userCode: userCode,
         longitude: that.getPileListParams.longitude,
         latitude: that.getPileListParams.latitude,
-        keyword: '',
+        keyword: keyWord,
         chargePileType: chargePileType,
         chargeRateType: chargeRateType,
         isFree: isFree,
@@ -977,6 +1036,7 @@
       let thirdName = that.pileMenuList[2].name
       let _params = {}
       let session = CTP().session
+      let keyWord = wx.getStorageSync('keyWord')
 
       if (firstName === '直流电') {
         chargePileType = '1'
@@ -1002,7 +1062,7 @@
         userCode: session === null || session === '' ? '' : JSON.parse(session).user.userId,
         longitude: that.point.longitude,
         latitude: that.point.latitude,
-        keyword: '',
+        keyword: keyWord,
         chargePileType: chargePileType,
         chargeRateType: chargeRateType,
         isFree: isFree,
@@ -1075,6 +1135,11 @@
           that.$apply()
         }
       })
+      let keyWord = wx.getStorageSync('keyWord')
+      that.setData({
+        searchValue: keyWord
+      })
+      that.searchValue = keyWord
       that.menuHeight = menuHeight
       that.mapHeight = mapHeight
       that.$apply()
@@ -1087,9 +1152,6 @@
 
     onShow () {
       let that = this
-      that.setData({
-        searchValue: ''
-      })
       let checkTimer = setInterval(function () {
         console.log('定时器执行')
         if (that.completeStatus) {
@@ -1098,6 +1160,11 @@
           let mapControls = that.mapControls
           // 过滤条件
           let mapFilter = wx.getStorageSync('mapFilter') !== '' ? JSON.parse(wx.getStorageSync('mapFilter')) : ''
+          let keyWord = wx.getStorageSync('keyWord')
+          that.setData({
+            searchValue: keyWord
+          })
+          that.searchValue = keyWord
           that.mapTop = that.menuHeight
           that.controls = mapControls
           that.getPileListParams.longitude = that.point.longitude
@@ -1107,29 +1174,35 @@
             success: function (e) {
               console.log('获取到用户信息：')
               console.log(e)
+              that.islogin = true
               if (mapFilter !== '') {
                 console.log('查询地图数据，走选择过滤条件分支')
-                that.getPileList(e, mapFilter)
+                that.getPileList(e, mapFilter, keyWord)
+                that.getRecPileList(e, mapFilter, keyWord)
                 // 清空过滤条件
-                wx.setStorageSync('mapFilter', '')
+                // wx.setStorageSync('mapFilter', '')
               } else {
                 console.log('获取到用户信息2：')
                 console.log('查询地图数据，走没有任何条件分支')
-                that.getPileList(e, {})
+                that.getPileList(e, {}, keyWord)
+                that.getRecPileList(e, {}, keyWord)
               }
             },
             // 用户不存在
             fail: function (e) {
+              that.islogin = false
               if (mapFilter !== '') {
                 console.log('获取到用户信息3：')
                 console.log('查询地图数据，走选择过滤条件分支')
-                that.getPileList('', mapFilter)
+                that.getPileList('', mapFilter, keyWord)
+                that.getRecPileList('', mapFilter, keyWord)
                 // 清空过滤条件
-                wx.setStorageSync('mapFilter', '')
+                // wx.setStorageSync('mapFilter', '')
               } else {
                 console.log('获取到用户信息4：')
                 console.log('查询地图数据，走没有任何条件分支')
-                that.getPileList('', {})
+                that.getPileList('', {}, keyWord)
+                that.getRecPileList('', {}, keyWord)
               }
             }
           })
@@ -1148,6 +1221,7 @@
       console.log('onUnload')
       // 清除过滤条件
       wx.setStorageSync('mapFilter', '')
+      wx.setStorageSync('keyWord', '')
     }
 
     onPullDownRefresh () {

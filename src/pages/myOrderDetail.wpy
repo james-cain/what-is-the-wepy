@@ -202,7 +202,7 @@
         </view>
       </view>
       <view class="mark">
-        <view class="mark-p mark-charging-amout"><text>{{myOrderDetails.chargeElectricity === null ? 0: myOrderDetails.chargeElectricity}}kWh</text>充电电量</view>
+        <view class="mark-p mark-charging-amout"><text>{{chargeElectricity}}kWh</text>充电电量</view>
         <view class="mark-p mark-charging-time"><text>{{chargeTime}}</text>充电时长</view>
       </view>
       <view class="orderDetails-menu">
@@ -251,7 +251,16 @@
     }
 
     computed = {
+      chargeElectricity () {
+        if (this.myOrderDetails.chargeElectricity === null || isNaN(this.myOrderDetails.chargeElectricity)) {
+          return '-'
+        }
+        return this.myOrderDetails.chargeElectricity
+      },
       chargeTime () {
+        if (this.myOrderDetails.chargeTime === null || isNaN(this.myOrderDetails.chargeTime)) {
+          return '-分钟'
+        }
         return (this.myOrderDetails.chargeTime * 1 / 60).toFixed(0) + '分钟'
       }
     }
@@ -335,11 +344,15 @@
 
     }
 
+    onShow() {
+      this.myOrderDetailsCode = wx.getStorageSync('myOrderDetailsCode')
+      this.getOrderDetail()
+      this.$apply()
+    }
+
     onLoad() {
       let se = CTP().session
       this.session = se === '' || se === null ? '' : JSON.parse(se)
-      this.myOrderDetailsCode = wx.getStorageSync('myOrderDetailsCode')
-      this.getOrderDetail()
       this.$apply()
     }
 

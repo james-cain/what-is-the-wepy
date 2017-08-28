@@ -226,24 +226,26 @@
                 icon: 'loading',
                 duraction: 2000
               })
+            } else {
+              let time = setInterval(function() {
+                console.log('进入定时器')
+                number--
+                that.getCodeBtnProperty.title = number + '秒后重发'
+                that.getCodeBtnProperty.disabled = true
+                that.$apply()
+                if (number === 0) {
+                  that.getCodeBtnProperty.title = '重新获取'
+                  that.getCodeBtnProperty.disabled = false
+                  that.getCodeBtnProperty.loading = false
+                  that.$apply()
+                  clearInterval(time)
+                }
+              }, 1000)
+              that.codeTfFocus = true
+              that.$apply()
             }
           }
         })
-        let time = setInterval(function() {
-          console.log('进入定时器')
-          number--
-          that.getCodeBtnProperty.title = number + '秒后重发'
-          that.getCodeBtnProperty.disabled = true
-          that.$apply()
-          if (number === 0) {
-            that.getCodeBtnProperty.title = '重新获取'
-            that.getCodeBtnProperty.disabled = false
-            that.getCodeBtnProperty.loading = false
-            that.$apply()
-            clearInterval(time)
-          }
-        }, 1000)
-        that.codeTfFocus = true
         that.$apply()
         // }
       },

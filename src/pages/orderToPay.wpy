@@ -147,7 +147,7 @@
             <view class="orderToPay-details-params-span charging-panel-details-elect">电量:<text>{{orderDetail.chargeElectricity}}</text>kWh</view>
           </view>
           <view class="orderToPay-details-params-p">
-            <view class="orderToPay-details-params-span charging-panel-details-del-c">减排:<text>{{orderDetail.carbonReduction}}</text></view>
+            <view class="orderToPay-details-params-span charging-panel-details-del-c">减排:<text>{{orderDetail.carbonReduction}}克</text></view>
           </view>
         </view>
       </view>
@@ -163,7 +163,7 @@
       </view>
 
       <view class="orderToPay-btn" @tap="pay">
-        确定支付<text class="orderToPay-btn-span">{{orderDetail.chargeQuantity}}</text>
+        确定支付<text class="orderToPay-btn-span">{{orderDetail.chargeQuantity}}元</text>
       </view>
     </view>
   </view>
@@ -185,7 +185,7 @@
 
     data = {
       orderDetail: {},
-      payType: 0,
+      payType: 1,
       chargingOrderCode: '',
       session: ''
     }

@@ -20,17 +20,26 @@
 }
 .basic {
   height: 45px;
-  width: 322px;
+  width: 90%;
   margin: 0 auto;
   border: 1px solid #cccccc;
   border-radius: 3px;
+  position: relative;
   input {
     height: 15px;
-    width: 290px;
-    float: right;
-    margin: 10px 0;
+    width: 90%;
+    float: left;
+    margin: 11px 0 11px 25px;
     font-size: 15px;
   }
+}
+.up {
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_downward_icon@2x.png') center center no-repeat;
+  background-size: 10px 10px;
+}
+.selected {
+  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_tick_ok@2x.png') right center no-repeat;
+  background-size: 20px 20px;
 }
 .account {
   background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_login_user_icon@2x.png') left center no-repeat;
@@ -45,13 +54,13 @@
 }
 .login-btn {
   height: 45px;
-  width: 322px;
+  width: 90%;
   margin-top: 25px;
   color: #ffffff;
 }
 .goto {
   height: 15px;
-  width: 322px;
+  width: 90%;
   font-size: 14px;
   line-height: 15px;
   color: #2fb9c3;
@@ -71,9 +80,24 @@
       <image src="{{appImg}}" class="app-img"/>
       <text class="app-title">充电桩</text>
     </view>
-    <form>
+    <form style="position: relative;">
       <view class="basic account"><input type="text" @input="accountInput" placeholder="手机/账号" focus="true"/></view>
-      <view class="basic pwd mt10"><input type="text" password="true" @input="pwdInput" placeholder="请输入登录密码"/></view>
+      <view class="basic pwd mt10">
+        <view style="display: {{isSelected == 1 ? 'inline-block' : 'none'}}">
+          <input style="width: 75%" type="text" password="true" @input="pwdInput" placeholder="登录密码"/>
+        </view>
+        <view style="width: 82%; display: {{isSelected == 2 ? 'inline-block' : 'none'}}">
+          <input style="width: 60%" type="number" @input="dymaticPwdInput" placeholder="动态密码"/>
+          <view @tap="getCodeAct" style="display: inline-block; width: 65px; font-size: 13px; background-color: #2fb9c3; color: #fff; height: 30px; margin-top: 8px; text-align: center; line-height: 30px; border-radius: 2px;">{{dymaticPwdText}}</view>
+        </view>
+        <view style="width: 15%; height: 45px; border-left: 1px solid #cccccc; float: right;" class="up" @tap="open"></view>
+      </view>
+      <view style="position: absolute; top: 105px; z-index: 10; width: {{windowW}}px" wx:if="{{isOpen}}">
+        <view class="basic" style="height: 90px; font-size: 15px; clear: both; background-color: #fafafa;">
+          <view style="line-height: 45px; padding-left: 10px; border-bottom: 1px solid #cccccc; box-sizing: border-box;" class="{{isSelected == 1 ? 'selected' : ''}}" @tap.stop="loginType(1)">登陆密码</view>
+          <view style="line-height: 45px; padding-left: 10px; box-sizing: border-box;" class="{{isSelected == 2 ? 'selected' : ''}}" @tap.stop="loginType(2)">动态密码</view>
+        </view>
+      </view>
       <button class="login-btn" style="background-color: {{loginBtnProperty.backcolor}}; color: #ffffff;" type="default" @tap="loginAct" disabled="{{loginBtnProperty.disabled}}" loading="{{loginBtnProperty.loading}}">登录</button>
     </form>
     <view class="goto">
@@ -104,21 +128,118 @@
       },
       appImg: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_app_logo160@2x.png',
       account: '',
-      pwd: ''
+      pwd: '',
+      dymaticPwd: '',
+      windowW: 0,
+      isOpen: false,
+      isSelected: 1,
+      dymaticPwdText: '获取密码'
     }
 
     methods = {
+      getCodeAct (e) {
+        let that = this
+        let number = 60
+        if (that.account === '') {
+          wx.showToast({
+            title: '手机号须填写',
+            icon: 'loading',
+            duraction: 1000,
+            mask: true
+          })
+          return
+        }
+        let paramsEvaluation = {
+          mobile: that.account,
+          reason: 'login',
+          validCode: '',
+
+          nonce: 'abc',
+          v: '1.0',
+          format: 'json',
+          method: 'user.sendvalidcode',
+          locale: 'zh_CN',
+          appKey: '',
+          sessionId: '',
+          timestamp: new Date().getTime()
+        }
+        CTP().Ajax({
+          params: paramsEvaluation,
+          url: '/msp-cas/router',
+          success: function (e) {
+            console.log('获取到的验证码：')
+            console.log(e)
+            if (e.data.code === '9') {
+              wx.showToast({
+                title: e.data.subErrors[0].message,
+                icon: 'loading',
+                duraction: 2000
+              })
+            } else {
+              let time = setInterval(function() {
+                console.log('进入定时器')
+                number--
+                that.dymaticPwdText = number + '秒'
+                that.$apply()
+                if (number === 0) {
+                  that.dymaticPwdText = '重新获取'
+                  that.$apply()
+                  clearInterval(time)
+                }
+              }, 1000)
+              that.$apply()
+            }
+          }
+        })
+        that.$apply()
+      },
+      loginType (type, e) {
+        this.isSelected = type
+        this.isOpen = !this.isOpen
+        if (this.isSelected * 1 === 1) {
+          if (this.account.length !== 0 && this.pwd.length !== 0) {
+            this.loginBtnProperty.disabled = false
+            this.loginBtnProperty.backcolor = '#2fb9c3'
+          } else {
+            this.loginBtnProperty.disabled = true
+            this.loginBtnProperty.backcolor = '#CCCCCC'
+          }
+        } else {
+          if (this.account.length !== 0 && this.dymaticPwd.length !== 0) {
+            this.loginBtnProperty.disabled = false
+            this.loginBtnProperty.backcolor = '#2fb9c3'
+          } else {
+            this.loginBtnProperty.disabled = true
+            this.loginBtnProperty.backcolor = '#CCCCCC'
+          }
+        }
+        this.$apply()
+      },
+      open (e) {
+        this.isOpen = !this.isOpen
+        this.$apply()
+      },
       // 输入账号
       accountInput (e) {
         let that = this
         let length = e.detail.value.length
         that.account = e.detail.value
-        if (length !== 0 && that.pwd.length !== 0) {
-          that.loginBtnProperty.disabled = false
-          that.loginBtnProperty.backcolor = '#2fb9c3'
+        if (this.isSelected * 1 === 1) {
+          if (length !== 0 && that.pwd.length !== 0) {
+            that.loginBtnProperty.disabled = false
+            that.loginBtnProperty.backcolor = '#2fb9c3'
+          } else {
+            that.loginBtnProperty.disabled = true
+            that.loginBtnProperty.backcolor = '#CCCCCC'
+          }
         } else {
-          that.loginBtnProperty.disabled = true
-          that.loginBtnProperty.backcolor = '#CCCCCC'
+          if (length !== 0 && that.dymaticPwd.length !== 0) {
+            that.loginBtnProperty.disabled = false
+            that.loginBtnProperty.backcolor = '#2fb9c3'
+          } else {
+            that.loginBtnProperty.disabled = true
+            that.loginBtnProperty.backcolor = '#CCCCCC'
+          }
         }
         that.$apply()
       },
@@ -127,6 +248,19 @@
         let that = this
         let length = e.detail.value.length
         that.pwd = MD5()(e.detail.value)
+        if (that.account.length !== 0 && length !== 0) {
+          that.loginBtnProperty.disabled = false
+          that.loginBtnProperty.backcolor = '#2fb9c3'
+        } else {
+          that.loginBtnProperty.disabled = true
+          that.loginBtnProperty.backcolor = '#CCCCCC'
+        }
+        that.$apply()
+      },
+      dymaticPwdInput (e) {
+        let that = this
+        let length = e.detail.value.length
+        that.dymaticPwd = e.detail.value
         if (that.account.length !== 0 && length !== 0) {
           that.loginBtnProperty.disabled = false
           that.loginBtnProperty.backcolor = '#2fb9c3'
@@ -148,17 +282,24 @@
         let paramsEvaluation = {
           account: that.account,
           phone: that.account,
-          password: that.pwd,
+          password: '',
           chargeMiniAppId: CTP().weChatAccount.id,
           system: 'XNCD',
           nonce: 'abc',
           v: '1.0',
           format: 'json',
-          method: 'user.login',
+          method: '',
           locale: 'zh_CN',
           appKey: '',
           sessionId: '',
           timestamp: new Date().getTime()
+        }
+        if (this.isSelected * 1 === 1) {
+          paramsEvaluation.password = this.pwd
+          paramsEvaluation.method = 'user.login'
+        } else {
+          paramsEvaluation.validCode = this.dymaticPwd
+          paramsEvaluation.method = 'user.validCodelogin'
         }
         CTP().Ajax({
           params: paramsEvaluation,
@@ -199,6 +340,9 @@
 
     events = {}
 
-    onLoad () {}
+    onLoad () {
+      this.windowW = wx.getStorageSync('windowW')
+      this.$apply()
+    }
   }
 </script>

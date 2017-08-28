@@ -47,6 +47,9 @@
   color: #7ccdd4;
 }
 
+.hide {
+  display: none
+}
 </style>
 
 <template>
@@ -77,9 +80,23 @@
     props = {
       pileMenuList: {
         twoWay: true
+      },
+      isLogin: {
+        type: Boolean,
+        default: false
       }
     }
 
+    watch = {
+      isLogin(value) {
+        if (!value) {
+          this.pileMenuList[2].list.pop()
+          console.log('用户没有登陆，不能显示我的车型')
+          console.log(this.pileMenuList)
+          this.$apply()
+        }
+      }
+    }
     data = {
       menuTabWidth: 0,
       menuChildWidth: 0
