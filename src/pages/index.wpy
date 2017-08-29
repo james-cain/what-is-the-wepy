@@ -501,8 +501,7 @@
             mask: true
           })
           wx.navigateTo({
-            // url: 'mapFilter'
-            url: 'https://www.baidu.com'
+            url: 'mapFilter'
           })
         } else if (id === 4) {
           wx.showToast({
