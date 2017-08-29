@@ -234,7 +234,7 @@
       },
       showCarType (e) {
         wx.navigateTo({
-          url: 'carTypeBox'
+          url: 'carTypeBox?isSave=false'
         })
       },
       cancel (e) {

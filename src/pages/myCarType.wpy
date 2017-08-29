@@ -106,7 +106,7 @@
     methods = {
       showCarType (e) {
         wx.navigateTo({
-          url: 'carTypeBox'
+          url: 'carTypeBox?isSave=true'
         })
         this.$apply()
       }

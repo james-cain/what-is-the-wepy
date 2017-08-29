@@ -134,7 +134,7 @@
     components = {}
 
     data = {
-      isTerms: false,
+      isTerms: true,
       phoneValue: '',
       codeValue: '',
       getCodeBtnProperty: {

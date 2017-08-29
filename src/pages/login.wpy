@@ -78,7 +78,7 @@
   <view class="homepage">
     <view class="app-head">
       <image src="{{appImg}}" class="app-img"/>
-      <text class="app-title">充电桩</text>
+      <text class="app-title">小南充电</text>
     </view>
     <form style="position: relative;">
       <view class="basic account"><input type="text" @input="accountInput" placeholder="手机/账号" focus="true"/></view>

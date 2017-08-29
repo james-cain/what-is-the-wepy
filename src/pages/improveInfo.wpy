@@ -120,7 +120,7 @@
       },
       selectedCar (e) {
         wx.navigateTo({
-          url: 'carTypeBox'
+          url: 'carTypeBox?isSave=true'
         })
       },
       jump (e) {

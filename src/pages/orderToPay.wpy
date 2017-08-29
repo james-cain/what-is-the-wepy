@@ -144,7 +144,7 @@
         <view class="orderToPay-details-params">
           <view class="orderToPay-details-params-p">
             <view class="orderToPay-details-params-span charging-panel-details-time">时长:<text>{{orderDetail.chargeTime}}</text>分钟</view>
-            <view class="orderToPay-details-params-span charging-panel-details-elect">电量:<text>{{orderDetail.chargeElectricity}}</text>kWh</view>
+            <view class="orderToPay-details-params-span charging-panel-details-elect">电量:<text>{{orderDetail.chargeQuantity}}</text>kWh</view>
           </view>
           <view class="orderToPay-details-params-p">
             <view class="orderToPay-details-params-span charging-panel-details-del-c">减排:<text>{{orderDetail.carbonReduction}}克</text></view>
@@ -163,7 +163,7 @@
       </view>
 
       <view class="orderToPay-btn" @tap="pay">
-        确定支付<text class="orderToPay-btn-span">{{orderDetail.chargeQuantity}}元</text>
+        确定支付<text class="orderToPay-btn-span">{{orderDetail.chargeElectricity}}元</text>
       </view>
     </view>
   </view>

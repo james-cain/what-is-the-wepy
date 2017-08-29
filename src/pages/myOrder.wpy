@@ -162,7 +162,7 @@
                <view class="order-list-item-mark">
                 <view class="charging-time">{{order.chargeMinuteTime}} 分钟</view>
                 <view class="charging-quality">{{order.chargeQuantity === null ? '0' : order.chargeQuantity}} kWh</view>
-                <view class="charging-electricity">{{order.chargeElectricity === null ? '无' : order.chargeElectricity}}元</view>
+                <view class="charging-electricity">{{order.chargeElectricity === null ? '0' : order.chargeElectricity}}元</view>
               </view>
             </view>
           </view>

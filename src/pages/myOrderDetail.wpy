@@ -202,7 +202,7 @@
         </view>
       </view>
       <view class="mark">
-        <view class="mark-p mark-charging-amout"><text>{{chargeElectricity}}kWh</text>充电电量</view>
+        <view class="mark-p mark-charging-amout"><text>{{chargeQuantity}}kWh</text>充电电量</view>
         <view class="mark-p mark-charging-time"><text>{{chargeTime}}</text>充电时长</view>
       </view>
       <view class="orderDetails-menu">
@@ -251,11 +251,11 @@
     }
 
     computed = {
-      chargeElectricity () {
-        if (this.myOrderDetails.chargeElectricity === null || isNaN(this.myOrderDetails.chargeElectricity)) {
+      chargeQuantity () {
+        if (this.myOrderDetails.chargeQuantity === null || isNaN(this.myOrderDetails.chargeQuantity)) {
           return '-'
         }
-        return this.myOrderDetails.chargeElectricity
+        return this.myOrderDetails.chargeQuantity
       },
       chargeTime () {
         if (this.myOrderDetails.chargeTime === null || isNaN(this.myOrderDetails.chargeTime)) {

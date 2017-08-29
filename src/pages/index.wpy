@@ -282,28 +282,28 @@
           clickable: true
         },
         // 地图中心位置按钮
-        {
-          id: 3,
-          position: {
-            left: 169.5 * wx.getStorageSync('kScreenW'),
-            top: 245.5 * wx.getStorageSync('kScreenH'),
-            width: 35 * wx.getStorageSync('kScreenW'),
-            height: 35 * wx.getStorageSync('kScreenW')
-          },
-          iconPath: '../images/c_map_pin@2x.png',
-          clickable: false
-        },
-        {
-          id: 5,
-          position: {
-            left: 129.5 * wx.getStorageSync('kScreenW'),
-            top: 210.5 * wx.getStorageSync('kScreenH'),
-            width: 120 * wx.getStorageSync('kScreenW'),
-            height: 35 * wx.getStorageSync('kScreenW')
-          },
-          iconPath: '../images/c_map_bubble2_normal@2x.png',
-          clickable: true
-        },
+        // {
+        //   id: 3,
+        //   position: {
+        //     left: 169.5 * wx.getStorageSync('kScreenW'),
+        //     top: 245.5 * wx.getStorageSync('kScreenH'),
+        //     width: 35 * wx.getStorageSync('kScreenW'),
+        //     height: 35 * wx.getStorageSync('kScreenW')
+        //   },
+        //   iconPath: '../images/c_map_pin@2x.png',
+        //   clickable: false
+        // },
+        // {
+        //   id: 5,
+        //   position: {
+        //     left: 129.5 * wx.getStorageSync('kScreenW'),
+        //     top: 210.5 * wx.getStorageSync('kScreenH'),
+        //     width: 120 * wx.getStorageSync('kScreenW'),
+        //     height: 35 * wx.getStorageSync('kScreenW')
+        //   },
+        //   iconPath: '../images/c_map_bubble2_normal@2x.png',
+        //   clickable: true
+        // },
         // 扫描二维码控件按钮
         {
           id: 4,
@@ -494,10 +494,23 @@
           that.getUserCurrentLocation()
         } else if (id === 2) {
           // 筛选功能
+          wx.showToast({
+            title: '正在打开筛选框',
+            icon: 'loading',
+            duraction: 1000,
+            mask: true
+          })
           wx.navigateTo({
-            url: 'mapFilter'
+            // url: 'mapFilter'
+            url: 'https://www.baidu.com'
           })
         } else if (id === 4) {
+          wx.showToast({
+            title: '正在打开扫码',
+            icon: 'loading',
+            duraction: 1000,
+            mask: true
+          })
           if (CTP().checkLogin()) {
             console.log('以获取到用户信息，可以进入扫描界面')
             CTP().getHomeInfo(function (m) {
@@ -595,7 +608,7 @@
       delete (e) {
         console.log('删除搜索框中的内容')
         let that = this
-        // that.searchValue = ''
+        that.searchValue = ''
         that.setData({
           searchValue: ''
         })
@@ -785,8 +798,8 @@
           let searchPile = data.data
           console.log(searchPile)
           if (searchPile && searchPile.length !== 0) {
-            that.getPileListParams.longitude = searchPile[0].longitude
-            that.getPileListParams.latitude = searchPile[0].latitude
+            // that.getPileListParams.longitude = searchPile[0].longitude
+            // that.getPileListParams.latitude = searchPile[0].latitude
             searchPile.forEach((e, index, arr) => {
               markers.push(that.addMarker(e, index))
             })
@@ -1178,14 +1191,14 @@
               if (mapFilter !== '') {
                 console.log('查询地图数据，走选择过滤条件分支')
                 that.getPileList(e, mapFilter, keyWord)
-                that.getRecPileList(e, mapFilter, keyWord)
+                // that.getRecPileList(e, mapFilter, keyWord)
                 // 清空过滤条件
                 // wx.setStorageSync('mapFilter', '')
               } else {
                 console.log('获取到用户信息2：')
                 console.log('查询地图数据，走没有任何条件分支')
                 that.getPileList(e, {}, keyWord)
-                that.getRecPileList(e, {}, keyWord)
+                // that.getRecPileList(e, {}, keyWord)
               }
             },
             // 用户不存在
@@ -1195,14 +1208,14 @@
                 console.log('获取到用户信息3：')
                 console.log('查询地图数据，走选择过滤条件分支')
                 that.getPileList('', mapFilter, keyWord)
-                that.getRecPileList('', mapFilter, keyWord)
+                // that.getRecPileList('', mapFilter, keyWord)
                 // 清空过滤条件
                 // wx.setStorageSync('mapFilter', '')
               } else {
                 console.log('获取到用户信息4：')
                 console.log('查询地图数据，走没有任何条件分支')
                 that.getPileList('', {}, keyWord)
-                that.getRecPileList('', {}, keyWord)
+                // that.getRecPileList('', {}, keyWord)
               }
             }
           })

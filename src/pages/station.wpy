@@ -540,11 +540,17 @@
             console.log('评论内容变化:')
             console.log(e)
 
-            if (e.data.state === 0) {
+            if (e.data.code !== '9') {
               that.isEdit = false
               that.evalPageNo = 1
               that.$apply()
               that.getCommentList()
+            } else {
+              wx.showToast({
+                title: e.data.subErrors[0].message,
+                icon: 'loading',
+                duration: 2000
+              })
             }
           },
           error: function (e) {
