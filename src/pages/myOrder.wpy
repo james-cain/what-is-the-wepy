@@ -225,7 +225,6 @@
 
     myOrderList2OrderList () {
       let that = this
-      that.orderList.length = 0
       that.myOrderList.forEach((e, index, arr) => {
         let order = {}
         order = e
@@ -273,7 +272,7 @@
               that.isShow = false
               that.myOrderList.length = 0
               that.myOrderList = data.data
-              if (data.count < that.pageSize) {
+              if (data.data.length < that.pageSize) {
                 that.isNoMore = true
                 that.showInfo = '没有更多数据了！'
               } else {

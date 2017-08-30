@@ -65,6 +65,7 @@
               <text class="pile-menu-tab-child {{pileChild.selected ? 'selected' : ''}}">{{pileChild.name}}</text>
             </view>
           </view>
+          <view style="position: absolute; width: {{menuChildWidth}}px; left: 0px; background-color: #000; z-index: 10; opacity: 0.3; height: 100%;" wx:if="{{pileMenu.selected}}"></view>
         </view>
     </view>
 </template>
