@@ -350,7 +350,7 @@
                   icon: 'loading',
                   duration: 2000
                 })
-              } else if (state === 2102) {
+              } else if (state === 2101) {
                 // 该用户在当前枪有充电中的订单（重复启动充电的情况）
                 wx.redirectTo({
                   url: 'electring'

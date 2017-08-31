@@ -306,7 +306,12 @@
                 that.isMore = true
               }
               that.currentList.forEach((e, index, arr) => {
-                e.img = that.$parent.globalData.serverUrl + '/cloudfs/api/view/' + e.avatarId
+                if (e.avatarId) {
+                  e.img = that.$parent.globalData.serverUrl + '/cloudfs/api/fs/view/' + e.avatarId
+                } else {
+                  e.img = 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'
+                }
+                
                 that.detailList.push(e)
               })
             }

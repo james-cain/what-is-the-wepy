@@ -346,6 +346,10 @@
                 title: data.message,
                 icon: 'loading',
                 duration: 2000
+              }).showToast({
+                title: data.message,
+                icon: 'loading',
+                duration: 2000
               })
               clearInterval(that.getInfoM)
               wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
@@ -353,7 +357,7 @@
               wx.redirectTo({
                 url: 'myOrderDetail'
               })
-            } else if (data.state === 2051 || data.state === 2306) {
+            } else if (data.state === 2051) {
               wx.showToast({
                 title: data.message,
                 icon: 'loading',
