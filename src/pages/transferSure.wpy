@@ -166,7 +166,7 @@
         <view class="transfer-obj-details">
           <view class="transfer-obj-details-main">
             <view class="transfer-obj-details-main-icon">
-              <image class="transfer-user-avatar" src="{{avatarId}}"/>
+              <image class="transfer-user-avatar" src="{{transferUser.img}}"/>
             </view>
             <view class="transfer-obj-details-name">{{transferUser.nick !== null && transferUser.nick !== '' ? transferUser.nick : (transferUser.account !== null && transferUser.account !== '' ? transferUser.account : transferUser.phone)}}</view>
             <view class="transfer-obj-details-tel">{{transferUser.phone}}</view>
@@ -241,13 +241,13 @@
     }
 
     computed = {
-      avatarId() {
-        if (this.avatarId) {
-          return this.$parent.globalData.serverUrl + '/cloudfs/api/fs/view/' + this.avatarId
-        } else {
-          return 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'
-        }
-      }
+      // avatarId() {
+      //   if (this.avatarId) {
+      //     return this.$parent.globalData.serverUrl + '/cloudfs/api/fs/view/' + this.avatarId
+      //   } else {
+      //     return 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'
+      //   }
+      // }
     }
 
     methods = {

@@ -223,9 +223,8 @@
     methods = {
       endCharge (e) {
         wx.showModal({
-          title: '结束充电',
-          content: '您确认结束充电吗?',
-          showCancel: true,
+          title: '确定结束本次充电？',
+          content: '充电完后请取出充电枪，并尽快完成支付！',
           success: (res) => {
             if (res.confirm) {
               wx.showLoading({
@@ -277,9 +276,30 @@
             that.chargeInfo = data.data
             that.chargeInfo.chargeQuantity = (that.chargeInfo.chargeQuantity).substring(0, (that.chargeInfo.chargeQuantity).indexOf('.') + 3)
             console.log('获取充电信息data：', data.data)
+            if (data.data.orderState === 3) {
+              clearInterval(that.getInfoM)
+              wx.showModal({
+                title: '充电结束',
+                content: '本次充电已经完成，请取出充电枪，并尽快完成支付！',
+                cancelText: '稍后支付',
+                confirmText: '确定',
+                success: res => {
+                  if (res.confirm) {
+                    wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
+                    wx.redirectTo({
+                      url: 'orderToPay'
+                    })
+                  } else if (res.cancel) {
+                    wx.navigateBack({
+                      delta: 3
+                    })
+                  }
+                }
+              })
+            }
             that.$apply()
           } else {
-            if (data.state === 2201) {
+            if (data.state === 2201 || data.state === 10000) {
               wx.showToast({
                 title: data.message,
                 icon: 'loading',
@@ -318,6 +338,7 @@
 
     startC () {
       let that = this
+      clearInterval(that.getInfoM)
       let params = {
         userCode: that.session.user.userId,
         orderCode: that.chargingOrderCode,
@@ -340,7 +361,7 @@
           console.log(e)
           let data = e.data
           if (data.state !== 0 && data.state !== 2052) {
-            if (data.state === 2201) {
+            if (data.state === 2201 || data.state === 10000) {
               // 订单已结束
               wx.showToast({
                 title: data.message,
@@ -351,7 +372,6 @@
                 icon: 'loading',
                 duration: 2000
               })
-              clearInterval(that.getInfoM)
               wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
               that.updateUserSession()
               wx.redirectTo({
@@ -364,7 +384,6 @@
                 duration: 1000
               })
               wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
-              clearInterval(that.getInfoM)
               wx.redirectTo({
                 url: 'orderToPay'
               })
@@ -384,7 +403,6 @@
               duration: 2000
             })
             wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
-            clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'orderToPay'
             })
@@ -397,7 +415,6 @@
               duration: 2000
             })
             wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
-            clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'myOrderDetail'
             })
@@ -410,7 +427,6 @@
               duration: 2000
             })
             wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
-            clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'orderToPay'
             })
@@ -422,7 +438,6 @@
               icon: 'success',
               duration: 2000
             })
-            clearInterval(that.getInfoM)
             wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
             that.updateUserSession()
             wx.redirectTo({
@@ -437,7 +452,6 @@
               icon: 'loading',
               duration: 2000
             })
-            clearInterval(that.getInfoM)
             wx.redirectTo({
               url: 'myOrderDetail'
             })

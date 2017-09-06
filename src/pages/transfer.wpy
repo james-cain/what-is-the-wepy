@@ -137,6 +137,7 @@
           <view class="transfer-detail-item" wx:for="{{detailList}}" wx:for-item="detail" wx:key="userId" @tap="goToSure({{index}})">
             <view class="transfer-obj-list-icon">
               <image src="{{detail.img}}"/>
+              <image src="{{detail.img}}"/>
             </view>
             <view class="transfer-detail-item-i">{{detail.nick !== null && detail.nick !== '' ? detail.nick : (detail.account !== null && detail.account !== '' ? detail.account : detail.phone)}}</view>
             <view style="width: 30%; display: inline-block;">{{detail.phone}}</view>
@@ -232,7 +233,7 @@
             console.log(e)
             let data = e.data
             if (data.state === 0) {
-              data.data.img = 'http://mspshow.szcomtop.com/cloudfs/api/view/' + data.data.avatarId
+              data.data.img = that.$parent.globalData.serverUrl + data.data.avatarId
               wx.setStorageSync('transferUser', JSON.stringify(data.data))
               wx.navigateTo({
                 url: 'transferSure'
@@ -307,11 +308,11 @@
               }
               that.currentList.forEach((e, index, arr) => {
                 if (e.avatarId) {
-                  e.img = that.$parent.globalData.serverUrl + '/cloudfs/api/fs/view/' + e.avatarId
+                  // e.img = that.$parent.globalData.serverUrl + '/cloudfs/api/fs/view/' + e.avatarId
+                  e.img = 'http://mspshow.szcomtop.com/cloudfs/api/fs/view/' + e.avatarId
                 } else {
                   e.img = 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'
                 }
-                
                 that.detailList.push(e)
               })
             }

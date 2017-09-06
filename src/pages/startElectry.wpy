@@ -53,9 +53,9 @@
   font-size: 25px;
   color: #fff;
   width: 200px;
-  text-align: left;
+  text-align: center;
   height: 30px;
-  margin: 70px auto 0 30px;
+  margin: 70px auto 0 auto;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -69,10 +69,11 @@
 
 .charging-top-code {
   font-size: 14px;
-  margin: 0 auto 0 30px;
+  margin: 0 auto 5px auto;
   text-align: left;
   color: #595858;
-  padding-bottom: 20px;
+  padding-bottom: 15px;
+  padding-top: 5px;
   width: 200px;
   border-bottom: 1px solid #595858;
 }
@@ -345,15 +346,41 @@
                 })
               } else if (state === 2100) {
                 // 启动充电，有未支付订单
-                wx.showToast({
-                  title: '您订单未支付,请先支付订单后再充电',
-                  icon: 'loading',
-                  duration: 2000
+                let homeInfo = JSON.parse(wx.getStorageSync('homeInfo'))
+                console.log('状态码为2100，存在有未支付订单：')
+                console.log(homeInfo)
+                wx.showModal({
+                  title: '付款提示',
+                  content: '订单支付后，才能再一次进行充电，请尽快完成支付。',
+                  cancelText: '稍候支付',
+                  confirmText: '现在支付',
+                  success: res => {
+                    if (res.confirm) {
+                      wx.setStorageSync('chargingOrderCode', homeInfo.orderCode)
+                      wx.navigateTo({
+                        url: 'orderToPay'
+                      })
+                    }
+                  }
                 })
               } else if (state === 2101) {
                 // 该用户在当前枪有充电中的订单（重复启动充电的情况）
                 wx.redirectTo({
                   url: 'electring'
+                })
+              } else if (state === 1090) {
+                wx.showModal({
+                  title: '充值提示',
+                  content: '您的账户余额须大于' + that.configThreshold.promptThreshold + '元，请及时充值。',
+                  cancelText: '暂不充值',
+                  confirmText: '马上充值',
+                  success: res => {
+                    if (res.confirm) {
+                      wx.navigateTo({
+                        url: 'addMoney'
+                      })
+                    }
+                  }
                 })
               } else {
                 if (e.data.code === 9) {
@@ -423,8 +450,17 @@
             if (typeof that.configThreshold.promptThreshold !== 'undefined') {
               if (that.session.user.balance * 1 <= that.configThreshold.promptThreshold * 1) {
                 wx.showModal({
-                  title: '注意',
-                  content: '当前余额为' + that.session.user.balance + '元，请及时充值'
+                  title: '充值提示',
+                  content: '您的账户余额须大于' + that.configThreshold.promptThreshold + '元，请及时充值。',
+                  cancelText: '暂不充值',
+                  confirmText: '马上充值',
+                  success: res => {
+                    if (res.confirm) {
+                      wx.navigateTo({
+                        url: 'addMoney'
+                      })
+                    }
+                  }
                 })
                 that.canStart = false
                 that.$apply()
@@ -457,8 +493,17 @@
           if (typeof that.configThreshold.promptThreshold !== 'undefined') {
             if (that.session.user.balance * 1 <= that.configThreshold.promptThreshold * 1) {
               wx.showModal({
-                title: '注意',
-                content: '当前余额为' + that.session.user.balance + '元，请及时充值'
+                title: '充值提示',
+                content: '您的账户余额须大于' + that.configThreshold.promptThreshold + '元，请及时充值。',
+                cancelText: '暂不充值',
+                confirmText: '马上充值',
+                success: res => {
+                  if (res.confirm) {
+                    wx.navigateTo({
+                      url: 'addMoney'
+                    })
+                  }
+                }
               })
               that.canStart = false
               that.$apply()

@@ -504,15 +504,14 @@
             url: 'mapFilter'
           })
         } else if (id === 4) {
-          wx.showToast({
+          wx.showLoading({
             title: '正在打开扫码',
-            icon: 'loading',
-            duraction: 1000,
             mask: true
           })
           if (CTP().checkLogin()) {
             console.log('以获取到用户信息，可以进入扫描界面')
             CTP().getHomeInfo(function (m) {
+              wx.hideLoading()
               let data = m.data
               console.log(data)
               if (data.data.orderCode !== '' && data.data.orderState === '2') {
@@ -529,6 +528,7 @@
               }
             })
           } else {
+            wx.hideLoading()
             wx.navigateTo({
               url: 'login'
             })
@@ -1199,6 +1199,28 @@
                 that.getPileList(e, {}, keyWord)
                 // that.getRecPileList(e, {}, keyWord)
               }
+              CTP().getHomeInfo(function (m) {
+                let data = m.data
+                console.log('打开首页判断当前是否存在需要付款的订单：')
+                console.log(data)
+                wx.setStorageSync('homeInfo', JSON.stringify(data.data))
+                if (data.data.orderCode !== '' && data.data.orderState === '3') {
+                  wx.showModal({
+                    title: '您有一个订单未支付',
+                    content: '订单支付后，才能再一次进行充电，请尽快完成支付。',
+                    cancelText: '稍候支付',
+                    confirmText: '现在支付',
+                    success: res => {
+                      if (res.confirm) {
+                        wx.setStorageSync('chargingOrderCode', data.data.orderCode)
+                        wx.navigateTo({
+                          url: 'orderToPay'
+                        })
+                      }
+                    }
+                  })
+                }
+              })
             },
             // 用户不存在
             fail: function (e) {

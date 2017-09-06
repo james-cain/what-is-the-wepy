@@ -5,7 +5,8 @@ let CTP = function() {
 
   let session = wx.getStorageSync('session')
 
-  let SERVER_URL = 'https://mspshow.szcomtop.com'
+  // let SERVER_URL = 'https://mspshow.szcomtop.com'
+  let SERVER_URL = 'https://eimshow.szcomtop.com'
 
   function checkLogin () {
     let curSession = wx.getStorageSync('session') === '' ? null : JSON.parse(wx.getStorageSync('session'))

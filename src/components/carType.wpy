@@ -119,8 +119,8 @@
       <view class="left-type-list">
         <view wx:for="{{allCarList}}" wx:for-item="car" wx:key="brand">
           <view class="left-type-card {{car.selected ? 'selected' : ''}}" @tap.stop="switchBrand({{car.brand}}, {{car.selected}})">
-             <image class="left-type-img" src="{{car.brandImg}}"/> 
-            <text>{{car.brand}}</text>
+             <image class="left-type-img" src="{{car.brandImg}}"/>
+             <text>{{car.brand}}</text>
           </view>
         </view>
       </view>

@@ -91,6 +91,7 @@
     overflow: hidden;
     left: 10%;
     top: 110px;
+    font-size: 15px;
 }
 
 .mineInfo-panel-bottom .arrow {
@@ -112,24 +113,24 @@
         <view style="background: #f5f5f5;width: 50px;height: 50px;overflow: hidden;border: 2px solid #fff;border-radius: 27px;left: 50%;top: 20px;position: absolute;margin-left: -27px;">
           <image class="mineInfo-panel-top-icon" src="{{userInfo.avatarId && userInfo.avatarId !== 'http://mspshow.szcomtop.com/cloudfs/api/fs/view/' ? userInfo.avatarId : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'}}" />
         </view>
-        <view class="mineInfo-panel-top-name"></view>
-        <view class="mineInfo-panel-top-description"></view>
+        <view class="mineInfo-panel-top-name">{{userInfo.nick ? userInfo.nick : '未设置'}}</view>
+        <view class="mineInfo-panel-top-description">{{userInfo.introduction ? userInfo.introduction : '未设置'}}</view>
       </view>
       <view class="mineInfo-panel-bottom">
         <view class="bottom-p mineInfo-panel-bottom-account"><text>账号</text>
-          <view class="info">{{userInfo.account}}</view>
+          <view class="info">{{userInfo.account ? userInfo.account : '未设置'}}</view>
         </view>
         <view class="bottom-p mineInfo-panel-bottom-tel"><text>手机号码</text>
-          <view class="info">{{userInfo.phone}}</view>
+          <view class="info">{{userInfo.phone ? userInfo.phone : '未设置'}}</view>
         </view>
         <view class="bottom-p mineInfo-panel-bottom-nick" @tap="mod('nick', {{userInfo.nick}})"><view class="arrow"></view><text>昵称</text>
-          <text class="info">{{userInfo.nick}}</text>
+          <text class="info">{{userInfo.nick ? userInfo.nick : '未设置'}}</text>
         </view>
         <view class="bottom-p mineInfo-panel-bottom-sex" @tap="mod('gender', {{userInfo.gender === 2 ? '男' : '女'}})"><view class="arrow"></view><text>性别</text>
-          <view class="info">{{userInfo.gender === 2 ? '男' : '女'}}</view>
+          <view class="info">{{userInfo.gender === 2 ? '男' : (userInfo.gender === 1 ? '女' : '未设置')}}</view>
         </view>
         <view class="bottom-p mineInfo-panel-bottom-description" @tap="mod('introduction', {{userInfo.introduction}})"><view class="arrow"></view><text>简介</text>
-          <text class="info">{{userInfo.introduction}}</text>
+          <text class="info">{{userInfo.introduction ? userInfo.introduction : '未设置'}}</text>
         </view>
       </view>
     </view>

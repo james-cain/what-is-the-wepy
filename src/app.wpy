@@ -55,7 +55,8 @@
 
     globalData = {
       userInfo: null,
-      serverUrl: 'https://mspshow.szcomtop.com'
+      // serverUrl: 'https://mspshow.szcomtop.com'
+      serverUrl: 'https://eimshow.szcomtop.com'
     }
 
     onLaunch() {
