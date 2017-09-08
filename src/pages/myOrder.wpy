@@ -330,16 +330,16 @@
         })
         console.log('当前状态：' + orderState + ',' + isComment + ',' + index)
         if (orderState === '4' && isComment === '1') {
-          wx.setStorageSync('chargedPayment', JSON.stringify(this.myOrderList[index]))
-          wx.setStorageSync('chargingOrderCode', this.myOrderList[index].orderCode)
+          wx.setStorageSync('chargedPayment', JSON.stringify(this.orderList[index]))
+          wx.setStorageSync('chargingOrderCode', this.orderList[index].orderCode)
           // wx.setStorageSync('evaluationNeedparams', JSON.stringify(this.myOrderList[index]))
           wx.navigateTo({
             url: 'evaluation'
           })
           wx.hideLoading()
         } else if (orderState === '3' && isComment === '1') {
-          wx.setStorageSync('chargedPayment', JSON.stringify(this.myOrderList[index]))
-          wx.setStorageSync('chargingOrderCode', this.myOrderList[index].orderCode)
+          wx.setStorageSync('chargedPayment', JSON.stringify(this.orderList[index]))
+          wx.setStorageSync('chargingOrderCode', this.orderList[index].orderCode)
           wx.navigateTo({
             url: 'orderToPay'
           })
@@ -364,13 +364,14 @@
           mask: true
         })
         if (orderState === '2') {
-          wx.setStorageSync('chargingOrderCode', this.myOrderList[index].orderCode)
+          wx.setStorageSync('chargingOrderCode', this.orderList[index].orderCode)
           wx.navigateTo({
             url: 'electring'
           })
           wx.hideLoading()
         } else {
-          wx.setStorageSync('myOrderDetailsCode', this.myOrderList[index].orderCode)
+          console.log('当前orderCode为：' + this.orderList[index].orderCode)
+          wx.setStorageSync('myOrderDetailsCode', this.orderList[index].orderCode)
           wx.navigateTo({
             url: 'myOrderDetail'
           })
@@ -384,14 +385,34 @@
     }
 
     onShow () {
-      this.initMyOrder('')
+      this.isShow = false
+      this.pageNo = 1
+      this.pageSize = 20
+      this.showInfo = '加载更多'
+      this.isNoMore = false
+      this.flg = true
+      this.orderList.length = 0
+      this.myOrderList.length = 0
       this.$apply()
+      this.initMyOrder('')
     }
 
     onLoad() {
       let se = CTP().session
       this.windowH = wx.getStorageSync('windowH')
       this.session = se === '' || se === null ? '' : JSON.parse(se)
+      this.$apply()
+    }
+
+    onUnload () {
+      this.isShow = false
+      this.pageNo = 1
+      this.pageSize = 20
+      this.showInfo = '加载更多'
+      this.isNoMore = false
+      this.flg = true
+      this.orderList.length = 0
+      this.myOrderList.length = 0
       this.$apply()
     }
   }

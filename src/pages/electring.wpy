@@ -132,7 +132,7 @@
   <view class="homepage">
     <view id="charging-panel-charging"  style="overflow: hidden;">
       <view class="charging-top">
-         <view class="left-time">预计结束:<text>{{formatSeconds}}</text></view>
+         <view class="left-time">预计结束: <text>{{formatSeconds}}</text></view>
       </view>
       <view class="charging-end-button" @tap="endCharge">
         <text>结束充电</text>

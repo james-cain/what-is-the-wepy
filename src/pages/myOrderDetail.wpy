@@ -346,6 +346,7 @@
 
     onShow() {
       this.myOrderDetailsCode = wx.getStorageSync('myOrderDetailsCode')
+      console.log('当前orderCode为2：' + this.myOrderDetailsCode)
       this.getOrderDetail()
       this.$apply()
     }

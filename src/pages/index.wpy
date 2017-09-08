@@ -619,10 +619,8 @@
     events = {
       // 获取站点信息
       initStakeList () {
-        wx.showToast({
+        wx.showLoading({
           title: '正在查询站点',
-          icon: 'loading',
-          duraction: 1000,
           mask: true
         })
         let that = this
@@ -686,6 +684,7 @@
           params: _params,
           url: '/msp-charge/router',
           success: function (e) {
+            wx.hideLoading()
             let data = e.data.data
             console.log('列表：data')
             console.log(e.data)
@@ -1037,6 +1036,10 @@
 
     // 获取站点信息
     initStakeList () {
+      wx.showLoading({
+        title: '正在查询站点',
+        mask: true
+      })
       let that = this
       let chargePileType = ''
       let isFree = ''
@@ -1095,6 +1098,7 @@
         params: _params,
         url: '/msp-charge/router',
         success: function (e) {
+          wx.hideLoading()
           let data = e.data.data
           console.log('列表：data')
           console.log(e.data)

@@ -243,22 +243,27 @@
                   url: 'myOrderDetail'
                 })
               } else {
-                wx.showModal({
-                  title: '余额不足',
-                  content: '是否现在前往充值？',
-                  showCancel: true,
-                  success: (res) => {
-                    if (res.confirm) {
-                      wx.redirectTo({
-                        url: 'addMoney'
-                      })
-                    } else if (res.cancel) {
-                      wx.redirectTo({
-                        url: 'myOrderDetail'
-                      })
-                    }
-                  }
+                wx.showToast({
+                  title: e.data.message,
+                  icon: 'loading',
+                  duration: 2000
                 })
+                // wx.showModal({
+                //   title: '余额不足',
+                //   content: '是否现在前往充值？',
+                //   showCancel: true,
+                //   success: (res) => {
+                //     if (res.confirm) {
+                //       wx.redirectTo({
+                //         url: 'addMoney'
+                //       })
+                //     } else if (res.cancel) {
+                //       wx.redirectTo({
+                //         url: 'myOrderDetail'
+                //       })
+                //     }
+                //   }
+                // })
               }
             }
           })

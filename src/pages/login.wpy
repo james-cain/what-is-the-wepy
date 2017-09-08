@@ -94,7 +94,7 @@
       </view>
       <view style="position: absolute; top: 105px; z-index: 10; width: {{windowW}}px" wx:if="{{isOpen}}">
         <view class="basic" style="height: 90px; font-size: 15px; clear: both; background-color: #fafafa;">
-          <view style="line-height: 45px; padding-left: 10px; border-bottom: 1px solid #cccccc; box-sizing: border-box;" class="{{isSelected == 1 ? 'selected' : ''}}" @tap.stop="loginType(1)">登陆密码</view>
+          <view style="line-height: 45px; padding-left: 10px; border-bottom: 1px solid #cccccc; box-sizing: border-box;" class="{{isSelected == 1 ? 'selected' : ''}}" @tap.stop="loginType(1)">登录密码</view>
           <view style="line-height: 45px; padding-left: 10px; box-sizing: border-box;" class="{{isSelected == 2 ? 'selected' : ''}}" @tap.stop="loginType(2)">动态密码</view>
         </view>
       </view>
