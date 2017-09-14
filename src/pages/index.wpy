@@ -584,14 +584,16 @@
                 flag = true
               }
             })
-            if (!flag) {
+            if (!flag && e.detail.value.replace(/^\s+|\s+$/g, '') !== '') {
               searchHistory.unshift(e.detail.value)
             }
             wx.setStorageSync(session.user.userId + '_searchHistory', JSON.stringify(searchHistory))
             that.searchHistory = searchHistory
           } else {
             let searchHistory = []
-            searchHistory.unshift(e.detail.value)
+            if (e.detail.value.replace(/^\s+|\s+$/g, '') !== '') {
+              searchHistory.unshift(e.detail.value)
+            }
             wx.setStorageSync(session.user.userId + '_searchHistory', JSON.stringify(searchHistory))
             that.searchHistory = searchHistory
           }
@@ -601,6 +603,11 @@
         that.$apply()
       },
       hisSearch (keyWord, e) {
+        let that = this
+        that.searchValue = keyWord
+        that.setData({
+          searchValue: keyWord
+        })
         this.searchFn(keyWord)
         console.log('通过历史信息查询')
       },
@@ -1260,6 +1267,7 @@
       // 清除过滤条件
       wx.setStorageSync('mapFilter', '')
       wx.setStorageSync('keyWord', '')
+      wx.setStorageSync('selectedCarItem', '')
     }
 
     onPullDownRefresh () {
