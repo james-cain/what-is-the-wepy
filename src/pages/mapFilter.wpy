@@ -243,7 +243,7 @@
       ok (selectedArr, selectedCar, selectedCarItem, myCarItem) {
         // selectedArr 0:直流电 1：交流快充 2：交流慢充 3：有空闲
         let electType = ''
-        let isFree = 3
+        let isFree = ''
         let chargeRateType = ''
         let modelCode = ''
         let mapFilter = {}

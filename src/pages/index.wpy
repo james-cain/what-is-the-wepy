@@ -792,15 +792,8 @@
           console.log(data)
           that.isSearch = false
           that.switchType = 'map'
-          // that.pileList = data.data
-          // data.data.forEach((e, index, arr) => {
-          //   markers.push(that.addMarker(e, index))
-          // })
-
-          // console.log('总站点数：' + markers.length)
-          // console.log(markers)
-          // that.markers = markers
           let searchPile = data.data
+          that.markers.length = 0
           console.log(searchPile)
           if (searchPile && searchPile.length !== 0) {
             // that.getPileListParams.longitude = searchPile[0].longitude
@@ -813,7 +806,7 @@
             console.log(markers)
             that.markers = markers
           } else {
-            that.markers = []
+            // that.markers = []
             setTimeout(function () {
               wx.showToast({
                 title: '没有找到站点',
@@ -1017,6 +1010,8 @@
           let data = e.data
           console.log('所有站点信息:')
           console.log(data)
+          that.pileList.length = 0
+          that.markers.length = 0
           that.pileList = data.data
           if (that.pileList.length === 0) {
             console.log('没有筛选。。。')
