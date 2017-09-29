@@ -450,6 +450,7 @@
             // that.setData({
             //   searchValue: ''
             // })
+            this.searchFn(wx.getStorageSync('keyWord'))
             that.switchType = 'map'
           }
         }
@@ -605,11 +606,13 @@
       hisSearch (keyWord, e) {
         let that = this
         that.searchValue = keyWord
+        console.log('通过历史信息查询keyWord', keyWord)
+        wx.setStorageSync('keyWord', keyWord)
         that.setData({
           searchValue: keyWord
         })
         this.searchFn(keyWord)
-        console.log('通过历史信息查询')
+        console.log('通过历史信息查询', wx.getStorageSync('keyWord'))
       },
       delete (e) {
         console.log('删除搜索框中的内容')
@@ -619,6 +622,11 @@
           searchValue: ''
         })
         wx.setStorageSync('keyWord', '')
+        if (that.switchType === 'map') {
+          this.searchFn(wx.getStorageSync('keyWord'))
+        } else {
+          that.initStakeList()
+        }
         that.$apply()
       }
     }
@@ -793,6 +801,10 @@
           that.isSearch = false
           that.switchType = 'map'
           let searchPile = data.data
+
+          that.pileList.length = 0
+          that.pileList = data.data
+
           that.markers.length = 0
           console.log(searchPile)
           if (searchPile && searchPile.length !== 0) {
