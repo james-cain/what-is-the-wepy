@@ -86,67 +86,67 @@
             })
             return
           }
-          // wepy.request({
-          //   url: that.globalData.serverUrl + '/msp-charge/miniapp/session_key',
-          //   method: 'GET',
-          //   dataType: 'json',
-          //   data: _params,
-          //   success: (e) => {
-          //     console.log('获取微信用户openid和sessionkey：')
-          //     console.log(e)
-          //     if (e.data.state === 0) {
-          //       wx.getUserInfo({
-          //         success (res) {
-          //           let userInfo = res.userInfo
-          //           weChatAccount.nickName = userInfo.nickName
-          //           weChatAccount.avatarUrl = userInfo.avatarUrl
-          //           weChatAccount.gender = userInfo.gender
-          //           weChatAccount.id = e.data.data.openid
-          //           wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
-          //           console.log('获取到微信信息：')
-          //           console.log(weChatAccount)
-          //         }
-          //       })
-          //     } else {
-          //       wx.getSetting({
-          //         success: function(res) {
-          //           console.log('getSetting')
-          //           console.log(res)
-          //           if (res.authSetting['scope.userInfo']) {
-          //             // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-          //             wx.getUserInfo({
-          //               success: function(res) {
-          //                 console(res.userInfo)
-          //               }
-          //             })
-          //           }
-          //         },
-          //         fail(err) {
-          //           console.log(err)
-          //         }
-          //       })
-          //       wx.getUserInfo({
-          //         success (res) {
-          //           let userInfo = res.userInfo
-          //           weChatAccount.nickName = userInfo.nickName
-          //           weChatAccount.avatarUrl = userInfo.avatarUrl
-          //           weChatAccount.gender = userInfo.gender
-          //           weChatAccount.id = ''
-          //           wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
-          //           console.log('获取到微信信息：')
-          //           console.log(weChatAccount)
-          //         },
-          //         fail (res) {
-          //           console.log(res)
-          //         }
-          //       })
-          //     }
-          //   },
-          //   fail: (e) => {
-          //     console.log('获取微信用户失败：')
-          //     console.log(e)
-          //   }
-          // })
+          wepy.request({
+            url: that.globalData.serverUrl + '/msp-charge/miniapp/session_key',
+            method: 'GET',
+            dataType: 'json',
+            data: _params,
+            success: (e) => {
+              console.log('获取微信用户openid和sessionkey：')
+              console.log(e)
+              if (e.data.state === 0) {
+                wx.getUserInfo({
+                  success (res) {
+                    let userInfo = res.userInfo
+                    weChatAccount.nickName = userInfo.nickName
+                    weChatAccount.avatarUrl = userInfo.avatarUrl
+                    weChatAccount.gender = userInfo.gender
+                    weChatAccount.id = e.data.data.openid
+                    wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
+                    console.log('获取到微信信息：')
+                    console.log(weChatAccount)
+                  }
+                })
+              } else {
+                wx.getSetting({
+                  success: function(res) {
+                    console.log('getSetting')
+                    console.log(res)
+                    if (res.authSetting['scope.userInfo']) {
+                      // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+                      wx.getUserInfo({
+                        success: function(res) {
+                          console(res.userInfo)
+                        }
+                      })
+                    }
+                  },
+                  fail(err) {
+                    console.log(err)
+                  }
+                })
+                wx.getUserInfo({
+                  success (res) {
+                    let userInfo = res.userInfo
+                    weChatAccount.nickName = userInfo.nickName
+                    weChatAccount.avatarUrl = userInfo.avatarUrl
+                    weChatAccount.gender = userInfo.gender
+                    weChatAccount.id = ''
+                    wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
+                    console.log('获取到微信信息：')
+                    console.log(weChatAccount)
+                  },
+                  fail (res) {
+                    console.log(res)
+                  }
+                })
+              }
+            },
+            fail: (e) => {
+              console.log('获取微信用户失败：')
+              console.log(e)
+            }
+          })
         }
       })
     }
