@@ -311,7 +311,7 @@
             if (e.data.code === '9') {
               wx.showToast({
                 title: e.data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
             }
@@ -385,13 +385,13 @@
             } else if (data.code === 9) {
               wx.showToast({
                 title: data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
             } else {
               wx.showToast({
                 title: data.message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
             }

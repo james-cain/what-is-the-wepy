@@ -66,7 +66,7 @@
         let that = this
         // wx.showToast({
         //   title: '提交反馈中...',
-        //   icon: 'loading',
+        //   icon: 'none',
         //   duraction: 1000
         // })
         let commentParams = {
@@ -93,7 +93,7 @@
               if (_r.data.state === 0) {
                 wx.showToast({
                   title: '提交成功',
-                  icon: 'success',
+                  icon: 'none',
                   duraction: 1000
                 })
               }

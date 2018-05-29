@@ -140,7 +140,7 @@
           if (!that.payAmount || that.payAmount === '' || that.payAmount === 0) {
             wx.showToast({
               title: '请输入充值金额',
-              icon: 'loading',
+              icon: 'none',
               duraction: 1000
             })
             return
@@ -173,7 +173,7 @@
                 wx.showToast({
                   title: data.subErrors[0].message,
                   duration: 2000,
-                  icon: 'loading'
+                  icon: 'none'
                 })
                 return
               }
@@ -211,7 +211,7 @@
                       if (e.state === '0') {
                         wx.showToast({
                           title: '支付成功！',
-                          icon: 'success',
+                          icon: 'none',
                           duraction: 1000
                         })
                         that.updateUserSession()
@@ -226,7 +226,7 @@
                   console.log(res)
                   wx.showToast({
                     title: '支付失败！',
-                    icon: 'loading',
+                    icon: 'none',
                     duraction: 1000
                   })
                 }
@@ -239,7 +239,7 @@
         } else {
           wx.showToast({
             title: '请选择充值类型',
-            icon: 'loading',
+            icon: 'none',
             duraction: 1000
           })
         }

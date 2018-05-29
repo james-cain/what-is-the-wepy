@@ -241,7 +241,7 @@
             } else {
               wx.showToast({
                 title: data.message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
             }

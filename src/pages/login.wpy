@@ -143,7 +143,7 @@
         if (that.account === '') {
           wx.showToast({
             title: '手机号须填写',
-            icon: 'loading',
+            icon: 'none',
             duraction: 1000,
             mask: true
           })
@@ -172,7 +172,7 @@
             if (e.data.code === '9') {
               wx.showToast({
                 title: e.data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
             } else {
@@ -275,7 +275,7 @@
         let that = this
         wx.showToast({
           title: '正在登录...',
-          icon: 'loading',
+          icon: 'none',
           duraction: 2000,
           mask: true
         })
@@ -309,7 +309,7 @@
             if (data.code !== '9' && data.data !== '') {
               wx.showToast({
                 title: '登录成功',
-                icon: 'success',
+                icon: 'none',
                 duraction: 1000
               })
               wx.setStorageSync('session', JSON.stringify(e.data))
@@ -319,7 +319,7 @@
             } else {
               wx.showToast({
                 title: '登录失败:' + data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 1000
               })
             }

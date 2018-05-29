@@ -413,7 +413,7 @@
             if (data.code === '9') {
               wx.showToast({
                 title: data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duration: 1000
               })
               return
@@ -497,7 +497,7 @@
           // 筛选功能
           wx.showToast({
             title: '正在打开筛选框',
-            icon: 'loading',
+            icon: 'none',
             duraction: 1000,
             mask: true
           })
@@ -507,6 +507,7 @@
         } else if (id === 4) {
           wx.showLoading({
             title: '正在打开扫码',
+            icon: 'none',
             mask: true
           })
           if (CTP().checkLogin()) {
@@ -752,7 +753,7 @@
       console.log('搜索地图基站：')
       wx.showToast({
         title: '正在搜索',
-        icon: 'loading',
+        icon: 'none',
         duraction: 1000,
         mask: true
       })
@@ -822,7 +823,7 @@
             setTimeout(function () {
               wx.showToast({
                 title: '没有找到站点',
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               })
             }, 1000)
@@ -961,7 +962,7 @@
           if (data.code === '9') {
             wx.showToast({
               title: data.subErrors[0].message,
-              icon: 'loading',
+              icon: 'none',
               duration: 1000
             })
             return
@@ -976,12 +977,12 @@
     getPileList (o, condition, keyWord) {
       console.log('获取map站点信息condition：')
       console.log(condition)
-      wx.showToast({
-        title: '正在获取用户最新状态',
-        icon: 'loading',
-        duraction: 1000,
-        mask: true
-      })
+      // wx.showToast({
+      //   title: '正在获取用户最新状态',
+      //   icon: 'none',
+      //   duraction: 1000,
+      //   mask: true
+      // })
       // 检查网络
       // if (checkNetWorkStatus() === false) {
       //   console.log('网络错误')
@@ -1030,7 +1031,7 @@
             setTimeout(function () {
               wx.showToast({
                 title: '没有找到筛选的站点',
-                icon: 'loading',
+                icon: 'none',
                 duration: 1000
               })
             }, 1000)
@@ -1122,7 +1123,7 @@
             that.pileTableList = []
             wx.showToast({
               title: '没有找到筛选的站点',
-              icon: 'loading',
+              icon: 'none',
               duration: 2000
             })
           }
@@ -1137,7 +1138,7 @@
     failMessage () {
       wx.showToast({
         title: '连接服务器失败',
-        icon: 'loading',
+        icon: 'none',
         duration: 2000
       })
     }

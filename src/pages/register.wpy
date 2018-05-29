@@ -223,7 +223,7 @@
             if (e.data.code === '9') {
               wx.showToast({
                 title: e.data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
             } else {
@@ -300,7 +300,7 @@
             if (result.data.code === '9') {
               wx.showToast({
                 title: result.data.subErrors[0],
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
               that.nextBtnProperty.loading = false

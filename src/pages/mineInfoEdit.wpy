@@ -86,14 +86,14 @@
           if (that.value === '') {
             wx.showToast({
               title: '昵称不能为空',
-              icon: 'loading',
+              icon: 'none',
               duraction: 1000
             })
             return
           } else if (that.value.length > 20) {
             wx.showToast({
               title: '昵称不能超过20位',
-              icon: 'loading',
+              icon: 'none',
               duraction: 1000
             })
             return
@@ -104,7 +104,7 @@
           if (that.value !== '男' && that.value !== '女') {
             wx.showToast({
               title: '性别输入不正确',
-              icon: 'loading',
+              icon: 'none',
               duraction: 1000
             })
             return
@@ -121,7 +121,7 @@
             if (typeof _r.data.user !== 'undefined') {
               wx.showToast({
                 title: '信息已保存',
-                icon: 'success',
+                icon: 'none',
                 duraction: 1000
               })
               that.session.user = _r.data.user
@@ -130,7 +130,7 @@
             } else {
               wx.showToast({
                 title: '保存失败',
-                icon: 'loading',
+                icon: 'none',
                 duraction: 1000
               })
             }

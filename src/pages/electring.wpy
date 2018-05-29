@@ -302,7 +302,7 @@
             if (data.state === 2201 || data.state === 10000) {
               wx.showToast({
                 title: data.message,
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               })
               wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
@@ -327,7 +327,7 @@
             } else {
               wx.showToast({
                 title: data.message,
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               })
             }
@@ -365,11 +365,11 @@
               // 订单已结束
               wx.showToast({
                 title: data.message,
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               }).showToast({
                 title: data.message,
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               })
               wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
@@ -380,7 +380,7 @@
             } else if (data.state === 2051) {
               wx.showToast({
                 title: data.message,
-                icon: 'loading',
+                icon: 'none',
                 duration: 1000
               })
               wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
@@ -390,7 +390,7 @@
             } else {
               wx.showToast({
                 title: data.message,
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               })
             }
@@ -399,7 +399,7 @@
             // 跳到支付页面
             wx.showToast({
               title: data.message,
-              icon: 'loading',
+              icon: 'none',
               duration: 2000
             })
             wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
@@ -411,7 +411,7 @@
             // 跳到订单详情页面
             wx.showToast({
               title: data.message,
-              icon: 'loading',
+              icon: 'none',
               duration: 2000
             })
             wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
@@ -423,7 +423,7 @@
             // 跳到支付页面
             wx.showToast({
               title: data.message,
-              icon: 'loading',
+              icon: 'none',
               duration: 2000
             })
             wx.setStorageSync('chargingOrderCode', that.chargingOrderCode)
@@ -435,7 +435,7 @@
             // 支付成功跳至订单详情
             wx.showToast({
               title: data.message,
-              icon: 'success',
+              icon: 'none',
               duration: 2000
             })
             wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
@@ -449,7 +449,7 @@
             wx.setStorageSync('myOrderDetailsCode', that.chargingOrderCode)
             wx.showToast({
               title: data.message,
-              icon: 'loading',
+              icon: 'none',
               duration: 2000
             })
             wx.redirectTo({

@@ -106,7 +106,7 @@
 </style>
 
 <template>
-<view wx:for="{{pilelist}}" wx:for-item="pileItem" class="pile-li" wx:key="chargePileCode">
+<view wx:for="{{pileListTmp}}" wx:for-item="pileItem" class="pile-li" wx:key="chargePileCode">
   <view class="line {{'status-' + pileItem.workingState}}">
     {{statusAry[pileItem.workingState * 1 - 1]}}
   </view>
@@ -115,8 +115,8 @@
       <view style="display: inline-block;">
         {{pileItem.chargePileName}}
       </view>
-      <view style="display: inline-block;" class="{{pileItem.ratedPower <= 7 ? 'chargetype-m' : 'chargetype-k'}}">
-        [{{pileItem.chargePileType === '2' ? '交流' : '直流'}}{{pileItem.ratedPower <= 7 ? '慢充' : '快充'}}/{{pileItem.ratedPower}}kW]
+      <view style="display: inline-block;" class="{{pileItem.ratedPowerFlag ? 'chargetype-m' : 'chargetype-k'}}">
+        [{{pileItem.chargePileType === '2' ? '交流' : '直流'}}{{pileItem.ratedPowerFlag ? '慢充' : '快充'}}/{{pileItem.ratedPower}}kW]
       </view>
     </view>
     <view class="code">编号(CID)：{{pileItem.chargePileCode}}</view>
@@ -138,13 +138,22 @@
       pilelist: {}
     }
 
+    watch = {
+      pilelist(val) {
+        this.pileListTmp = val.map((e) => {
+          e.ratedPowerFlag = e.ratedPower <= 7
+          return e
+        })
+      }
+    }
     data = {
       statusAry: [
         '空闲中',
         '充电中',
         '告警',
         '离线'
-      ]
+      ],
+      pileListTmp: {}
     }
 
     components = {

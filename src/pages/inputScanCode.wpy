@@ -145,6 +145,7 @@
           fail: () => {
             wx.showToast({
               title: '扫码失败',
+              icon: 'none',
               duration: 1000
             })
           },
@@ -156,7 +157,7 @@
         that.errorCode = false
         wx.showToast({
           title: '等待验证...',
-          icon: 'loading',
+          icon: 'none',
           duraction: 2000,
           mask: true
         })
@@ -194,7 +195,7 @@
           if (data.state * 1 === 0) {
             wx.showToast({
               title: '验证成功',
-              icon: 'success',
+              icon: 'none',
               duraction: 1000
             })
             wx.setStorageSync('pileDetails', JSON.stringify(data.data))
@@ -206,6 +207,7 @@
           } else {
             wx.showToast({
               title: '扫码失败',
+              icon: 'none',
               duration: 1000
             })
             that.errorCode = true
@@ -215,6 +217,7 @@
         fail: function () {
           wx.showToast({
             title: '已超时',
+            icon: 'none',
             duraction: 1000
           })
         }

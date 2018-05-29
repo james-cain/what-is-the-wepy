@@ -1,7 +1,7 @@
 import { hexSha1 } from './sha1'
 import wepy from 'wepy'
 let CTP = function() {
-  let weChatAccount = JSON.parse(wx.getStorageSync('weChatAccount'))
+  let weChatAccount = wx.getStorageSync('weChatAccount') === '' ? '' : JSON.parse(wx.getStorageSync('weChatAccount'))
 
   let session = wx.getStorageSync('session')
 
@@ -46,7 +46,7 @@ let CTP = function() {
           wx.hideLoading()
           wx.showToast({
             title: '服务请求失败，网络原因引起',
-            icon: 'loading',
+            icon: 'none',
             duraction: 2000
           })
         }

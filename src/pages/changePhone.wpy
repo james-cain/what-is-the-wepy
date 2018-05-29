@@ -233,7 +233,7 @@
             if (e.data.code === '9') {
               wx.showToast({
                 title: e.data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
             }
@@ -287,7 +287,7 @@
             if (e.data.code === '9') {
               wx.showToast({
                 title: e.data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
             }
@@ -366,7 +366,7 @@
             if (result.data.code === '9') {
               wx.showToast({
                 title: '验证码错误',
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
               that.nextBtnProperty.loading = false
@@ -414,7 +414,7 @@
             if (result.data.code === '9') {
               wx.showToast({
                 title: '验证码错误',
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
               that.nextBtnProperty2.loading = false
@@ -443,7 +443,7 @@
                 if (_r.statusCode === 200) {
                   wx.showToast({
                     title: '绑定成功',
-                    icon: 'success',
+                    icon: 'none',
                     duraction: 2000
                   })
                   that.session.user = _r.data.user
@@ -453,7 +453,7 @@
                 } else {
                   wx.showToast({
                     title: '绑定失败',
-                    icon: 'loading',
+                    icon: 'none',
                     duraction: 2000
                   })
                 }
@@ -471,7 +471,7 @@
     failMessage () {
       wx.showToast({
         title: '连接服务器失败',
-        icon: 'loading',
+        icon: 'none',
         duration: 2000
       })
     }

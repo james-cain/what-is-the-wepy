@@ -59,24 +59,15 @@
       serverUrl: 'https://eimshow.szcomtop.com'
     }
 
-    onLaunch() {
-      let that = this
-      wx.getSystemInfo({
-        success: (res) => {
-          let kScreenW = res.windowWidth / 375
-          let kScreenH = res.windowHeight / 603
-          wx.setStorageSync('windowH', res.windowHeight)
-          wx.setStorageSync('windowW', res.windowWidth)
-          wx.setStorageSync('kScreenW', kScreenW)
-          wx.setStorageSync('kScreenH', kScreenH)
-        }
-      })
+    onShow() {
+      const that = this
       wx.login({
         success: (res) => {
           let weChatAccount = {}
           let _params = {
             code: res.code
           }
+          console.log(res.code)
           // 清除weChatAccount和session
           console.log('每次登陆之前先把weChatAccount和session信息清除。。。')
           console.log('weChatAccount:', wx.getStorageSync('weChatAccount'))
@@ -90,52 +81,86 @@
           if (!res.code) {
             wx.showToast({
               title: '获取微信用户数据超时，重新退出登录',
-              icon: 'loading',
+              icon: 'none',
               duraction: 2000
             })
             return
           }
-          wepy.request({
-            url: that.globalData.serverUrl + '/msp-charge/miniapp/session_key',
-            method: 'GET',
-            dataType: 'json',
-            data: _params,
-            success: (e) => {
-              console.log('获取微信用户openid和sessionkey：')
-              console.log(e)
-              if (e.data.state === 0) {
-                wepy.getUserInfo({
-                  success (res) {
-                    let userInfo = res.userInfo
-                    weChatAccount.nickName = userInfo.nickName
-                    weChatAccount.avatarUrl = userInfo.avatarUrl
-                    weChatAccount.gender = userInfo.gender
-                    weChatAccount.id = e.data.data.openid
-                    wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
-                    console.log('获取到微信信息：')
-                    console.log(weChatAccount)
-                  }
-                })
-              } else {
-                wepy.getUserInfo({
-                  success (res) {
-                    let userInfo = res.userInfo
-                    weChatAccount.nickName = userInfo.nickName
-                    weChatAccount.avatarUrl = userInfo.avatarUrl
-                    weChatAccount.gender = userInfo.gender
-                    weChatAccount.id = ''
-                    wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
-                    console.log('获取到微信信息：')
-                    console.log(weChatAccount)
-                  }
-                })
-              }
-            },
-            fail: (e) => {
-              console.log('获取微信用户失败：')
-              console.log(e)
-            }
-          })
+          // wepy.request({
+          //   url: that.globalData.serverUrl + '/msp-charge/miniapp/session_key',
+          //   method: 'GET',
+          //   dataType: 'json',
+          //   data: _params,
+          //   success: (e) => {
+          //     console.log('获取微信用户openid和sessionkey：')
+          //     console.log(e)
+          //     if (e.data.state === 0) {
+          //       wx.getUserInfo({
+          //         success (res) {
+          //           let userInfo = res.userInfo
+          //           weChatAccount.nickName = userInfo.nickName
+          //           weChatAccount.avatarUrl = userInfo.avatarUrl
+          //           weChatAccount.gender = userInfo.gender
+          //           weChatAccount.id = e.data.data.openid
+          //           wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
+          //           console.log('获取到微信信息：')
+          //           console.log(weChatAccount)
+          //         }
+          //       })
+          //     } else {
+          //       wx.getSetting({
+          //         success: function(res) {
+          //           console.log('getSetting')
+          //           console.log(res)
+          //           if (res.authSetting['scope.userInfo']) {
+          //             // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+          //             wx.getUserInfo({
+          //               success: function(res) {
+          //                 console(res.userInfo)
+          //               }
+          //             })
+          //           }
+          //         },
+          //         fail(err) {
+          //           console.log(err)
+          //         }
+          //       })
+          //       wx.getUserInfo({
+          //         success (res) {
+          //           let userInfo = res.userInfo
+          //           weChatAccount.nickName = userInfo.nickName
+          //           weChatAccount.avatarUrl = userInfo.avatarUrl
+          //           weChatAccount.gender = userInfo.gender
+          //           weChatAccount.id = ''
+          //           wx.setStorageSync('weChatAccount', JSON.stringify(weChatAccount))
+          //           console.log('获取到微信信息：')
+          //           console.log(weChatAccount)
+          //         },
+          //         fail (res) {
+          //           console.log(res)
+          //         }
+          //       })
+          //     }
+          //   },
+          //   fail: (e) => {
+          //     console.log('获取微信用户失败：')
+          //     console.log(e)
+          //   }
+          // })
+        }
+      })
+    }
+
+    onLaunch() {
+      let that = this
+      wx.getSystemInfo({
+        success: (res) => {
+          let kScreenW = res.windowWidth / 375
+          let kScreenH = res.windowHeight / 603
+          wx.setStorageSync('windowH', res.windowHeight)
+          wx.setStorageSync('windowW', res.windowWidth)
+          wx.setStorageSync('kScreenW', kScreenW)
+          wx.setStorageSync('kScreenH', kScreenH)
         }
       })
     }

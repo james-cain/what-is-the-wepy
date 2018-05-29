@@ -136,7 +136,7 @@
         if (that.pwd !== that.rePwd) {
           wx.showToast({
             title: '密码不一致！',
-            icon: 'loading',
+            icon: 'none',
             duraction: 2000
           })
           that.nextBtnProperty.loading = false
@@ -153,7 +153,7 @@
             if (data.code !== '9' && data.data !== '') {
               wx.showToast({
                 title: '密码修改成功',
-                icon: 'success',
+                icon: 'none',
                 duraction: 1000
               })
               wx.navigateBack({
@@ -162,7 +162,7 @@
             } else {
               wx.showToast({
                 title: '密码修改失败:' + data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 1000
               })
             }

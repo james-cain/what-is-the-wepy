@@ -210,7 +210,7 @@
             if (e.data.code === '9') {
               wx.showToast({
                 title: e.data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
             } else {
@@ -280,7 +280,7 @@
             if (result.data.code === '9') {
               wx.showToast({
                 title: '验证码错误',
-                icon: 'loading',
+                icon: 'none',
                 duraction: 2000
               })
               that.nextBtnProperty.loading = false
@@ -304,7 +304,7 @@
     failMessage () {
       wx.showToast({
         title: '连接服务器失败',
-        icon: 'loading',
+        icon: 'none',
         duration: 2000
       })
     }

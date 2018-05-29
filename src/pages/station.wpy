@@ -368,7 +368,7 @@
           </view>
         </view>
         <view class="station-details-tab-sub-comment {{evaSelected ? 'selected' : ''}}">
-          <commentList class="comment-body" :commentlist.sync="commentlist" :commentlistLength.sync="commentlistLength" :evalPageSize.sync="evalPageSize" :isCommentRecord.sync="isCommentRecord"></commentList>
+          <!-- <comment-list class="comment-body" :commentlist.sync="commentlist" :commentlistLength.sync="commentlistLength" :evalPageSize.sync="evalPageSize" :isCommentRecord.sync="isCommentRecord"></comment-list> -->
         </view>
         <view class="ctp-edit-box-mask ctp-mask" wx:if="{{isEdit}}"></view>
         <view id="ctp-edit-box" class="ctp-edit-box" wx:if="{{isEdit}}">
@@ -392,7 +392,7 @@
   import wepy from 'wepy'
   import score from '../components/score'
   import pileList from '../components/pileList'
-  import commentList from '../components/commentList'
+  // import commentList from '../components/commentList'
   import CTP from '../utils/ajax'
 
   export default class Station extends wepy.page {
@@ -514,7 +514,7 @@
         if (that.commentContent === '') {
           wx.showToast({
             title: '请输入评论内容',
-            icon: 'loading',
+            icon: 'none',
             duration: 2000
           })
           return
@@ -548,7 +548,7 @@
             } else {
               wx.showToast({
                 title: e.data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               })
             }
@@ -680,8 +680,8 @@
 
     components = {
       score: score,
-      pileList: pileList,
-      commentList: commentList
+      pileList: pileList
+      // commentList: commentList
     }
 
     // 获取评论列表

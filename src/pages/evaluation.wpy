@@ -250,7 +250,8 @@
           that.submitEva()
         } else {
           wx.showToast({
-            title: '请评分！'
+            title: '请评分！',
+            icon: 'none'
           })
         }
       }
@@ -290,14 +291,14 @@
           if (e.data.state === 0) {
             wx.showToast({
               title: '评论成功',
-              icon: 'success',
+              icon: 'none',
               duration: 2000
             })
             wx.navigateBack()
           } else {
             wx.showToast({
               title: e.data.message,
-              icon: 'loading',
+              icon: 'none',
               duration: 2000
             })
           }

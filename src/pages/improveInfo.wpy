@@ -161,7 +161,7 @@
             if (e.data.code === '1') {
               wx.showToast({
                 title: e.data.subErrors[0].message,
-                icon: 'loading',
+                icon: 'none',
                 duraction: 1000
               })
             } else {

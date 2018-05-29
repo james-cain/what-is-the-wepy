@@ -258,21 +258,21 @@
         if (!(that.record * 1 > 0 && that.record * 1 <= balance * 1 - minThreshold * 1)) {
           wx.showToast({
             title: '请输入正确的值',
-            icon: 'loading',
+            icon: 'none',
             duration: 2000
           })
           that.record = ''
         } else if (that.record === '' || that.record * 1 === 0) {
           wx.showToast({
             title: '输入金额不能为空',
-            icon: 'loading',
+            icon: 'none',
             duration: 2000
           })
           that.record = ''
         } else if (that.record > balance) {
           wx.showToast({
             title: '输入金额不能大于余额',
-            icon: 'loading',
+            icon: 'none',
             duration: 2000
           })
           that.record = ''
@@ -292,21 +292,21 @@
             if (!(chargingMoney * 1 > 0 && chargingMoney * 1 <= that.session.user.balance * 1 - that.configThreshold.minThreshold * 1)) {
               wx.showToast({
                 title: '请输入正确的值',
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               })
               return
             } else if (chargingMoney === '' || chargingMoney * 1 === 0) {
               wx.showToast({
                 title: '输入金额不能为空',
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               })
               return
             } else if (chargingMoney > that.session.user.balance * 1) {
               wx.showToast({
                 title: '输入金额不能大于余额',
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               })
               return
@@ -386,13 +386,13 @@
                 if (e.data.code === 9) {
                   wx.showToast({
                     title: e.data.subErrors[0].message,
-                    icon: 'loading',
+                    icon: 'none',
                     duration: 2000
                   })
                 } else {
                   wx.showToast({
                     title: e.data.message,
-                    icon: 'loading',
+                    icon: 'none',
                     duration: 2000
                   })
                 }
@@ -402,7 +402,7 @@
               wx.hideLoading()
               wx.showToast({
                 title: '请求超时',
-                icon: 'loading',
+                icon: 'none',
                 duration: 2000
               })
             }
@@ -410,7 +410,7 @@
         } else {
           wx.showToast({
             title: '余额小于等于10元，不能启动充电！',
-            icon: 'loading',
+            icon: 'none',
             duration: 2000
           })
         }

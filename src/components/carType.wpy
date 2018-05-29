@@ -249,7 +249,7 @@
         if (JSON.stringify(that.selectedCarItem) === '{}') {
           wx.showToast({
             title: '没有选择车型',
-            icon: 'loading',
+            icon: 'none',
             duraction: 1000
           })
           return

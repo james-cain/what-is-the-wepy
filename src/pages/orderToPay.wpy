@@ -235,7 +235,7 @@
               if (e.data.state === 0) {
                 wx.showToast({
                   title: '支付成功',
-                  icon: 'success',
+                  icon: 'none',
                   duration: 2000
                 })
                 that.updateUserSession()
@@ -245,7 +245,7 @@
               } else {
                 wx.showToast({
                   title: e.data.message,
-                  icon: 'loading',
+                  icon: 'none',
                   duration: 2000
                 })
                 // wx.showModal({
@@ -270,7 +270,7 @@
         } else {
           wx.showToast({
             title: '请选择支付方式',
-            icon: 'loading',
+            icon: 'none',
             duration: 2000
           })
         }
