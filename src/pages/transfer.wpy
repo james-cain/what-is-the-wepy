@@ -128,12 +128,12 @@
           <button style="background-color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="next" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">下一步</button>
         </view>
       </view>
-      <view class="transfer-obj-list-title">最近</view>
+      <view class="transfer-obj-list-title" wx:if="{{isShow}}">最近</view>
       <view class="transfer-obj-list">
-        <view class="list-tips" wx:if="{{isShow}}">
+        <!-- <view class="list-tips" wx:if="{{!isShow}}">
           <view class="list-tips-title">无转账联系人</view>
-        </view>
-        <view class="transfer-details-list" wx:if="{{!isShow}}">
+        </view> -->
+        <view class="transfer-details-list" wx:if="{{isShow}}">
           <view class="transfer-detail-item" wx:for="{{detailList}}" wx:for-item="detail" wx:key="userId" @tap="goToSure({{index}})">
             <view class="transfer-obj-list-icon">
               <image src="{{detail.img}}"/>
@@ -143,7 +143,7 @@
             <view style="width: 30%; display: inline-block;">{{detail.phone}}</view>
           </view>
         </view>
-        <view class="add-more" wx:if="{{!isShow}}">
+        <view class="add-more" wx:if="{{isShow}}">
           <view class="more {{isMore ? 'noMorePage' : ''}}" @tap="more" hidden="{{loading}}">
             {{!isMore ? '没有更多数据了！' : '加载更多'}}
           </view>
@@ -296,9 +296,9 @@
           that.loading = false
           if (data.state === 0) {
             if (data.data.length === 0 && that.detailList.length === 0) {
-              that.isShow = true
-            } else {
               that.isShow = false
+            } else {
+              that.isShow = true
               that.currentList.length = 0
               that.currentList = data.data
               if (data.data.length < that.pageSize) {

@@ -65,7 +65,7 @@
               <text class="pile-menu-tab-child {{pileChild.selected ? 'selected' : ''}}">{{pileChild.name}}</text>
             </view>
           </view>
-          <view style="position: absolute; width: {{menuChildWidth}}px; left: 0px; background-color: #000; z-index: 10; opacity: 0.3; height: 100%;" wx:if="{{pileMenu.selected}}"></view>
+          <view style="position: absolute; width: {{menuChildWidth}}px; left: 0px; background-color: #000; z-index: 10; opacity: 0.3; height: 100%;" wx:if="{{pileMenu.selected}}" @tap.stop="removeSelected({{pileMenu.id}})"></view>
         </view>
     </view>
 </template>
@@ -119,6 +119,13 @@
     }
 
     methods = {
+      removeSelected (id, e) {
+        this.pileMenuList.forEach((e, index, self) => {
+          if (index === id) {
+            e.selected = false
+          }
+        })
+      },
       menuSelected (id, e) {
         console.log('id:' + id)
         console.log(e)

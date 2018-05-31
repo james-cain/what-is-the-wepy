@@ -321,7 +321,7 @@
         <view class="station-details-icon"><image src="{{imgUrl}}" mode="scaleToFill" style="height: 70px; width: 70px;"/></view>
         <view class="station-details-params">
           <view class="score">
-            <score :scores.sync="score"></score>
+            <score :scores.sync="scoreCount"></score>
           </view>
         </view>
         <view class="station-details-top-bottom">
@@ -356,19 +356,19 @@
           </view>
           <view class="station-details-tab-sub-details-carType" wx:if="{{isShowCarTypeList}}">
             <view class="station-details-tab-sub-details-carType-list">
-              <view class="carType" wx:for="{{carTypeList}}" wx:for-item="carType" wx:for-index="index">
+              <view class="carType" wx:for="{{carTypeList}}" wx:for-item="carType" wx:for-index="index" wx:if="{{index < 4}}">
                 <image class="carType-image" src="{{carType.vehicleBrandImg}}" mode="scaleToFill"></image>
                 <view class="carType-name">{{carType.vehicleModel}}</view>
               </view>
             </view>
-            <view class="station-details-tab-sub-details-carType-btn" @tap="moreCarType"><view>更多</view><view>车型</view></view>
+            <view class="station-details-tab-sub-details-carType-btn" wx:if="{{carTypeList.length > 4}}" @tap="moreCarType"><view>更多</view><view>车型</view></view>
           </view>
           <view class="station-details-tab-sub-details-list">
-             <pileList :pilelist.sync="pilelist"></pileList>
+             <pileListComp :pilelist.sync="pilelist"></pileListComp>
           </view>
         </view>
         <view class="station-details-tab-sub-comment {{evaSelected ? 'selected' : ''}}">
-          <!-- <comment-list class="comment-body" :commentlist.sync="commentlist" :commentlistLength.sync="commentlistLength" :evalPageSize.sync="evalPageSize" :isCommentRecord.sync="isCommentRecord"></comment-list> -->
+          <commentListComp class="comment-body" :commentlist.sync="commentlist" :commentlistLength.sync="commentlistLength" :isCommentRecord.sync="isCommentRecord"></commentListComp>
         </view>
         <view class="ctp-edit-box-mask ctp-mask" wx:if="{{isEdit}}"></view>
         <view id="ctp-edit-box" class="ctp-edit-box" wx:if="{{isEdit}}">
@@ -391,8 +391,8 @@
 <script>
   import wepy from 'wepy'
   import score from '../components/score'
-  import pileList from '../components/pileList'
-  // import commentList from '../components/commentList'
+  import pileListComp from '../components/pileList'
+  import commentListComp from '../components/commentList'
   import CTP from '../utils/ajax'
 
   export default class Station extends wepy.page {
@@ -411,7 +411,7 @@
       workingTime: '',
       carType: '',
       address: '',
-      score: 0,
+      scoreCount: 0,
       isPark: '',
       parkingRate: '',
       pilelist: [],
@@ -680,8 +680,8 @@
 
     components = {
       score: score,
-      pileList: pileList
-      // commentList: commentList
+      pileListComp: pileListComp,
+      commentListComp: commentListComp
     }
 
     // 获取评论列表
@@ -786,7 +786,7 @@
       this.carType = stakeDetails.carType
       this.address = stakeDetails.address
       // this.score = (parseInt(stakeDetails.score)) + (stakeDetails.score - parseInt(stakeDetails.score) > 0 ? 0.5 : 0)
-      this.score = stakeDetails.score
+      this.scoreCount = stakeDetails.score
       this.isPark = stakeDetails.isPark * 1
       this.isCollect = stakeDetails.isCollect
       this.parkingRate = stakeDetails.parkingRate
@@ -836,7 +836,7 @@
       this.workingTime = ''
       this.carType = ''
       this.address = ''
-      this.score = 0
+      this.scoreCount = 0
       this.isPark = ''
       this.parkingRate = ''
       this.pilelist.length = 0

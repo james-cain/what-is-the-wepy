@@ -144,6 +144,8 @@
           e.ratedPowerFlag = e.ratedPower <= 7
           return e
         })
+
+        this.$apply()
       }
     }
     data = {

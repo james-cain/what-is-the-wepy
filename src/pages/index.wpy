@@ -128,7 +128,7 @@
       <view class="btn-clear-history" @tap="clear">清除历史</view>
     </scroll-view>
     <view style="position: relative; width: {{mapWidth}}; height: {{mapHeight}}px; top: {{mapTop}}px" wx:if="{{isSearch ? false : (switchType === 'map' ? false : true)}}">
-      <menu :pileMenuList.sync="pileMenuList" ></menu>
+      <menu :pileMenuList.sync="pileMenuList" :isLogin.sync="islogin"></menu> 
       <tableList :pileTableList.sync="pileTableList" :isLogin.sync="islogin"></tableList>
     </view>
     <!-- <image src="../images/c_map_bubble2_normal@2x.png" style="position: absolute; left: 129.5px; top: 210.5px; width: 120px; height: 35px"/> -->
@@ -516,12 +516,14 @@
               wx.hideLoading()
               let data = m.data
               console.log(data)
-              if (data.data.orderCode !== '' && data.data.orderState === '2') {
-                wx.setStorageSync('chargingOrderCode', data.data.orderCode)
-                wx.navigateTo({
-                  url: 'electring'
-                  // url: 'myOrder'
-                })
+              if (data.code !== '21') {
+                if (data.data.orderCode !== '' && data.data.orderState === '2') {
+                  wx.setStorageSync('chargingOrderCode', data.data.orderCode)
+                  wx.navigateTo({
+                    url: 'electring'
+                    // url: 'myOrder'
+                  })
+                }
               } else {
                 wx.navigateTo({
                   url: 'inputScanCode'
@@ -1222,22 +1224,24 @@
                 let data = m.data
                 console.log('打开首页判断当前是否存在需要付款的订单：')
                 console.log(data)
-                wx.setStorageSync('homeInfo', JSON.stringify(data.data))
-                if (data.data.orderCode !== '' && data.data.orderState === '3') {
-                  wx.showModal({
-                    title: '您有一个订单未支付',
-                    content: '订单支付后，才能再一次进行充电，请尽快完成支付。',
-                    cancelText: '稍候支付',
-                    confirmText: '现在支付',
-                    success: res => {
-                      if (res.confirm) {
-                        wx.setStorageSync('chargingOrderCode', data.data.orderCode)
-                        wx.navigateTo({
-                          url: 'orderToPay'
-                        })
+                if (data.code !== '21') {
+                  wx.setStorageSync('homeInfo', JSON.stringify(data.data))
+                  if (data.data.orderCode !== '' && data.data.orderState === '3') {
+                    wx.showModal({
+                      title: '您有一个订单未支付',
+                      content: '订单支付后，才能再一次进行充电，请尽快完成支付。',
+                      cancelText: '稍候支付',
+                      confirmText: '现在支付',
+                      success: res => {
+                        if (res.confirm) {
+                          wx.setStorageSync('chargingOrderCode', data.data.orderCode)
+                          wx.navigateTo({
+                            url: 'orderToPay'
+                          })
+                        }
                       }
-                    }
-                  })
+                    })
+                  }
                 }
               })
             },

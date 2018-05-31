@@ -163,7 +163,7 @@
           <view class="good-num" @tap="thumbUp({{comment.commentId}}, {{comment.isThumbUp}})">
             <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_like_normal@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp !== 2}}"/>
             <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_like_pressed@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp === 2}}"/>
-            {{comment.thumbUpNum}}
+            {{comment.thumbUpNum ? comment.thumbUpNum : 0}}
           </view>
           <view class="comment-num" @tap="comment({{comment.commentId}})">
             <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_comment_normal@2x.png" mode="scaleToFill"/>
@@ -172,7 +172,7 @@
           <image wx:if="{{comment.avatar === null}}" class="user-avatar" src="{{tempImg}}" mode="scaleToFill"/>
           <image wx:if="{{comment.avatar !== null}}" class="user-avatar" src="{{tempImg}}" mode="scaleToFill"/>
           <view class="user-name">{{comment.userName}}</view>
-        </view>
+        </view> 
         <view class="score">
           <view style="display: inline-block; margin: 0 10px 0 5px;">评分:</view>
           <view class="scores">
@@ -213,16 +213,11 @@
   import scoring from './score'
 
   export default class CommentList extends wepy.component {
-
     props = {
       commentlist: {},
       isCommentRecord: {
         type: Boolean,
         default: true
-      },
-      evalPageSize: {
-        type: Number,
-        default: 20
       },
       commentlistLength: {
         type: Number,
@@ -232,15 +227,15 @@
 
     watch = {
       commentlistLength (val) {
-        this.noMore =  val * 1 < 20;
-        this.$apply();
+        this.noMore = val * 1 < 20
+        this.$apply()
       }
     }
 
     data = {
       tempImg: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png',
       loading: false,
-      noMore: false,
+      noMore: false
     }
 
     computed = {
@@ -256,10 +251,6 @@
       },
       commentlistLength (val) {
         console.log('查询记录数')
-        console.log(val)
-      },
-      evalPageSize (val) {
-        console.log('每次查询条数')
         console.log(val)
       },
       isCommentRecord (val) {
