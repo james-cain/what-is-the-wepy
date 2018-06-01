@@ -516,14 +516,12 @@
               wx.hideLoading()
               let data = m.data
               console.log(data)
-              if (data.code !== '21') {
-                if (data.data.orderCode !== '' && data.data.orderState === '2') {
-                  wx.setStorageSync('chargingOrderCode', data.data.orderCode)
-                  wx.navigateTo({
-                    url: 'electring'
-                    // url: 'myOrder'
-                  })
-                }
+              if (data.data.orderCode !== '' && data.data.orderState === '2') {
+                wx.setStorageSync('chargingOrderCode', data.data.orderCode)
+                wx.navigateTo({
+                  url: 'electring'
+                  // url: 'myOrder'
+                })
               } else {
                 wx.navigateTo({
                   url: 'inputScanCode'
