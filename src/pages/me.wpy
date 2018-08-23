@@ -165,7 +165,8 @@
       <text class="mine-panel-title">账户信息</text>
       <view class="account-info">
         <view class="account-info-top" @tap="goToAccount">
-          <view class="add-action" @tap.stop="goToAddMoney">充值</view><text class="total"><text>{{userInfo.balance}}</text>账户余额</text><text @tap.stop="goToTransfer" style="float: right; font-size: 15px; margin-right: 20px; color: #24b0d8;">转账</text>
+          <!-- <view class="add-action" @tap.stop="goToAddMoney">充值</view> -->
+          <text class="total"><text>{{userInfo.balance}}</text>账户余额</text><text @tap.stop="goToTransfer" style="float: right; font-size: 15px; margin-right: 20px; color: #24b0d8;">转账</text>
         </view>
         <view class="account-part">
           <view class="account-part-ul">
