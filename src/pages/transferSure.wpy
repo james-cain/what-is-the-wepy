@@ -194,7 +194,7 @@
       <view class="transfer-finish" wx:if="{{!isShow}}">
         <view class="transfer-obj-details-main" style="padding-bottom: 20px; padding-top: 10px;">
             <view class="transfer-obj-details-main-icon">
-                <image style="width: 60px; height: 60px;" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_finish_payment_icon@2x.png"/>
+                <image style="width: 60px; height: 60px;" src="/msp-charge/include/miniapps/images/c_charge_finish_payment_icon@2x.png"/>
             </view>
             <view class="transfer-obj-details-name" style="font-weight: bold;color: #46b97e;height: 25px; line-height: 25px;text-align: center;">转账成功</view>
             <view class="transfer-obj-details-tel" style="text-align: center;"><text class="transfer-user-phone" style="font-style: normal">{{transferUser.phone}}</text>已收到你的转账</view>
@@ -245,7 +245,7 @@
       //   if (this.avatarId) {
       //     return this.$parent.globalData.serverUrl + '/cloudfs/api/fs/view/' + this.avatarId
       //   } else {
-      //     return 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'
+      //     return '/msp-charge/include/miniapps/images/c_default_avatar@2x.png'
       //   }
       // }
     }

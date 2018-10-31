@@ -152,7 +152,7 @@
 <template>
 <view class="comment-body {{commentlist.length === 0 && commentlist !== ''? 'comment-no-data' : ''}}">
   <view class="list-tips" hidden="{{isCommentRecord}}">
-    <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_nodata_grade_list@2x.png" mode="scaleToFill" style="width: 155px; height: 106px; display: block; margin: 0 auto;"/>
+    <image src="/msp-charge/include/miniapps/images/c_nodata_grade_list@2x.png" mode="scaleToFill" style="width: 155px; height: 106px; display: block; margin: 0 auto;"/>
     <view class="list-tips-title">暂无评价</view>
     <view class="list-tips-title">手指运动起来，写出你的想法</view>
   </view>
@@ -161,12 +161,12 @@
       <view id="{{comment.commentId}}">
         <view class="user">
           <view class="good-num" @tap="thumbUp({{comment.commentId}}, {{comment.isThumbUp}})">
-            <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_like_normal@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp !== 2}}"/>
-            <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_like_pressed@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp === 2}}"/>
+            <image class="comment-icon" src="/msp-charge/include/miniapps/images/c_like_normal@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp !== 2}}"/>
+            <image class="comment-icon" src="/msp-charge/include/miniapps/images/c_like_pressed@2x.png" mode="scaleToFill" wx:if="{{comment.isThumbUp === 2}}"/>
             {{comment.thumbUpNum ? comment.thumbUpNum : 0}}
           </view>
           <view class="comment-num" @tap="comment({{comment.commentId}})">
-            <image class="comment-icon" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_comment_normal@2x.png" mode="scaleToFill"/>
+            <image class="comment-icon" src="/msp-charge/include/miniapps/images/c_comment_normal@2x.png" mode="scaleToFill"/>
             {{comment.commentList.length}}
           </view>
           <image wx:if="{{comment.avatar === null}}" class="user-avatar" src="{{tempImg}}" mode="scaleToFill"/>
@@ -176,11 +176,11 @@
         <view class="score">
           <view style="display: inline-block; margin: 0 10px 0 5px;">评分:</view>
           <view class="scores">
-            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png" style="height: 16px; width: 16px;"/>
-            <image src="{{comment.score === '1' ?  'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png' : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png'}}" style="height: 16px; width: 16px;"/>
-            <image src="{{comment.score === '1' || comment.score === '2' ? 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png' : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png'}}" style="height: 16px; width: 16px;"/>
-            <image src="{{comment.score === '4' || comment.score === '5' ? 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png' : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png'}}" style="height: 16px; width: 16px;"/>
-            <image src="{{comment.score === '5' ? 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png' : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png'}}" style="height: 16px; width: 16px;"/>
+            <image src="/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png" style="height: 16px; width: 16px;"/>
+            <image src="{{comment.score === '1' ?  '/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png' : '/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png'}}" style="height: 16px; width: 16px;"/>
+            <image src="{{comment.score === '1' || comment.score === '2' ? '/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png' : '/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png'}}" style="height: 16px; width: 16px;"/>
+            <image src="{{comment.score === '4' || comment.score === '5' ? '/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png' : '/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png'}}" style="height: 16px; width: 16px;"/>
+            <image src="{{comment.score === '5' ? '/msp-charge/include/miniapps/images/c_grade_star_yellow@2x.png' : '/msp-charge/include/miniapps/images/c_grade_star_gray@2x.png'}}" style="height: 16px; width: 16px;"/>
           </view>
         </view>
         <view class="labels-p">
@@ -233,7 +233,7 @@
     }
 
     data = {
-      tempImg: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png',
+      tempImg: '/msp-charge/include/miniapps/images/c_default_avatar@2x.png',
       loading: false,
       noMore: false
     }

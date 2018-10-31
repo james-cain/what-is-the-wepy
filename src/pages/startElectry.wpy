@@ -2,7 +2,7 @@
 #charging-panel {
   width: 100%;
   height: 100%;
-  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_test_bg@2x.png') left top no-repeat;
+  background: url('/msp-charge/include/miniapps/images/c_test_bg@2x.png') left top no-repeat;
   background-size: 100% 400px;
   overflow: hidden;
   overflow-y: auto;
@@ -34,7 +34,7 @@
   height: 120px;
   position: absolute;
   left: 50%;
-  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_start_btn_normal@2x.png') center center no-repeat;
+  background: url('/msp-charge/include/miniapps/images/c_charge_start_btn_normal@2x.png') center center no-repeat;
   background-size: 120px 120px;
   line-height: 280px;
   color: lightseagreen;
@@ -45,7 +45,7 @@
 }
 
 .charging-start-button.clicked {
-  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_start_btn_pressed@2x.png') center center no-repeat;
+  background: url('/msp-charge/include/miniapps/images/c_charge_start_btn_pressed@2x.png') center center no-repeat;
   background-size: 120px 120px;
 }
 
@@ -127,7 +127,7 @@
 .charging-elect-amount-fullof-button {
   width: 25px;
   height: 25px;
-  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') left center no-repeat;
+  background: url('/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') left center no-repeat;
   background-size: 25px 25px;
   float: right;
   margin-top: 0px;
@@ -136,7 +136,7 @@
 .charging-elect-amount-fullof-button.clicked {
   width: 25px;
   height: 25px;
-  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') left center no-repeat;
+  background: url('/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') left center no-repeat;
   background-size: 25px 25px;
   float: right;
 }
@@ -175,12 +175,12 @@
           编号(CID):<text>{{pileDetails.chargePileCode}}</text>
         </view>
         <view class="charging-top-params">
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_ac_icon@2x.png" wx:if="{{pileDetails.chargePileType !== '1'}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0; margin: 2px;"></image>
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_dc_icon@2x.png" wx:if="{{pileDetails.chargePileType === '1'}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0; margin: 2px;"></image>
+          <image src="/msp-charge/include/miniapps/images/c_filtrate_ac_icon@2x.png" wx:if="{{pileDetails.chargePileType !== '1'}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0; margin: 2px;"></image>
+          <image src="/msp-charge/include/miniapps/images/c_filtrate_dc_icon@2x.png" wx:if="{{pileDetails.chargePileType === '1'}}" style="height: 26px; width: 26px; float: left; position: relative; left:0; top:0; margin: 2px;"></image>
           <view class="charging-elect-type">
                {{pileDetails.chargePileType === '1' ? '直流电' : '交流电'}}
           </view>
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_price_icon@2x.png" style="height: 16px; width: 16px; float: left; position: relative; left: 25px; margin: 7px 0;"></image>
+          <image src="/msp-charge/include/miniapps/images/c_list_price_icon@2x.png" style="height: 16px; width: 16px; float: left; position: relative; left: 25px; margin: 7px 0;"></image>
           <view class="charging-elect-price">
               {{pileDetails.price + '元/kWh'}}
           </view>

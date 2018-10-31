@@ -55,17 +55,17 @@
   }
 
   .charging-time {
-    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png') left center no-repeat;
+    background: url('/msp-charge/include/miniapps/images/c_charge_time_icon@2x.png') left center no-repeat;
     background-size: 10px 10px;
   }
 
   .charging-quality {
-    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_charge_quantity_icon@2x.png') left center no-repeat;
+    background: url('/msp-charge/include/miniapps/images/c_charge_quantity_icon@2x.png') left center no-repeat;
     background-size: 10px 10px;
   }
 
   .charging-electricity {
-    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_price_icon@2x.png') left center no-repeat;
+    background: url('/msp-charge/include/miniapps/images/c_list_price_icon@2x.png') left center no-repeat;
     background-size: 10px 10px;
   }
 }
@@ -110,7 +110,7 @@
   right: 10px;
   bottom: 11px;
   padding-left: 20px;
-  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_order_list_charging_icon@2x.png") left center no-repeat;
+  background: url("/msp-charge/include/miniapps/images/c_order_list_charging_icon@2x.png") left center no-repeat;
   background-size: 15px 15px;
   font-size: 15px;
 }
@@ -125,7 +125,7 @@
   right: 10px;
   bottom: 11px;
   padding-left: 20px;
-  background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_no_connection_icon@2x.png") left center no-repeat;
+  background: url("/msp-charge/include/miniapps/images/c_no_connection_icon@2x.png") left center no-repeat;
   background-size: 15px 15px;
   font-size: 15px;
 }
@@ -149,7 +149,7 @@
   <view class="container" style="background: #f1f5f8; height: {{windowH}}px">
     <scroll-view scroll-y="true" class="ctp-list-box"  style="height: inherit; position:relative;">
       <view class="list-tips" wx:if="{{isShow}}">
-        <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_nodata_order_list@2x.png" mode="scaleToFill" style="width: 155px; height: 106px; display: block; margin: 0 auto;"/>
+        <image src="/msp-charge/include/miniapps/images/c_nodata_order_list@2x.png" mode="scaleToFill" style="width: 155px; height: 106px; display: block; margin: 0 auto;"/>
         <view class="list-tips-title">无充电订单</view>
         <view class="list-tips-title">请进行充电</view>
       </view>

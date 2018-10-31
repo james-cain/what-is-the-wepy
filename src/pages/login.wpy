@@ -34,19 +34,19 @@
   }
 }
 .up {
-  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_downward_icon@2x.png') center center no-repeat;
+  background: url('/msp-charge/include/miniapps/images/c_downward_icon@2x.png') center center no-repeat;
   background-size: 10px 10px;
 }
 .selected {
-  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_tick_ok@2x.png') right center no-repeat;
+  background: url('/msp-charge/include/miniapps/images/c_list_tick_ok@2x.png') right center no-repeat;
   background-size: 20px 20px;
 }
 .account {
-  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_login_user_icon@2x.png') left center no-repeat;
+  background: url('/msp-charge/include/miniapps/images/c_login_user_icon@2x.png') left center no-repeat;
   background-size: 30px 30px;
 }
 .pwd {
-  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_login_password_icon@2x.png') left center no-repeat;
+  background: url('/msp-charge/include/miniapps/images/c_login_password_icon@2x.png') left center no-repeat;
   background-size: 30px 30px;
 }
 .mt10 {
@@ -78,7 +78,7 @@
   <view class="homepage">
     <view class="app-head">
       <image src="{{appImg}}" class="app-img"/>
-      <text class="app-title">小南充电</text>
+      <text class="app-title"></text>
     </view>
     <form style="position: relative;">
       <view class="basic account"><input type="text" @input="accountInput" placeholder="手机/账号" focus="true"/></view>
@@ -126,7 +126,7 @@
         disabled: true,
         loading: false
       },
-      appImg: 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_app_logo160@2x.png',
+      appImg: '/msp-charge/include/miniapps/images/c_app_logo160@2x.png',
       account: '',
       pwd: '',
       dymaticPwd: '',

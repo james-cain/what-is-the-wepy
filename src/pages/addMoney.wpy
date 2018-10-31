@@ -30,7 +30,7 @@
     height: 60px;
     float: right;
     display: block;
-    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') center center no-repeat;
+    background: url('/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') center center no-repeat;
     background-size: 30px 30px;
   }
   .selectedItem {
@@ -38,13 +38,13 @@
     height: 60px;
     float: right;
     display: block;
-    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') center center no-repeat;
+    background: url('/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') center center no-repeat;
     background-size: 30px 30px;
   }
   .wx {
     height: 60px;
     border-bottom: 1px solid #e5e5e5;
-    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_pay_wechat_icon@2x.png') 13px center no-repeat;
+    background: url('/msp-charge/include/miniapps/images/c_pay_wechat_icon@2x.png') 13px center no-repeat;
     background-size: 25px 25px;
     padding-left: 50px;
   }

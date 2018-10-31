@@ -42,7 +42,7 @@
     height: 160px;
     width: 100%;
     position: relative;
-    background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_test_bg@2x.png") center center no-repeat;
+    background: url("/msp-charge/include/miniapps/images/c_test_bg@2x.png") center center no-repeat;
     background-size: 100% 180px;
 }
 
@@ -100,7 +100,7 @@
     height: 45px;
     margin: 0;
     float: right;
-    background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_right_gray@2x.png") right 14px no-repeat;
+    background: url("/msp-charge/include/miniapps/images/c_list_right_gray@2x.png") right 14px no-repeat;
     background-size: 10px 20px;
 }
 </style>
@@ -111,7 +111,7 @@
       <view class="mineInfo-panel-top">
         <view class="mineInfo-panel-top-bg"></view>
         <view style="background: #f5f5f5;width: 50px;height: 50px;overflow: hidden;border: 2px solid #fff;border-radius: 27px;left: 50%;top: 20px;position: absolute;margin-left: -27px;">
-          <image class="mineInfo-panel-top-icon" src="{{userInfo.avatarId && userInfo.avatarId !== 'http://mspshow.szcomtop.com/cloudfs/api/fs/view/' ? userInfo.avatarId : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'}}" />
+          <image class="mineInfo-panel-top-icon" src="{{userInfo.avatarId && userInfo.avatarId !== '/cloudfs/api/fs/view/' ? userInfo.avatarId : '/msp-charge/include/miniapps/images/c_default_avatar@2x.png'}}" />
         </view>
         <view class="mineInfo-panel-top-name">{{userInfo.nick ? userInfo.nick : '未设置'}}</view>
         <view class="mineInfo-panel-top-description">{{userInfo.introduction ? userInfo.introduction : '未设置'}}</view>

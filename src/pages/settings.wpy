@@ -20,7 +20,7 @@
     height: 30px;
     margin: 5px 10px;
     float: right;
-    background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_right_gray@2x.png") left center no-repeat;
+    background: url("/msp-charge/include/miniapps/images/c_list_right_gray@2x.png") left center no-repeat;
     background-size: 15px 30px;
 }
 

@@ -126,7 +126,7 @@
           font-size: 10px;
           color: #ccc;
           text-indent: 0;
-          background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_details_navi_btn_pressed@2x.png") center 5px no-repeat;
+          background: url("/msp-charge/include/miniapps/images/c_details_navi_btn_pressed@2x.png") center 5px no-repeat;
           background-size: 38px 24px;
         }
       }
@@ -315,8 +315,8 @@
     <view id="station-details">
       <view class="station-details-top">
         <!-- <view class="fav-star">
-          <image class="fav" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_details_add_favorite@2x.png" wx:if="{{!isFav}}"></image>
-          <image class="fav" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_details_favorite_select@2x.png" wx:if="{{isFav}}"></image>
+          <image class="fav" src="/msp-charge/include/miniapps/images/c_details_add_favorite@2x.png" wx:if="{{!isFav}}"></image>
+          <image class="fav" src="/msp-charge/include/miniapps/images/c_details_favorite_select@2x.png" wx:if="{{isFav}}"></image>
         </view> -->
         <view class="station-details-icon"><image src="{{imgUrl}}" mode="scaleToFill" style="height: 70px; width: 70px;"/></view>
         <view class="station-details-params">
@@ -350,7 +350,7 @@
               <view class="location-gis">{{getDis + 'km'}}</view>
             </view>
             <view class="icon">
-              <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_parking_icon@2x.png" mode="scaleToFill" wx:if="{{isPark}}" style="width: 15px; height: 15px;position: relative; top: 3px;"></image>
+              <image src="/msp-charge/include/miniapps/images/c_list_parking_icon@2x.png" mode="scaleToFill" wx:if="{{isPark}}" style="width: 15px; height: 15px;position: relative; top: 3px;"></image>
               {{isPark ? '停车费用：' + parkingRate : ''}}
             </view>
           </view>
@@ -779,7 +779,7 @@
       this.session = se === '' || se === null ? '' : JSON.parse(se)
       this.stationH = wx.getStorageSync('windowH') - 141
       this.stakeDetails = stakeDetails
-      this.imgUrl = stakeDetails.img === '' || stakeDetails.img === null ? 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_station@2x.png' : stakeDetails.img
+      this.imgUrl = stakeDetails.img === '' || stakeDetails.img === null ? '/msp-charge/include/miniapps/images/c_default_station@2x.png' : stakeDetails.img
       this.siteCode = stakeDetails.siteCode
       this.siteName = stakeDetails.siteName
       this.workingTime = stakeDetails.workingTime

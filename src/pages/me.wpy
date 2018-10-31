@@ -33,7 +33,7 @@
     height: 30px;
     margin: 30px 10px;
     float: right;
-    background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_right_gray@2x.png") center center no-repeat;
+    background: url("/msp-charge/include/miniapps/images/c_list_right_gray@2x.png") center center no-repeat;
     background-size: 15px 30px;
 }
 
@@ -138,17 +138,17 @@
 }
 
 .myOrder .account-part-span .account-part-i {
-    background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_more_order_icon@2x.png") left center no-repeat;
+    background: url("/msp-charge/include/miniapps/images/c_more_order_icon@2x.png") left center no-repeat;
     background-size: 35px 35px;
 }
 
 .myCarType .account-part-span .account-part-i {
-    background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_more_car_icon@2x.png") left center no-repeat;
+    background: url("/msp-charge/include/miniapps/images/c_more_car_icon@2x.png") left center no-repeat;
     background-size: 35px 35px;
 }
 
 .settings .account-part-span .account-part-i {
-    background: url("http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_more_setting_icon@2x.png") left center no-repeat;
+    background: url("/msp-charge/include/miniapps/images/c_more_setting_icon@2x.png") left center no-repeat;
     background-size: 35px 35px;
 }
 </style>
@@ -158,7 +158,7 @@
       <view class="mine-panel-top">
         <view class="name-icon" @tap="goToMineInfo">
           <view class="arrow"></view>
-          <view class="user-icon"><image src="{{userInfo.avatarId && userInfo.avatarId !== 'http://mspshow.szcomtop.com/cloudfs/api/fs/view/'? userInfo.avatarId : 'http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_default_avatar@2x.png'}}" style="height: 50px; width: 50px;"/></view>
+          <view class="user-icon"><image src="{{userInfo.avatarId && userInfo.avatarId !== '/cloudfs/api/fs/view/'? userInfo.avatarId : '/msp-charge/include/miniapps/images/c_default_avatar@2x.png'}}" style="height: 50px; width: 50px;"/></view>
           <view class="name-info"><view class="name">{{userInfo.nick ? userInfo.nick : '无昵称'}}</view><view class="tel">{{userInfo.phone}}</view></view>
         </view>
       </view>

@@ -81,7 +81,7 @@
     height: 40px;
   }
   .terms {
-    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') left center no-repeat;
+    background: url('/msp-charge/include/miniapps/images/c_list_check_box_normal@2x.png') left center no-repeat;
     background-size: 22px 22px;
     margin-left: 10px;
     padding-left: 22px;
@@ -95,7 +95,7 @@
     }
   }
   .terms.selected {
-    background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') left center no-repeat;
+    background: url('/msp-charge/include/miniapps/images/c_list_check_box_select@2x.png') left center no-repeat;
     background-size: 22px 22px;
   }
 }

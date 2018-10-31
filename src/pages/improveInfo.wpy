@@ -12,7 +12,7 @@
 
 .doneInfo-arrow {
   padding-left: 20px;
-  background: url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_tick_ok@2x.png') center center no-repeat;
+  background: url('/msp-charge/include/miniapps/images/c_list_tick_ok@2x.png') center center no-repeat;
   background-size: 20px 20px;
 }
 
@@ -60,7 +60,7 @@
   display: inline-block;
   margin-top: 5px;
   float: right;
-  background:url('http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_right_gray@2x.png') 90% center no-repeat;
+  background:url('/msp-charge/include/miniapps/images/c_list_right_gray@2x.png') 90% center no-repeat;
   background-size: 15px 30px;
 }
 

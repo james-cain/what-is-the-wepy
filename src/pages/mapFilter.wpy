@@ -124,19 +124,19 @@
       </text>
       <view class="filter-elect-list">
         <view class="filter-elect-card zld {{selectedArr[0] ? 'selected' : ''}}" @tap="selectedCard(0)">
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_dc_icon@2x.png" class="filter-elect-img"/>
+          <image src="/msp-charge/include/miniapps/images/c_filtrate_dc_icon@2x.png" class="filter-elect-img"/>
           <text class="filter-elect-name">直流电</text>
         </view>
         <view class="filter-elect-card jlkc {{selectedArr[1] ? 'selected' : ''}}" @tap="selectedCard(1)">
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_ac_fast_icon@2x.png" class="filter-elect-img" />
+          <image src="/msp-charge/include/miniapps/images/c_filtrate_ac_fast_icon@2x.png" class="filter-elect-img" />
           <text class="filter-elect-name">交流快充</text>
         </view>
         <view class="filter-elect-card jlmc {{selectedArr[2] ? 'selected' : ''}}" @tap="selectedCard(2)">
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_ac_icon@2x.png" class="filter-elect-img" />
+          <image src="/msp-charge/include/miniapps/images/c_filtrate_ac_icon@2x.png" class="filter-elect-img" />
           <text class="filter-elect-name">交流慢充</text>
         </view>
         <view class="filter-elect-card ykx {{selectedArr[3] ? 'selected' : ''}}" @tap="selectedCard(3)">
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_filtrate_list_leisure_icon@2x.png" class="filter-elect-img" />
+          <image src="/msp-charge/include/miniapps/images/c_filtrate_list_leisure_icon@2x.png" class="filter-elect-img" />
           <text class="filter-elect-name">有空闲</text>
         </view>
       </view>
@@ -157,7 +157,7 @@
               车型
             </view>
           </view>
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_right_icon_cyan@2x.png" class="more"/>
+          <image src="/msp-charge/include/miniapps/images/c_right_icon_cyan@2x.png" class="more"/>
         </view>
       </view>
       <view class="btn-group">

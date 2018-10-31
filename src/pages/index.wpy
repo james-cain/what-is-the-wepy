@@ -105,15 +105,15 @@
    <view class="homepage">
      <view class="menu" style="height: {{menuHeight}}px;">
        <view class="menu-login">
-          <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_main_more_icon.png" mode="scaleToFill" class="login-img" @tap="goUserPage"></image>
+          <image src="/msp-charge/include/miniapps/images/c_main_more_icon.png" mode="scaleToFill" class="login-img" @tap="goUserPage"></image>
        </view>
        <view class="menu-search">
          <view class="search-icon-area">
-            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_search_box_icon@2x.png" mode="scaleToFill" class="search-icon"/>
+            <image src="/msp-charge/include/miniapps/images/c_search_box_icon@2x.png" mode="scaleToFill" class="search-icon"/>
          </view>
          <input class="search-input" type="text" value="{{searchValue}}" @focus="changeType" @confirm="search" placeholder="搜索站点" placeholder-style="font-size: 14px; color: #999999;" confirm-type="search"/>
          <view class="search-del-area" @tap="delete">
-           <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/s_text_view_delete_icon.png" mode="scaleToFill" class="search-delete"/>
+           <image src="/msp-charge/include/miniapps/images/s_text_view_delete_icon.png" mode="scaleToFill" class="search-delete"/>
          </view>
        </view>
        <view class="menu-switch" @tap="switchType">

@@ -132,7 +132,7 @@
           <view wx:for="{{car.brandAry}}" wx:for-item="carbrand" wx:key="vehicleModelCode">
             <view class="right-type-details-card" @tap="switchCar({{car.brand}}, {{carbrand.vehicleBrandCode}}, {{carbrand.vehicleModelCode}}, {{carbrand.selected}})">
               <text class="right-type-details-card-name">{{carbrand.vehicleModel}}</text>
-              <image class="right-type-details-img" src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_tick_ok@2x.png" wx:if="{{carbrand.selected}}"></image>
+              <image class="right-type-details-img" src="/msp-charge/include/miniapps/images/c_list_tick_ok@2x.png" wx:if="{{carbrand.selected}}"></image>
             </view>
           </view>
         </view>

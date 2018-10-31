@@ -77,7 +77,7 @@
             车型
           </view>
         </view>
-        <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_right_icon_cyan@2x.png" class="more"/>
+        <image src="/msp-charge/include/miniapps/images/c_right_icon_cyan@2x.png" class="more"/>
       </view>
     </view>
   </view>

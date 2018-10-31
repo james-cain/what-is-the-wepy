@@ -88,8 +88,8 @@
           <view class="table-card-name">
             <text class="pile-table-name">{{pileTable.siteNameBak}}</text>
             <text wx:if= "{{pileTable.isForeignOpen * 1 === 0}}" style="font-weight: normal; font-size: 12px; color: orange">(暂不对外开放)</text>
-            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_leisure_icon@2x.png" mode="scaleToFill" class="pile-table-img" wx:if="{{pileTable.isForeignOpen * 1 !== 0 && pileTable.chargingPileNum * 1 !== 0}}"></image>
-            <image src="http://mspshow.szcomtop.com/msp-charge/include/miniapps/images/c_list_leisure_icon_gray@2x.png" mode="scaleToFill" class="pile-table-img" wx:if="{{pileTable.isForeignOpen * 1 !== 0 && pileTable.chargingPileNum * 1 === 0}}"></image>
+            <image src="/msp-charge/include/miniapps/images/c_list_leisure_icon@2x.png" mode="scaleToFill" class="pile-table-img" wx:if="{{pileTable.isForeignOpen * 1 !== 0 && pileTable.chargingPileNum * 1 !== 0}}"></image>
+            <image src="/msp-charge/include/miniapps/images/c_list_leisure_icon_gray@2x.png" mode="scaleToFill" class="pile-table-img" wx:if="{{pileTable.isForeignOpen * 1 !== 0 && pileTable.chargingPileNum * 1 === 0}}"></image>
             <text wx:if= "{{pileTable.isForeignOpen * 1 !== 0}}" class="pile-table-pilecount">{{pileTable.chargingPileNum}}</text>
           </view>
           <view class="table-card-address">
