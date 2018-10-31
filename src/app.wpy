@@ -43,7 +43,7 @@
       'window': {
         'navigationBarBackgroundColor': '#000000',
         'navigationBarTextStyle': 'white',
-        'navigationBarTitleText': '小南充电',
+        'navigationBarTitleText': '',
         'backgroundTextStyle': 'light'
       }
     }
@@ -55,8 +55,7 @@
 
     globalData = {
       userInfo: null,
-      // serverUrl: 'https://mspshow.szcomtop.com'
-      serverUrl: 'https://eimshow.szcomtop.com'
+      serverUrl: ''
     }
 
     onShow() {
