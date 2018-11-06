@@ -111,7 +111,7 @@
             <input type="number" maxLength="11" @input="codeTfInput" placeholder="请输入验证码" focus="{{codeTfFocus}}"/>
             <button class="getCodeBtn" style="color: {{getCodeBtnProperty.titleColor}}" type="default" @tap="getCodeAct" disabled="{{getCodeBtnProperty.disabled}}">{{getCodeBtnProperty.title}}</button>
           </view>
-          <view class="terms {{isTerms ? 'selected' : ''}}" @tap="okTerms">注册即代表您同意<view @tap.stop="showTerms">《小南充电服务协议》</view></view>
+          <view class="terms {{isTerms ? 'selected' : ''}}" @tap="okTerms">注册即代表您同意<view @tap.stop="showTerms">《服务协议》</view></view>
           <view class="btn">
             <button style="color: #ffffff; background-color: {{nextBtnProperty.backcolor}}" type="default" @tap="nextAct" disabled="{{nextBtnProperty.disabled}}" loading="{{nextBtnProperty.loading}}">下一步</button>
           </view>

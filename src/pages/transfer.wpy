@@ -121,7 +121,7 @@
     <view id="ctp-panel" style="background: #f5f5f5;padding-top: 20px;">
       <view class="ctp-panel-transfer">
         <view class="account-security">
-          <input type="number" placeholder="小南充电账号/手机号码" @input="phoneTfInput" class="transfer-obj" focus="true"/><text>对方账户</text>
+          <input type="number" placeholder="账号/手机号码" @input="phoneTfInput" class="transfer-obj" focus="true"/><text>对方账户</text>
         </view>
         <text class="transfer-tips">钱将实时转入对方账户，无法退款</text>
         <view class="transfer-btn">

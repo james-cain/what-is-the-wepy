@@ -14,7 +14,7 @@
   <view class="container" style="background: #f1f5f8; height: {{windowH}}px">
     <view class="ctp-panel-about">
       <view class="ctp-panel-about-top" style="position: relative;">
-        小南充电
+        
         <view style="color: #999;position: absolute; bottom: 14px; width: 100%; left: 0; text-align: center;font-size: 13px;height: 20px; line-height: 20px;">版本1.001</view>
       </view>
       <ul class="about-list">
